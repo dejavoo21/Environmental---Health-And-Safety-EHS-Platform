@@ -1,4 +1,10 @@
 /* --- Admin Table & Toolbar UI Polish (Phase 11) --- */
+.admin-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .admin-toolbar {
   display: flex;
   gap: 1.25rem;
@@ -454,6 +460,12 @@ h1, h2, h3, h4 {
 }
 
 .brand {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.brand-content {
   display: flex;
   gap: 0.75rem;
   align-items: center;
@@ -5369,5 +5381,372 @@ textarea:focus {
   color: var(--color-text-muted);
   font-size: 0.9rem;
   margin-top: 4px;
+}
+
+/* =============================================================
+   COMPREHENSIVE MOBILE RESPONSIVE STYLES
+   ============================================================= */
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #f6f1e7;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.mobile-menu-toggle:hover {
+  background: rgba(240, 179, 93, 0.2);
+}
+
+/* Tablet breakpoint (900px) */
+@media (max-width: 900px) {
+  /* Show mobile menu toggle */
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Collapsible sidebar for tablets */
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    position: relative;
+    padding: 1rem 1.25rem;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .sidebar-nav {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    width: 100%;
+  }
+
+  .sidebar-nav.open {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-top: 1rem;
+  }
+
+  .nav-group-section {
+    width: 100%;
+  }
+
+  /* Main content fills remaining space */
+  .main-area {
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Tables horizontal scroll */
+  .admin-table-wrapper,
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-table {
+    min-width: 600px;
+  }
+
+  /* Admin toolbar stacks */
+  .admin-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .admin-toolbar input[type="text"],
+  .admin-toolbar input[type="search"],
+  .admin-toolbar select {
+    width: 100%;
+  }
+
+  .admin-toolbar button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Inline forms stack on mobile */
+  .admin-form-card--inline,
+  .admin-form-card__inline-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-form-card--inline input,
+  .admin-form-card--inline select,
+  .admin-form-card__inline-row input,
+  .admin-form-card__inline-row select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  /* Page title smaller */
+  .topbar-title h1 {
+    font-size: 1.25rem;
+  }
+
+  /* Form grids single column */
+  .form-grid,
+  .modal-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Cards full width */
+  .card,
+  .chart-card,
+  .widget-half,
+  .chart-half {
+    padding: 1rem;
+  }
+
+  /* Pagination stacks */
+  .pagination-controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+/* Mobile breakpoint (600px) */
+@media (max-width: 600px) {
+  /* Smaller padding overall */
+  .content {
+    padding: 1rem;
+  }
+
+  /* Page header stacks */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-header .btn,
+  .page-header button {
+    width: 100%;
+  }
+
+  /* KPI single column */
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Topbar vertical layout */
+  .topbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .topbar-left {
+    width: 100%;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  /* Touch-friendly tap targets (44px minimum) */
+  .btn,
+  button,
+  .nav-link,
+  .tab-btn,
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+  }
+
+  .nav-link {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Table cells smaller text */
+  .admin-table th,
+  .admin-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Modal full screen */
+  .modal-content {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  .modal-overlay {
+    padding: 0;
+  }
+
+  /* Filter panel full width */
+  .filter-panel {
+    width: 100%;
+    right: 0;
+    left: 0;
+  }
+
+  /* User menu dropdown */
+  .user-menu-dropdown {
+    right: 0;
+    left: auto;
+    min-width: 200px;
+  }
+
+  /* Action buttons in table cells stack */
+  .admin-table td .btn-group,
+  .admin-table td button + button {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  /* Hide less important table columns */
+  .admin-table .hide-mobile {
+    display: none;
+  }
+}
+
+/* Small mobile breakpoint (400px) */
+@media (max-width: 400px) {
+  .sidebar {
+    padding: 0.75rem 1rem;
+  }
+
+  .brand-title {
+    font-size: 1rem;
+  }
+
+  .brand-tag {
+    display: none;
+  }
+
+  .topbar-title h1 {
+    font-size: 1.1rem;
+  }
+
+  .admin-table {
+    font-size: 0.85rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.5rem 0.4rem;
+  }
+
+  /* Stack filter groups */
+  .filter-group {
+    width: 100%;
+  }
+
+  /* Full width buttons */
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape mobile orientation */
+@media (max-width: 900px) and (orientation: landscape) {
+  .sidebar-nav.open {
+    max-height: 60vh;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects that don't work on touch */
+  .btn:hover,
+  .nav-link:hover,
+  .kpi:hover,
+  .admin-table tbody tr:hover {
+    transform: none;
+  }
+
+  /* Ensure tap targets are accessible */
+  .btn,
+  button,
+  a,
+  .nav-link,
+  select,
+  input {
+    -webkit-tap-highlight-color: rgba(240, 179, 93, 0.2);
+  }
+
+  /* Disable text selection on interactive elements */
+  .btn,
+  button,
+  .nav-link {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* High contrast / accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sidebar,
+  .topbar,
+  .mobile-menu-toggle,
+  .btn,
+  button,
+  .pagination-controls,
+  .filter-panel {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block;
+  }
+
+  .main-area {
+    width: 100%;
+  }
+
+  .content {
+    padding: 0;
+  }
+
+  .admin-table {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
 }
 

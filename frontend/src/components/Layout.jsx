@@ -29,7 +29,9 @@ import {
   Scale,
   HardHat,
   ChevronDown,
-  Circle
+  Circle,
+  Menu,
+  X
 } from 'lucide-react';
 
 const NAV_GROUPS_STORAGE_KEY = 'ehs_nav_groups_v1';
@@ -204,6 +206,7 @@ const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const userMenuRef = useRef(null);
   const [groupState, setGroupState] = useState(() => {
     const defaults = navGroups.reduce((acc, group) => {
@@ -261,6 +264,11 @@ const Layout = () => {
     localStorage.setItem(NAV_GROUPS_STORAGE_KEY, JSON.stringify(groupState));
   }, [groupState]);
 
+  // Close mobile nav on route change
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [location.pathname]);
+
   const canAccess = (roles) => {
     if (!roles || roles.length === 0) return true;
     return roles.includes(user?.role);
@@ -274,14 +282,25 @@ const Layout = () => {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="brand sidebar-header">
-          <span className="brand-mark">EHS</span>
-          <div className="brand-meta">
-            <div className="brand-title">Portal</div>
-            <span className="brand-tag">Phase 5</span>
+          <div className="brand-content">
+            <span className="brand-mark">EHS</span>
+            <div className="brand-meta">
+              <div className="brand-title">Portal</div>
+              <span className="brand-tag">Phase 5</span>
+            </div>
           </div>
+          <button
+            type="button"
+            className="mobile-menu-toggle"
+            onClick={() => setMobileNavOpen(!mobileNavOpen)}
+            aria-expanded={mobileNavOpen}
+            aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          >
+            {mobileNavOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
 
-        <nav className="nav-group sidebar-nav" aria-label="Primary">
+        <nav className={`nav-group sidebar-nav ${mobileNavOpen ? 'open' : ''}`} aria-label="Primary">
           {navGroups
             .filter((group) => canAccess(group.requiresRole))
             .map((group) => {

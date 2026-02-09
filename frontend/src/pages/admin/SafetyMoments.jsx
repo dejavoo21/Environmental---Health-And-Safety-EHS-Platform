@@ -274,7 +274,7 @@ const SafetyMoments = () => {
         <button type="button" onClick={() => fileInputRef.current && fileInputRef.current.click()} className="admin-import-btn" aria-label="Import CSV">Import CSV</button>
         <input type="file" accept=".csv" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImportCSV} aria-label="Import CSV file" />
         {isAdmin && (
-          <button className="admin-create-btn" onClick={handleCreate} aria-label="Create Safety Moment">Create Safety Moment</button>
+          <button className="btn primary" onClick={handleCreate} aria-label="Create Safety Moment">Create Safety Moment</button>
         )}
         {isAdmin && selected.length > 0 && (
           <button className="admin-bulk-archive-btn" onClick={handleBulkArchive} aria-label="Archive Selected Safety Moments">Archive Selected</button>
@@ -287,42 +287,44 @@ const SafetyMoments = () => {
         onClose={() => { setSuccess(''); setError(''); setShowToast(false); }}
         duration={3500}
       />
-      <table className="admin-table" aria-label="Safety Moments Table">
-        <thead>
-          <tr>
-            <th scope="col"><input type="checkbox" checked={paged.length > 0 && selected.length === paged.length} onChange={handleSelectAll} aria-label="Select all" tabIndex={0} disabled={!isAdmin} /></th>
-            <th scope="col">Title</th>
-            <th scope="col">Category</th>
-            <th scope="col">Applies To</th>
-            <th scope="col">Roles</th>
-            <th scope="col">Start date</th>
-            <th scope="col">End date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        {loading ? <TableSkeleton columns={9} rows={6} /> : (
-          <tbody>
-            {paged.map((m, idx) => (
-              <tr key={m.id} tabIndex={0} aria-rowindex={idx + 2}>
-                <td><input type="checkbox" checked={selected.includes(m.id)} onChange={() => handleSelect(m.id)} aria-label={`Select ${m.title}`} tabIndex={0} disabled={!isAdmin} /></td>
-                <td>{m.title}</td>
-                <td>{m.category}</td>
-                <td>{m.sites?.join(', ') || 'All sites'}</td>
-                <td>{m.roles?.join(', ') || 'All roles'}</td>
-                <td>{m.startDate}</td>
-                <td>{m.endDate}</td>
-                <td>{m.status}</td>
-                <td>
-                  {isAdmin && <button onClick={() => handleEdit(m)} aria-label={`Edit ${m.title}`}>Edit</button>}
-                  {isAdmin && <button onClick={() => handleArchive(m)} aria-label={`Archive ${m.title}`}>Archive</button>}
-                  <button onClick={() => handleViewHistory(m)} aria-label={`View history for ${m.title}`}>View History</button>
-                </td>
+      <div className="admin-table-wrapper">
+        <table className="admin-table" aria-label="Safety Moments Table">
+          <thead>
+            <tr>
+              <th scope="col"><input type="checkbox" checked={paged.length > 0 && selected.length === paged.length} onChange={handleSelectAll} aria-label="Select all" tabIndex={0} disabled={!isAdmin} /></th>
+              <th scope="col">Title</th>
+              <th scope="col">Category</th>
+              <th scope="col" className="hide-mobile">Applies To</th>
+              <th scope="col" className="hide-mobile">Roles</th>
+              <th scope="col">Start date</th>
+              <th scope="col" className="hide-mobile">End date</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          {loading ? <TableSkeleton columns={9} rows={6} /> : (
+            <tbody>
+              {paged.map((m, idx) => (
+                <tr key={m.id} tabIndex={0} aria-rowindex={idx + 2}>
+                  <td><input type="checkbox" checked={selected.includes(m.id)} onChange={() => handleSelect(m.id)} aria-label={`Select ${m.title}`} tabIndex={0} disabled={!isAdmin} /></td>
+                  <td>{m.title}</td>
+                  <td>{m.category}</td>
+                  <td className="hide-mobile">{m.sites?.join(', ') || 'All sites'}</td>
+                  <td className="hide-mobile">{m.roles?.join(', ') || 'All roles'}</td>
+                  <td>{m.startDate}</td>
+                  <td className="hide-mobile">{m.endDate}</td>
+                  <td>{m.status}</td>
+                  <td>
+                    {isAdmin && <button onClick={() => handleEdit(m)} aria-label={`Edit ${m.title}`}>Edit</button>}
+                    {isAdmin && <button onClick={() => handleArchive(m)} aria-label={`Archive ${m.title}`}>Archive</button>}
+                    <button onClick={() => handleViewHistory(m)} aria-label={`View history for ${m.title}`}>View History</button>
+                  </td>
               </tr>
             ))}
           </tbody>
         )}
-      </table>
+        </table>
+      </div>
       {!loading && (
         <div className="admin-pagination" role="navigation" aria-label="Pagination">
           <button disabled={page === 1} onClick={() => setPage(page - 1)} aria-label="Previous page">Prev</button>
