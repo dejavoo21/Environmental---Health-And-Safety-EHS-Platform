@@ -49,7 +49,7 @@ const PPERules = () => {
     const load = async () => {
       try {
         const res = await api.get('/safety-admin/ppe-rules');
-        setRules(res.data);
+        setRules(res.data.data || res.data || []);
       } catch (err) {
         setError('Failed to load PPE rules.');
       } finally {
@@ -82,7 +82,7 @@ const PPERules = () => {
         setSuccess('PPE rule created successfully.');
       }
       const res = await api.get('/safety-admin/ppe-rules');
-      setRules(res.data);
+      setRules(res.data.data || res.data || []);
       setModalOpen(false);
       setEditingRule(null);
     } catch (err) {
@@ -109,7 +109,7 @@ const PPERules = () => {
       setSuccess('PPE rule archived. Undo?');
       undoTimeout.current = setTimeout(() => setUndoRule(null), 8000);
       const res = await api.get('/safety-admin/ppe-rules');
-      setRules(res.data);
+      setRules(res.data.data || res.data || []);
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to archive PPE rule.');
       setToastType('error');
@@ -133,7 +133,7 @@ const PPERules = () => {
       setSuccess('Archive undone.');
       setUndoRule(null);
       const res = await api.get('/safety-admin/ppe-rules');
-      setRules(res.data);
+      setRules(res.data.data || res.data || []);
     } catch (err) {
       setError('Failed to undo archive.');
       setToastType('error');
@@ -184,7 +184,7 @@ const PPERules = () => {
       setSuccess('Selected PPE rules archived.');
       setSelected([]);
       const res = await api.get('/safety-admin/ppe-rules');
-      setRules(res.data);
+      setRules(res.data.data || res.data || []);
     } catch (err) {
       setError('Bulk archive failed.');
       setToastType('error');
@@ -227,7 +227,7 @@ const PPERules = () => {
           await Promise.all(results.data.map(row => api.post('/safety-admin/ppe-rules', row)));
           setSuccess('Imported PPE rules from CSV.');
           const res = await api.get('/safety-admin/ppe-rules');
-          setRules(res.data);
+          setRules(res.data.data || res.data || []);
         } catch (err) {
           setError('Import failed. Please check your CSV format.');
         } finally {

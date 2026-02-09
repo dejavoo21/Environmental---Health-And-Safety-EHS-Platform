@@ -49,7 +49,7 @@ const SafetyMoments = () => {
     const load = async () => {
       try {
         const res = await api.get('/safety-admin/safety-moments');
-        setMoments(res.data);
+        setMoments(res.data.data || res.data || []);
       } catch (err) {
         setError('Failed to load safety moments.');
       } finally {
@@ -82,7 +82,7 @@ const SafetyMoments = () => {
         setSuccess('Safety moment created successfully.');
       }
       const res = await api.get('/safety-admin/safety-moments');
-      setMoments(res.data);
+      setMoments(res.data.data || res.data || []);
       setModalOpen(false);
       setEditingMoment(null);
     } catch (err) {
@@ -109,7 +109,7 @@ const SafetyMoments = () => {
       setSuccess('Safety moment archived. Undo?');
       undoTimeout.current = setTimeout(() => setUndoMoment(null), 8000);
       const res = await api.get('/safety-admin/safety-moments');
-      setMoments(res.data);
+      setMoments(res.data.data || res.data || []);
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to archive safety moment.');
       setToastType('error');
@@ -133,7 +133,7 @@ const SafetyMoments = () => {
       setSuccess('Archive undone.');
       setUndoMoment(null);
       const res = await api.get('/safety-admin/safety-moments');
-      setMoments(res.data);
+      setMoments(res.data.data || res.data || []);
     } catch (err) {
       setError('Failed to undo archive.');
       setToastType('error');
@@ -184,7 +184,7 @@ const SafetyMoments = () => {
       setSuccess('Selected safety moments archived.');
       setSelected([]);
       const res = await api.get('/safety-admin/safety-moments');
-      setMoments(res.data);
+      setMoments(res.data.data || res.data || []);
     } catch (err) {
       setError('Bulk archive failed.');
       setToastType('error');
@@ -227,7 +227,7 @@ const SafetyMoments = () => {
           await Promise.all(results.data.map(row => api.post('/safety-admin/safety-moments', row)));
           setSuccess('Imported safety moments from CSV.');
           const res = await api.get('/safety-admin/safety-moments');
-          setMoments(res.data);
+          setMoments(res.data.data || res.data || []);
         } catch (err) {
           setError('Import failed. Please check your CSV format.');
         } finally {

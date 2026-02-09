@@ -48,8 +48,8 @@ const SiteLegislation = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await api.get('/safety-admin/site-legislation');
-        setLegislation(res.data);
+        const res = await api.get('/safety-admin/legislation');
+        setLegislation(res.data.data || res.data || []);
       } catch (err) {
         setError('Failed to load site legislation.');
       } finally {
@@ -75,14 +75,14 @@ const SiteLegislation = () => {
     setSuccess('');
     try {
       if (editingLegislation) {
-        await api.put(`/safety-admin/site-legislation/${editingLegislation.id}`, data);
+        await api.put(`/safety-admin/legislation/${editingLegislation.id}`, data);
         setSuccess('Legislation updated successfully.');
       } else {
-        await api.post('/safety-admin/site-legislation', data);
+        await api.post('/safety-admin/legislation', data);
         setSuccess('Legislation created successfully.');
       }
-      const res = await api.get('/safety-admin/site-legislation');
-      setLegislation(res.data);
+      const res = await api.get('/safety-admin/legislation');
+      setLegislation(res.data.data || res.data || []);
       setModalOpen(false);
       setEditingLegislation(null);
     } catch (err) {
@@ -104,12 +104,12 @@ const SiteLegislation = () => {
     setError('');
     setSuccess('');
     try {
-      await api.delete(`/safety-admin/site-legislation/${legislation.id}`);
+      await api.delete(`/safety-admin/legislation/${legislation.id}`);
       setUndoLegislation(legislation);
       setSuccess('Legislation archived. Undo?');
       undoTimeout.current = setTimeout(() => setUndoLegislation(null), 8000);
-      const res = await api.get('/safety-admin/site-legislation');
-      setLegislation(res.data);
+      const res = await api.get('/safety-admin/legislation');
+      setLegislation(res.data.data || res.data || []);
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to archive legislation.');
       setToastType('error');
@@ -129,11 +129,11 @@ const SiteLegislation = () => {
     setError('');
     setSuccess('');
     try {
-      await api.post('/safety-admin/site-legislation', undoLegislation);
+      await api.post('/safety-admin/legislation', undoLegislation);
       setSuccess('Archive undone.');
       setUndoLegislation(null);
-      const res = await api.get('/safety-admin/site-legislation');
-      setLegislation(res.data);
+      const res = await api.get('/safety-admin/legislation');
+      setLegislation(res.data.data || res.data || []);
     } catch (err) {
       setError('Failed to undo archive.');
       setToastType('error');
@@ -180,11 +180,11 @@ const SiteLegislation = () => {
     setError('');
     setSuccess('');
     try {
-      await Promise.all(selected.map(id => api.delete(`/safety-admin/site-legislation/${id}`)));
+      await Promise.all(selected.map(id => api.delete(`/safety-admin/legislation/${id}`)));
       setSuccess('Selected legislation archived.');
       setSelected([]);
-      const res = await api.get('/safety-admin/site-legislation');
-      setLegislation(res.data);
+      const res = await api.get('/safety-admin/legislation');
+      setLegislation(res.data.data || res.data || []);
     } catch (err) {
       setError('Bulk archive failed.');
       setToastType('error');
@@ -224,10 +224,10 @@ const SiteLegislation = () => {
         setError('');
         setSuccess('');
         try {
-          await Promise.all(results.data.map(row => api.post('/safety-admin/site-legislation', row)));
+          await Promise.all(results.data.map(row => api.post('/safety-admin/legislation', row)));
           setSuccess('Imported site legislation from CSV.');
-          const res = await api.get('/safety-admin/site-legislation');
-          setLegislation(res.data);
+          const res = await api.get('/safety-admin/legislation');
+          setLegislation(res.data.data || res.data || []);
         } catch (err) {
           setError('Import failed. Please check your CSV format.');
         } finally {
