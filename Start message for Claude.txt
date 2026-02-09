@@ -1,0 +1,25 @@
+Please begin with Step 0 (workspace discovery) and Phase A + Phase B only.
+
+Inspect the workspace for any existing docs (checklist, user journeys, user stories, test strategy, test cases, etc.) and summarise what you find.
+
+Then produce all the documentation and test planning for Phase 1 as described in your instructions:
+
+Overview & Scope
+
+Functional + Non-functional Requirements (Phase 1)
+
+System Architecture
+
+Data Model / ERD
+
+API Specification
+
+Frontend/UX design
+
+Implementation Plan (Phase 1)
+
+Test Strategy with shift-left, ATDD, TDD and mapping to the test case catalogue
+
+Do NOT generate any code yet.
+When you’re done, ask me explicitly:
+“Is this design and test strategy approved so I can start implementing Phase 1?”

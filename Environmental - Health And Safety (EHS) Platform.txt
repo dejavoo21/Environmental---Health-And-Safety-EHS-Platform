@@ -1,0 +1,6918 @@
+Here’s what that page is saying, in normal-human language 😊
+
+The **WorkEikon – EHS Software** page is basically a **marketing/feature overview** of an Environmental, Health & Safety (EHS) platform.
+
+### Core idea of the app
+
+> A comprehensive EHS platform that helps companies manage safety, compliance, and environmental responsibilities in one place.
+
+The text says the software is designed to:
+
+* Streamline safety management processes
+* Ensure compliance
+* Enhance operational efficiency
+* Protect the workforce
+
+### Listed feature modules (these are essentially app modules you’d want to copy/modernize)
+
+From the page: ([dorots.com][1])
+
+1. **Incident Management**
+
+   * Log incidents, categorize them, record root cause, corrective actions, etc.
+
+2. **Inspection Management**
+
+   * Schedule inspections, record findings, track follow-up actions.
+
+3. **BBO, Hazard ID and Near Miss Reporting**
+
+   * Behaviour-Based Observation (BBO)
+   * Hazard identification
+   * Near miss reporting (quick forms, maybe mobile-friendly)
+
+4. **Chemical Management**
+
+   * Track chemicals, safety data sheets, storage locations, risk ratings.
+
+5. **Joint Health and Safety Committee**
+
+   * Manage meetings, minutes, actions, attendance, agendas.
+
+6. **Asset Management**
+
+   * Register equipment/plant, status, maintenance due dates, ownership.
+
+7. **Training Management**
+
+   * Track who needs what training, expiry dates, completions, certificates.
+
+8. **Site Specific Hazard Assessment**
+
+   * Risk assessments per site/job, hazards, controls, residual risk.
+
+9. **Return to Work Management**
+
+   * Track injured workers, modified duties, RTW plans and approvals.
+
+10. **Meeting and Communication Management**
+
+    * Safety meetings, toolbox talks, announcements, records of attendance.
+
+11. **Environmental Management and Compliance System**
+
+    * Environmental monitoring, permits, waste tracking, reporting obligations.
+
+12. **Action Item Management**
+
+    * Central list of actions from incidents, audits, inspections, meetings.
+
+13. **Document Management Centre**
+
+    * Policies, procedures, SOPs, forms – version-controlled, searchable.
+
+14. **Audit Management**
+
+    * Plan audits, record findings (NCs & observations), corrective actions.
+
+15. **Subcontractor Safety Management**
+
+    * Contractor onboarding, documents, compliance status.
+
+16. **Permit Management**
+
+    * Work permits (e.g. Hot Work, Confined Space, Working at Height).
+
+17. **Notice Board: Bulletins and Alert**
+
+    * Safety alerts, bulletins, urgent messages to all users.
+
+---
+
+### How we can turn this into a similar app
+
+If you like, in the **next step** I can:
+
+* Propose a **modular architecture** (e.g. “Incident” microservice, “Training” module, etc.).
+* Suggest **tech stack** options (web + mobile, database choice).
+* Design a **data model** for the key modules (Incident, Inspection, Actions).
+* Sketch **screens/pages**:
+
+  * Dashboard
+  * Incident form
+  * Action tracker
+  * Training matrix
+  * Document centre
+
+Tell me what stack you prefer (e.g. React + Node + PostgreSQL, or Power Apps + SharePoint, etc.), and I’ll draft a mini design/blueprint for a WorkEikon-style EHS app tailored to you.
+
+[1]: https://dorots.com/workeikon.html "WorkEikon - EHS Software"
+
+
+------------------------------------------------------------
+
+Yep, there’s definitely useful stuff here for designing your own app 👀
+
+From the homepage, here’s what you can steal (respectfully) as **requirements** for your app:
+
+---
+
+## 1. Core Positioning
+
+They pitch it as:
+
+> **All-in-one Safety Management Suite** for EHS compliance, operational efficiency, and workforce protection. ([workeikon.com][1])
+
+So for your app, you probably want:
+
+* A **unified dashboard**
+* Focus on **EHS + safety + compliance**
+* Emphasis on **mobile-friendly** + **quick setup** + **customizable**
+
+---
+
+## 2. Main Modules (Feature List)
+
+The homepage confirms and extends the modules we saw before: ([workeikon.com][1])
+
+From **“Our Solutions”**:
+
+* Employee / **Staff Directory**
+* **Incident Management**
+* **Inspection Management**
+* **BBO, Hazard ID & Near Miss Reporting**
+* **Joint Health & Safety Committee Management**
+* **Asset Management**
+* **Training Management**
+* **Chemical & SDS Management**
+* **Site-Specific Hazard Assessment**
+* **Return to Work – Case Management**
+* **Meeting and Communication Management**
+* **Action Item Management**
+* **Document Management Centre**
+* **Audit Management**
+* **Subcontractor Safety Management**
+* **Permit Management**
+* **Notice Board: Bulletins & Alerts**
+* **Scheduled Reports**
+
+✅ For your app design, this is basically your **module checklist**.
+You can decide what’s **MVP** (must-have) vs **Phase 2**.
+
+Example MVP set could be:
+
+* Incidents
+* Inspections
+* Action Items
+* Training
+* Documents
+* Hazards / Near Miss
+
+---
+
+## 3. Non-Functional Features (Super Important)
+
+Under “Why Choose WorkEikon”, they highlight: ([workeikon.com][1])
+
+* **Pocket Friendly Solutions** → pricing / licensing model
+* **Fast and Easy Setup** → low onboarding friction
+* **User and Mobile-Friendly Interface** → responsive UI, maybe PWA or mobile app
+* **Customization and Compliance** → configurable forms, fields, workflows
+* **Digital Transformation (paperless)** → uploads, e-signatures, digital forms
+* **Track Performance** → dashboards, KPIs, trends
+* **API Access** → integration with HR, ERP, etc.
+* **Electronic Signatures**
+* **Data Import Tools** → CSV import, bulk upload
+
+These become your **technical requirements**:
+
+* API-first backend
+* Role-based access control
+* Reporting & dashboards
+* Integration hooks
+* E-signature integration (or simple approval logs)
+* Import/export functionality
+
+---
+
+## 4. Target Industries
+
+They show it’s used in: Construction, Manufacturing, Oil & Gas, Mining, Food & Pharma. ([workeikon.com][1])
+
+You can treat that as:
+
+* Your app should support **multi-industry configuration**:
+
+  * Site types
+  * Hazard libraries
+  * Regulatory references (e.g. OSHA, ISO 45001, ISO 14001, etc.)
+
+---
+
+## 5. What This Means for Your Build
+
+If you tell me your preferred stack, I can turn this into a **concrete blueprint**:
+
+* **Architecture**: frontend, backend, database, auth model
+* **Data models**: Incident, Inspection, TrainingRecord, ActionItem, Document, Hazard, etc.
+* **Screens / pages**:
+
+  * Safety Dashboard
+  * “Log Incident” flow
+  * Inspection checklist screen
+  * Training matrix
+  * Action item tracker
+  * Document centre
+* **Roadmap**:
+
+  * Phase 1 (MVP)
+  * Phase 2 (advanced modules like RTW, Subcontractor, Permits)
+  * Phase 3 (analytics, APIs, e-signatures)
+
+If you reply with something like:
+
+> “Let’s use React + Node + PostgreSQL” (or Power Apps + SharePoint / something else)
+
+I’ll immediately sketch out:
+
+* ERD-style data structure,
+* API endpoints,
+* and a list of user stories for v1 of your WorkEikon-style EHS app.
+
+[1]: https://www.workeikon.com/ "Workeikon All in one safety management software"
+------------------------------------------------------------------------------------------------
+
+Nice, solid stack choice 😎
+Let’s turn “WorkEikon-style EHS suite” into a React + Node + PostgreSQL blueprint you can actually build.
+
+---
+
+## 1. High-level architecture
+
+**Frontend (React)**
+
+* React + TypeScript (recommended)
+* Routing: `react-router-dom`
+* Data fetching: `React Query` or plain fetch/axios
+* UI: any component library (MUI, Ant Design, or your own)
+* Auth: store JWT in `httpOnly` cookie or memory (safer than localStorage)
+
+**Backend (Node)**
+
+* Node + Express (or Fastify)
+* ORM: Prisma or Sequelize (Prisma is very nice with Postgres + TypeScript)
+* Auth: JWT (access + optional refresh)
+* Validation: Zod/Joi/Yup for request bodies
+* File upload: S3/Cloud storage or local dev folder for documents/attachments
+
+**Database (PostgreSQL)**
+
+* Hosted (Render, Supabase, Neon, Railway, etc.) or local Docker
+* Use migrations (Prisma, Sequelize CLI, or Knex)
+
+---
+
+## 2. Core modules for MVP
+
+Let’s not build *everything* on day one. MVP set:
+
+1. **Users & Roles**
+2. **Sites / Locations**
+3. **Incidents & Near Misses**
+4. **Inspections**
+5. **Action Items** (central task tracking)
+6. **Training Management** (simple version)
+7. **Document Centre** (policies, SDS, templates)
+
+You can add RTW, Permits, Contractors, etc. later.
+
+---
+
+## 3. Data model (PostgreSQL schema sketch)
+
+I’ll show simplified tables – you can expand later.
+
+### 3.1 Users & roles
+
+```sql
+-- users
+CREATE TABLE users (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email         TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  first_name    TEXT NOT NULL,
+  last_name     TEXT NOT NULL,
+  role          TEXT NOT NULL CHECK (role IN ('admin', 'manager', 'worker')),
+  is_active     BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- sites (locations / facilities)
+CREATE TABLE sites (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  code        TEXT UNIQUE,
+  address     TEXT,
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+### 3.2 Incidents & near misses
+
+```sql
+CREATE TABLE incident_types (
+  id    SERIAL PRIMARY KEY,
+  name  TEXT NOT NULL UNIQUE   -- e.g. "Injury", "Property Damage", "Near Miss"
+);
+
+CREATE TABLE incidents (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title           TEXT NOT NULL,
+  description     TEXT,
+  incident_type_id INTEGER NOT NULL REFERENCES incident_types(id),
+  site_id         UUID REFERENCES sites(id),
+  reported_by_id  UUID REFERENCES users(id),
+  occurred_at     TIMESTAMP NOT NULL,
+  status          TEXT NOT NULL CHECK (status IN ('open', 'under_investigation', 'closed')),
+  severity        TEXT CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+  root_cause      TEXT,
+  created_at      TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE incident_actions (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  incident_id UUID NOT NULL REFERENCES incidents(id) ON DELETE CASCADE,
+  description TEXT NOT NULL,
+  assigned_to UUID REFERENCES users(id),
+  due_date    DATE,
+  status      TEXT NOT NULL CHECK (status IN ('open', 'in_progress', 'done')),
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+### 3.3 Inspections
+
+```sql
+-- optional templates for checklists
+CREATE TABLE inspection_templates (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  description TEXT
+);
+
+CREATE TABLE inspection_template_items (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  template_id UUID NOT NULL REFERENCES inspection_templates(id) ON DELETE CASCADE,
+  label       TEXT NOT NULL,       -- e.g. "Fire extinguishers inspected"
+  category    TEXT                 -- e.g. "Fire Safety"
+);
+
+CREATE TABLE inspections (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  template_id    UUID REFERENCES inspection_templates(id),
+  site_id        UUID REFERENCES sites(id),
+  performed_by   UUID REFERENCES users(id),
+  performed_at   TIMESTAMP NOT NULL,
+  status         TEXT NOT NULL CHECK (status IN ('draft', 'completed')),
+  overall_result TEXT CHECK (overall_result IN ('pass', 'fail')),
+  created_at     TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE inspection_responses (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  inspection_id   UUID NOT NULL REFERENCES inspections(id) ON DELETE CASCADE,
+  template_item_id UUID NOT NULL REFERENCES inspection_template_items(id),
+  result          TEXT NOT NULL CHECK (result IN ('ok', 'not_ok', 'n/a')),
+  comment         TEXT
+);
+```
+
+### 3.4 Training management (simple)
+
+```sql
+CREATE TABLE training_courses (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  description TEXT,
+  valid_for_months INTEGER      -- e.g. 12 = needs refresh yearly
+);
+
+CREATE TABLE training_assignments (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id        UUID NOT NULL REFERENCES users(id),
+  course_id      UUID NOT NULL REFERENCES training_courses(id),
+  assigned_at    TIMESTAMP NOT NULL DEFAULT NOW(),
+  completed_at   TIMESTAMP,
+  expires_at     TIMESTAMP,
+  status         TEXT NOT NULL CHECK (status IN ('assigned', 'completed', 'expired'))
+);
+```
+
+### 3.5 Document Centre
+
+```sql
+CREATE TABLE documents (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title         TEXT NOT NULL,
+  category      TEXT,               -- e.g. "Policy", "SDS", "Procedure"
+  file_path     TEXT NOT NULL,      -- or storage URL
+  version       TEXT,
+  uploaded_by   UUID REFERENCES users(id),
+  uploaded_at   TIMESTAMP NOT NULL DEFAULT NOW(),
+  site_id       UUID REFERENCES sites(id)
+);
+```
+
+That’s already enough for a decent v1.
+
+---
+
+## 4. REST API design (Node + Express)
+
+You can namespace everything under `/api`.
+
+### 4.1 Auth
+
+* `POST /api/auth/register` (maybe admin only)
+* `POST /api/auth/login` → returns JWT
+* `GET /api/auth/me` → current user profile
+
+### 4.2 Incidents
+
+* `GET /api/incidents` → list (filter by site, status, date range)
+* `GET /api/incidents/:id` → details with actions
+* `POST /api/incidents` → create
+* `PUT /api/incidents/:id` → update
+* `POST /api/incidents/:id/actions` → add corrective action
+* `PATCH /api/incidents/:id/status` → update status
+
+Example Express route sketch:
+
+```js
+// routes/incidents.js
+const router = require('express').Router();
+const { requireAuth } = require('../middleware/auth');
+
+router.get('/', requireAuth, async (req, res) => {
+  // pull filters from query: ?status=open&siteId=...
+});
+
+router.post('/', requireAuth, async (req, res) => {
+  // validate body & insert into DB
+});
+
+router.get('/:id', requireAuth, async (req, res) => {
+  // return incident + related actions
+});
+
+module.exports = router;
+```
+
+### 4.3 Inspections
+
+* `GET /api/inspection-templates`
+* `POST /api/inspection-templates`
+* `GET /api/inspections`
+* `POST /api/inspections` (start an inspection)
+* `PUT /api/inspections/:id` (save responses, mark completed)
+
+### 4.4 Training
+
+* `GET /api/training/courses`
+* `POST /api/training/courses`
+* `GET /api/training/assignments?userId=...`
+* `POST /api/training/assignments`
+* `PATCH /api/training/assignments/:id/complete`
+
+### 4.5 Documents
+
+* `GET /api/documents`
+* `POST /api/documents` (with file upload)
+* `GET /api/documents/:id`
+* `DELETE /api/documents/:id`
+
+---
+
+## 5. Frontend (React) structure
+
+### 5.1 Routes
+
+Something like:
+
+* `/login`
+* `/dashboard`
+* `/incidents`
+
+  * `/incidents/new`
+  * `/incidents/:id`
+* `/inspections`
+
+  * `/inspections/new`
+  * `/inspections/:id`
+* `/training`
+* `/documents`
+* `/admin/users`
+* `/admin/sites`
+
+### 5.2 Components
+
+* `App.tsx` – router + layout
+* `components/Layout/Sidebar.tsx` – navigation
+* `components/Layout/Topbar.tsx` – user menu, site picker
+* `features/incidents/*` – list, form, detail view
+* `features/inspections/*` – similar pattern
+* `features/training/*`
+* `features/documents/*`
+
+Use React Query (or similar) to fetch:
+
+```ts
+const { data: incidents } = useQuery({
+  queryKey: ['incidents', filters],
+  queryFn: () => api.get('/incidents', { params: filters }),
+});
+```
+
+---
+
+## 6. Suggested build roadmap
+
+### Phase 1 – MVP (core working app)
+
+* Auth (login, roles)
+* Sites
+* Incidents (create, list, view, actions)
+* Basic dashboard (number of open incidents, by site, last 30 days)
+* Simple document centre
+
+### Phase 2 – Safety operations
+
+* Inspections (templates + responses)
+* Training assignments + basic training matrix
+* Better action item management (filters, “My Actions” view)
+
+### Phase 3 – Advanced EHS
+
+* Near-miss quick reporting (mobile-friendly form)
+* Contractor/subcontractor management
+* Permits (Hot Work, Confined Space, etc.)
+* Analytics dashboards (trends, LTIFR, etc.)
+* Exports & scheduled reports
+
+---
+
+If you tell me what you want to do **first** (e.g. “start with incidents” or “start with training”), I can:
+
+* Draft the **exact SQL**,
+* The **Express routes**, and
+* A **React page structure** (with example component code) for that module.
+-----------------------------------------------------------------------------------------------------------
+
+Let’s start with **Incidents** as the first real feature – it’s the heart of any EHS app and everything else (inspections, training, actions) can plug into it later.
+
+I’ll give you a **vertical slice**:
+
+* DB tables for incidents
+* Node + Express API for `/api/incidents`
+* React pages: list + create incident
+
+You can literally copy–paste this into a backend + frontend and then expand.
+
+---
+
+## 1. Database: Postgres schema for incidents
+
+Run this SQL in your Postgres database (e.g. via psql, DBeaver, TablePlus, etc.):
+
+```sql
+-- enable UUID generation (Postgres 13+ often has this)
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- minimal users table (you can expand later)
+CREATE TABLE IF NOT EXISTS users (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email         TEXT UNIQUE NOT NULL,
+  first_name    TEXT NOT NULL,
+  last_name     TEXT NOT NULL,
+  created_at    TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- sites (locations / facilities)
+CREATE TABLE IF NOT EXISTS sites (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  code        TEXT UNIQUE,
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- incident types, e.g. "Injury", "Near Miss", "Property Damage"
+CREATE TABLE IF NOT EXISTS incident_types (
+  id    SERIAL PRIMARY KEY,
+  name  TEXT NOT NULL UNIQUE
+);
+
+-- incidents
+CREATE TABLE IF NOT EXISTS incidents (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title           TEXT NOT NULL,
+  description     TEXT,
+  incident_type_id INTEGER NOT NULL REFERENCES incident_types(id),
+  site_id         UUID REFERENCES sites(id),
+  reported_by_id  UUID REFERENCES users(id),
+  occurred_at     TIMESTAMP NOT NULL,
+  status          TEXT NOT NULL CHECK (status IN ('open', 'under_investigation', 'closed')) DEFAULT 'open',
+  severity        TEXT CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+  created_at      TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+Seed a few basic values so your UI has something to show:
+
+```sql
+INSERT INTO incident_types (name) VALUES
+('Injury'), ('Near Miss'), ('Property Damage')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO sites (name, code) VALUES
+('Head Office', 'HO'),
+('Factory A', 'FA')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO users (email, first_name, last_name)
+VALUES ('john.doe@example.com', 'John', 'Doe')
+ON CONFLICT DO NOTHING;
+```
+
+---
+
+## 2. Backend: Node + Express API for incidents
+
+### 2.1 Project skeleton
+
+Backend folder structure (simple version):
+
+```text
+backend/
+  package.json
+  server.js
+  db.js
+  routes/
+    incidents.js
+```
+
+### 2.2 `package.json`
+
+In `backend/package.json`:
+
+```json
+{
+  "name": "ehs-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.19.0",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
+```
+
+Install:
+
+```bash
+cd backend
+npm install
+```
+
+### 2.3 Database connection – `db.js`
+
+```js
+// backend/db.js
+import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const { Pool } = pg;
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  // OR use individual values:
+  // user: process.env.DB_USER,
+  // host: process.env.DB_HOST,
+  // database: process.env.DB_NAME,
+  // password: process.env.DB_PASS,
+  // port: process.env.DB_PORT,
+});
+```
+
+In a `.env` file:
+
+```env
+DATABASE_URL=postgres://user:password@localhost:5432/ehs_db
+PORT=4000
+```
+
+### 2.4 Incidents routes – `routes/incidents.js`
+
+```js
+// backend/routes/incidents.js
+import express from 'express';
+import { pool } from '../db.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/incidents
+ * Optional query params: status, siteId, limit, offset
+ */
+router.get('/', async (req, res) => {
+  try {
+    const { status, siteId, limit = 50, offset = 0 } = req.query;
+
+    const params = [];
+    const whereClauses = [];
+
+    if (status) {
+      params.push(status);
+      whereClauses.push(`i.status = $${params.length}`);
+    }
+
+    if (siteId) {
+      params.push(siteId);
+      whereClauses.push(`i.site_id = $${params.length}`);
+    }
+
+    const whereSql = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+    params.push(limit);
+    params.push(offset);
+
+    const sql = `
+      SELECT
+        i.id,
+        i.title,
+        i.status,
+        i.severity,
+        i.occurred_at,
+        s.name AS site_name,
+        it.name AS incident_type
+      FROM incidents i
+      LEFT JOIN sites s ON i.site_id = s.id
+      LEFT JOIN incident_types it ON i.incident_type_id = it.id
+      ${whereSql}
+      ORDER BY i.created_at DESC
+      LIMIT $${params.length - 1} OFFSET $${params.length};
+    `;
+
+    const { rows } = await pool.query(sql, params);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching incidents:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * GET /api/incidents/:id
+ */
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const sql = `
+      SELECT
+        i.*,
+        s.name AS site_name,
+        it.name AS incident_type,
+        u.first_name || ' ' || u.last_name AS reported_by_name
+      FROM incidents i
+      LEFT JOIN sites s ON i.site_id = s.id
+      LEFT JOIN incident_types it ON i.incident_type_id = it.id
+      LEFT JOIN users u ON i.reported_by_id = u.id
+      WHERE i.id = $1;
+    `;
+
+    const { rows } = await pool.query(sql, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Incident not found' });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Error fetching incident:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * POST /api/incidents
+ * Body: { title, description, incident_type_id, site_id, reported_by_id, occurred_at, severity }
+ */
+router.post('/', async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      incident_type_id,
+      site_id,
+      reported_by_id,
+      occurred_at,
+      severity,
+    } = req.body;
+
+    if (!title || !incident_type_id || !occurred_at) {
+      return res.status(400).json({ error: 'title, incident_type_id, occurred_at are required' });
+    }
+
+    const sql = `
+      INSERT INTO incidents
+        (title, description, incident_type_id, site_id, reported_by_id, occurred_at, severity)
+      VALUES
+        ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *;
+    `;
+
+    const { rows } = await pool.query(sql, [
+      title,
+      description || null,
+      incident_type_id,
+      site_id || null,
+      reported_by_id || null,
+      occurred_at,
+      severity || null,
+    ]);
+
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Error creating incident:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+### 2.5 Server entry – `server.js`
+
+```js
+// backend/server.js
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import incidentsRouter from './routes/incidents.js';
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173', // or 3000, depending on your React dev server
+  credentials: true,
+}));
+app.use(express.json());
+
+// basic health-check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.use('/api/incidents', incidentsRouter);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Backend listening on port ${PORT}`);
+});
+```
+
+Run:
+
+```bash
+npm run dev
+```
+
+Check: `http://localhost:4000/api/incidents`
+
+---
+
+## 3. Frontend: React incidents list + create form
+
+Assume a Vite + React app:
+
+```bash
+npm create vite@latest ehs-frontend -- --template react
+cd ehs-frontend
+npm install
+```
+
+### 3.1 Basic API helper
+
+Create `src/api.js`:
+
+```js
+// src/api.js
+const API_BASE = 'http://localhost:4000/api';
+
+export async function fetchIncidents() {
+  const res = await fetch(`${API_BASE}/incidents`);
+  if (!res.ok) throw new Error('Failed to fetch incidents');
+  return res.json();
+}
+
+export async function fetchIncident(id) {
+  const res = await fetch(`${API_BASE}/incidents/${id}`);
+  if (!res.ok) throw new Error('Failed to fetch incident');
+  return res.json();
+}
+
+export async function createIncident(payload) {
+  const res = await fetch(`${API_BASE}/incidents`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create incident');
+  }
+  return res.json();
+}
+```
+
+### 3.2 Incidents list page
+
+Create `src/IncidentsList.jsx`:
+
+```jsx
+// src/IncidentsList.jsx
+import { useEffect, useState } from 'react';
+import { fetchIncidents } from './api';
+
+export default function IncidentsList({ onSelectIncident, onNewIncident }) {
+  const [incidents, setIncidents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchIncidents()
+      .then((data) => {
+        if (isMounted) {
+          setIncidents(data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        if (isMounted) {
+          setError('Failed to load incidents');
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) return <p>Loading incidents...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+        <h2>Incidents</h2>
+        <button onClick={onNewIncident}>+ New Incident</button>
+      </div>
+
+      {incidents.length === 0 ? (
+        <p>No incidents yet. Create the first one.</p>
+      ) : (
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th align="left">Title</th>
+              <th align="left">Type</th>
+              <th align="left">Site</th>
+              <th align="left">Severity</th>
+              <th align="left">Status</th>
+              <th align="left">Occurred At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {incidents.map((inc) => (
+              <tr
+                key={inc.id}
+                style={{ cursor: 'pointer' }}
+                onClick={() => onSelectIncident(inc.id)}
+              >
+                <td>{inc.title}</td>
+                <td>{inc.incident_type || '-'}</td>
+                <td>{inc.site_name || '-'}</td>
+                <td>{inc.severity || '-'}</td>
+                <td>{inc.status}</td>
+                <td>{new Date(inc.occurred_at).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+```
+
+### 3.3 New incident form
+
+Create `src/NewIncidentForm.jsx`:
+
+```jsx
+// src/NewIncidentForm.jsx
+import { useState } from 'react';
+import { createIncident } from './api';
+
+export default function NewIncidentForm({ onCreated, onCancel }) {
+  const [title, setTitle] = useState('');
+  const [incidentTypeId, setIncidentTypeId] = useState('1'); // assume 1 = Injury
+  const [severity, setSeverity] = useState('medium');
+  const [occurredAt, setOccurredAt] = useState(
+    new Date().toISOString().slice(0, 16) // for datetime-local input
+  );
+  const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError('');
+
+    try {
+      await createIncident({
+        title,
+        description,
+        incident_type_id: Number(incidentTypeId),
+        site_id: null, // you can add a dropdown later
+        reported_by_id: null, // or current user id when auth exists
+        occurred_at: new Date(occurredAt).toISOString(),
+        severity,
+      });
+
+      onCreated();
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to create incident');
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div>
+      <h2>New Incident</h2>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <form onSubmit={handleSubmit} style={{ maxWidth: 500, display: 'grid', gap: 12 }}>
+        <label>
+          Title
+          <input
+            type="text"
+            value={title}
+            required
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </label>
+
+        <label>
+          Incident Type
+          <select
+            value={incidentTypeId}
+            onChange={(e) => setIncidentTypeId(e.target.value)}
+          >
+            <option value="1">Injury</option>
+            <option value="2">Near Miss</option>
+            <option value="3">Property Damage</option>
+          </select>
+        </label>
+
+        <label>
+          Severity
+          <select
+            value={severity}
+            onChange={(e) => setSeverity(e.target.value)}
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </label>
+
+        <label>
+          Occurred At
+          <input
+            type="datetime-local"
+            value={occurredAt}
+            onChange={(e) => setOccurredAt(e.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          Description
+          <textarea
+            rows="4"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </label>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Saving...' : 'Save Incident'}
+          </button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+```
+
+### 3.4 Incident details (simple)
+
+Create `src/IncidentDetail.jsx`:
+
+```jsx
+// src/IncidentDetail.jsx
+import { useEffect, useState } from 'react';
+import { fetchIncident } from './api';
+
+export default function IncidentDetail({ id, onBack }) {
+  const [incident, setIncident] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchIncident(id)
+      .then((data) => {
+        if (isMounted) {
+          setIncident(data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        if (isMounted) {
+          setError('Failed to load incident');
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  if (loading) return <p>Loading incident...</p>;
+  if (error) return <p>{error}</p>;
+  if (!incident) return <p>Incident not found.</p>;
+
+  return (
+    <div>
+      <button onClick={onBack} style={{ marginBottom: 16 }}>
+        ← Back to list
+      </button>
+
+      <h2>{incident.title}</h2>
+      <p><strong>Status:</strong> {incident.status}</p>
+      <p><strong>Severity:</strong> {incident.severity || '-'}</p>
+      <p><strong>Type:</strong> {incident.incident_type}</p>
+      <p><strong>Site:</strong> {incident.site_name || '-'}</p>
+      <p><strong>Reported By:</strong> {incident.reported_by_name || '-'}</p>
+      <p>
+        <strong>Occurred At:</strong>{' '}
+        {incident.occurred_at && new Date(incident.occurred_at).toLocaleString()}
+      </p>
+      <p><strong>Description:</strong></p>
+      <p>{incident.description || 'No description provided.'}</p>
+    </div>
+  );
+}
+```
+
+### 3.5 Tie it together in `App.jsx`
+
+Replace your default `App.jsx` with:
+
+```jsx
+// src/App.jsx
+import { useState } from 'react';
+import IncidentsList from './IncidentsList';
+import NewIncidentForm from './NewIncidentForm';
+import IncidentDetail from './IncidentDetail';
+
+function App() {
+  const [view, setView] = useState('list'); // 'list' | 'new' | 'detail'
+  const [selectedId, setSelectedId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const goToList = () => {
+    setView('list');
+    setSelectedId(null);
+    // bump key to re-run useEffect in IncidentsList
+    setRefreshKey((k) => k + 1);
+  };
+
+  const handleCreated = () => {
+    goToList();
+  };
+
+  const handleSelectIncident = (id) => {
+    setSelectedId(id);
+    setView('detail');
+  };
+
+  return (
+    <div style={{ padding: 24 }}>
+      <h1>EHS Incident Management (MVP)</h1>
+
+      {view === 'list' && (
+        <IncidentsList
+          key={refreshKey}
+          onSelectIncident={handleSelectIncident}
+          onNewIncident={() => setView('new')}
+        />
+      )}
+
+      {view === 'new' && (
+        <NewIncidentForm
+          onCreated={handleCreated}
+          onCancel={goToList}
+        />
+      )}
+
+      {view === 'detail' && selectedId && (
+        <IncidentDetail
+          id={selectedId}
+          onBack={goToList}
+        />
+      )}
+    </div>
+  );
+}
+
+export default App;
+```
+
+Run the frontend:
+
+```bash
+npm run dev
+```
+
+Visit `http://localhost:5173` (or whatever Vite shows), and you should:
+
+* See an **Incident list** (initially empty or seeded).
+* Click **“+ New Incident”**, submit form → POST to backend → added to DB.
+* See it appear in the table and click it to view details.
+
+---
+
+## 4. Next logical steps
+
+Once this slice works, you’re basically holding the skeleton of a WorkEikon-like app:
+
+1. Add **filters** on the incident list (by status, site, date range).
+2. Add **sites dropdown** in the form (pull from `/api/sites`).
+3. Add **basic auth** (login + “reported_by_id = currentUser.id”).
+4. Then replicate this pattern for:
+
+   * **Inspections**
+   * **Training assignments**
+   * **Document centre**
+
+If you’d like, next I can do the same vertical slice for **Inspections** (templates + inspection record + responses), using the same stack and structure.
+-----------------------------------------------------------------------------------------------------------------------------
+
+Next step now that Incidents MVP + docs exist is to **turn this toy into a real multi-user app and then add the next module.**
+
+Here’s the order I’d recommend and what each step means:
+
+---
+
+## 1. Make Incidents “real” (no hard-coding)
+
+Right now the frontend is faking some bits (like incident types and site selection).
+
+**Do next:**
+
+1. **Add simple APIs for lookups**
+
+   * `GET /api/incident-types`
+   * `GET /api/sites`
+2. **Update the React form** to:
+
+   * Load incident types from the API instead of hardcoded `<option>` values.
+   * Load sites into a dropdown, and send `site_id` on create.
+
+This is a small change but makes the feature feel properly wired.
+
+---
+
+## 2. Add Authentication + Current User
+
+Before adding more modules, you really want to know **“who is this?”** for:
+
+* `reported_by_id`
+* future **action assignments**
+* permissions (admin vs normal user)
+
+**Do next:**
+
+1. Backend:
+
+   * Add `password_hash` column to `users`.
+   * Create endpoints:
+
+     * `POST /api/auth/register` (for now, maybe only in dev)
+     * `POST /api/auth/login` → returns JWT
+     * `GET /api/auth/me` → returns current user from token
+2. Frontend:
+
+   * Add `/login` page.
+   * Store JWT in memory or httpOnly cookie.
+   * When creating an incident, send `reported_by_id = currentUser.id`.
+
+Once that’s in, incidents are correctly tied to **who reported them**.
+
+---
+
+## 3. Add Sites Management (Admin-ish)
+
+You’ll need a way to manage locations as you scale.
+
+**Do next:**
+
+1. Backend:
+
+   * `GET /api/sites`
+   * `POST /api/sites`
+   * `PUT /api/sites/:id`
+2. Frontend:
+
+   * Basic “Sites” page where an admin can:
+
+     * See list of sites
+     * Add a new site
+     * Edit a site
+
+This supports Incidents, Inspections, Training, etc.
+
+---
+
+## 4. Add the Second Big Module: Inspections
+
+Once the base is stable (Incidents + Auth + Sites), build your **next full vertical slice**: Inspections.
+
+**Scope for the Inspections MVP:**
+
+* `inspection_templates` (basic checklist)
+* `inspections` (an instance run on a site at a time)
+* `inspection_responses` (answers to each checklist item)
+
+**Do next:**
+
+1. DB tables for:
+
+   * `inspection_templates`
+   * `inspection_template_items`
+   * `inspections`
+   * `inspection_responses`
+2. Backend APIs:
+
+   * `GET /api/inspection-templates`
+   * `POST /api/inspection-templates`
+   * `POST /api/inspections` (start an inspection)
+   * `GET /api/inspections`
+   * `GET /api/inspections/:id`
+3. Frontend:
+
+   * “Inspection Templates” list + create/edit template.
+   * “New Inspection” page:
+
+     * Choose site + template
+     * Show checklist items with OK / Not OK / N/A.
+   * “Inspections” list + detail view.
+
+This gives you **two solid modules** that look and behave like a real EHS system.
+
+---
+
+## 5. Quality & Ops: Tests, Error Handling, Deployment
+
+Once the second module is in:
+
+* Add **validation** (e.g. with Zod/Joi) on API inputs.
+* Add **basic tests**:
+
+  * Backend: Jest/vitest to test API handlers or services.
+  * Frontend: at least one test for core components.
+* Prepare for **deployment**:
+
+  * Dockerfile for backend
+  * Env-based config
+  * Build script for frontend and serve static files from backend or separate hosting.
+
+---
+
+### TL;DR: Concrete “immediate next move”
+
+If you want a super clear next task for *right now*, I’d do this in order:
+
+1. Add `/api/sites` and `/api/incident-types` endpoints.
+2. Update the React incident form to fetch and use these values.
+3. Then add **auth + current user**.
+
+If you’d like, I can **write the actual `/api/sites` + `/api/incident-types` code and the React changes** in the next message so you can paste it straight in.
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Awesome, let’s wire this up properly 👷‍♀️⚙️
+
+I’ll give you **exact backend + frontend changes** so your Incident form pulls **real sites and incident types** from the database instead of hard-coded values.
+
+---
+
+## 1. Backend – new endpoints
+
+### 1.1. `GET /api/sites`
+
+Create a new file: **`backend/routes/sites.js`**
+
+```js
+// backend/routes/sites.js
+import express from 'express';
+import { pool } from '../db.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/sites
+ * Returns all sites.
+ */
+router.get('/', async (req, res) => {
+  try {
+    const sql = `
+      SELECT
+        id,
+        name,
+        code
+      FROM sites
+      ORDER BY name ASC;
+    `;
+    const { rows } = await pool.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching sites:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+### 1.2. `GET /api/incident-types`
+
+Create a new file: **`backend/routes/incidentTypes.js`**
+
+```js
+// backend/routes/incidentTypes.js
+import express from 'express';
+import { pool } from '../db.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/incident-types
+ * Returns all incident types.
+ */
+router.get('/', async (req, res) => {
+  try {
+    const sql = `
+      SELECT
+        id,
+        name
+      FROM incident_types
+      ORDER BY name ASC;
+    `;
+    const { rows } = await pool.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching incident types:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+### 1.3. Register routes in `server.js`
+
+Open **`backend/server.js`** and import + use the new routers.
+
+```js
+// backend/server.js
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+import incidentsRouter from './routes/incidents.js';
+import sitesRouter from './routes/sites.js';                // ⬅ ADD THIS
+import incidentTypesRouter from './routes/incidentTypes.js'; // ⬅ ADD THIS
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173', // adjust if needed
+  credentials: true,
+}));
+app.use(express.json());
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.use('/api/incidents', incidentsRouter);
+app.use('/api/sites', sitesRouter);                 // ⬅ ADD THIS
+app.use('/api/incident-types', incidentTypesRouter); // ⬅ ADD THIS
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Backend listening on port ${PORT}`);
+});
+```
+
+Now you should be able to hit:
+
+* `GET http://localhost:4000/api/sites`
+* `GET http://localhost:4000/api/incident-types`
+
+and get JSON back 🎉
+
+---
+
+## 2. Frontend – API helpers for lookups
+
+Open **`frontend/src/api.js`** and add two new functions.
+
+```js
+// src/api.js
+const API_BASE = 'http://localhost:4000/api';
+
+export async function fetchIncidents() {
+  const res = await fetch(`${API_BASE}/incidents`);
+  if (!res.ok) throw new Error('Failed to fetch incidents');
+  return res.json();
+}
+
+export async function fetchIncident(id) {
+  const res = await fetch(`${API_BASE}/incidents/${id}`);
+  if (!res.ok) throw new Error('Failed to fetch incident');
+  return res.json();
+}
+
+export async function createIncident(payload) {
+  const res = await fetch(`${API_BASE}/incidents`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create incident');
+  }
+  return res.json();
+}
+
+/** ⬇⬇ ADD THESE ⬇⬇ */
+
+export async function fetchSites() {
+  const res = await fetch(`${API_BASE}/sites`);
+  if (!res.ok) throw new Error('Failed to fetch sites');
+  return res.json();
+}
+
+export async function fetchIncidentTypes() {
+  const res = await fetch(`${API_BASE}/incident-types`);
+  if (!res.ok) throw new Error('Failed to fetch incident types');
+  return res.json();
+}
+```
+
+---
+
+## 3. Frontend – update the New Incident form
+
+We’ll make the form:
+
+* Load **incident types** from `/api/incident-types`
+* Load **sites** from `/api/sites`
+* Show them in `<select>` elements
+* Use the selected `site_id` instead of `null`
+
+Open **`frontend/src/NewIncidentForm.jsx`** and replace its contents with this version:
+
+```jsx
+// src/NewIncidentForm.jsx
+import { useEffect, useState } from 'react';
+import { createIncident, fetchSites, fetchIncidentTypes } from './api';
+
+export default function NewIncidentForm({ onCreated, onCancel }) {
+  const [title, setTitle] = useState('');
+  const [incidentTypeId, setIncidentTypeId] = useState('');
+  const [severity, setSeverity] = useState('medium');
+  const [occurredAt, setOccurredAt] = useState(
+    new Date().toISOString().slice(0, 16) // for datetime-local input
+  );
+  const [description, setDescription] = useState('');
+
+  const [sites, setSites] = useState([]);
+  const [incidentTypes, setIncidentTypes] = useState([]);
+  const [lookupsLoading, setLookupsLoading] = useState(true);
+  const [lookupsError, setLookupsError] = useState('');
+
+  const [selectedSiteId, setSelectedSiteId] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  // Load sites and incident types
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadLookups() {
+      try {
+        setLookupsLoading(true);
+        setLookupsError('');
+
+        const [sitesData, incidentTypesData] = await Promise.all([
+          fetchSites(),
+          fetchIncidentTypes(),
+        ]);
+
+        if (!isMounted) return;
+
+        setSites(sitesData);
+        setIncidentTypes(incidentTypesData);
+
+        // Default selections (if data exists)
+        if (incidentTypesData.length > 0) {
+          setIncidentTypeId(String(incidentTypesData[0].id));
+        }
+        if (sitesData.length > 0) {
+          setSelectedSiteId(sitesData[0].id);
+        }
+      } catch (err) {
+        console.error(err);
+        if (isMounted) {
+          setLookupsError('Failed to load sites or incident types');
+        }
+      } finally {
+        if (isMounted) {
+          setLookupsLoading(false);
+        }
+      }
+    }
+
+    loadLookups();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError('');
+
+    try {
+      await createIncident({
+        title,
+        description,
+        incident_type_id: Number(incidentTypeId),
+        site_id: selectedSiteId || null,
+        reported_by_id: null, // will be current user once auth exists
+        occurred_at: new Date(occurredAt).toISOString(),
+        severity,
+      });
+
+      onCreated();
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to create incident');
+      setSubmitting(false);
+    }
+  };
+
+  if (lookupsLoading) {
+    return (
+      <div>
+        <h2>New Incident</h2>
+        <p>Loading lookup data...</p>
+      </div>
+    );
+  }
+
+  if (lookupsError) {
+    return (
+      <div>
+        <h2>New Incident</h2>
+        <p style={{ color: 'red' }}>{lookupsError}</p>
+        <button onClick={onCancel}>Back</button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2>New Incident</h2>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <form onSubmit={handleSubmit} style={{ maxWidth: 500, display: 'grid', gap: 12 }}>
+        <label>
+          Title
+          <input
+            type="text"
+            value={title}
+            required
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </label>
+
+        <label>
+          Incident Type
+          <select
+            value={incidentTypeId}
+            onChange={(e) => setIncidentTypeId(e.target.value)}
+            required
+          >
+            {incidentTypes.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Site
+          <select
+            value={selectedSiteId}
+            onChange={(e) => setSelectedSiteId(e.target.value)}
+          >
+            {sites.map((site) => (
+              <option key={site.id} value={site.id}>
+                {site.name} {site.code ? `(${site.code})` : ''}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Severity
+          <select
+            value={severity}
+            onChange={(e) => setSeverity(e.target.value)}
+          >
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </label>
+
+        <label>
+          Occurred At
+          <input
+            type="datetime-local"
+            value={occurredAt}
+            onChange={(e) => setOccurredAt(e.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          Description
+          <textarea
+            rows="4"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </label>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Saving...' : 'Save Incident'}
+          </button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+```
+
+That’s it – your form is now **driven by database data**, not hard-coded options ✅
+
+---
+
+## 4. Quick sanity checklist
+
+1. **Backend running?**
+
+```bash
+cd backend
+npm run dev
+```
+
+2. Test in browser or Postman:
+
+* `http://localhost:4000/api/sites`
+* `http://localhost:4000/api/incident-types`
+
+You should see the seeded values.
+
+3. **Frontend running?**
+
+```bash
+cd frontend
+npm run dev
+```
+
+* Open the app
+* Click **“+ New Incident”**
+* You should see dropdowns filled with **real sites** and **real incident types**
+* Create an incident → it appears in the list with `site_name` + `incident_type` correctly populated.
+
+---
+
+If you want, the next upgrade we can do is:
+
+* **Add auth + current user** and wire `reported_by_id`
+* or
+* Start the **Inspections** module with similar vertical slice (DB + API + React screens).
+
+You can pick which one you want to tackle next, and I’ll build it out.
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Nice, let’s bolt on **auth + current user** so incidents are properly tied to whoever is logged in 🔐
+
+I’ll give you:
+
+1. DB tweak for passwords
+2. Backend auth (`/api/auth/login`, `/api/auth/register`, `/api/auth/me`)
+3. Auth middleware + securing incidents/sites/incident-types
+4. Frontend login page + wiring token + `reported_by_id` via `req.user`
+
+---
+
+## 1. Database: add password support
+
+If you don’t care about existing test users, easiest is to **recreate** `users` table like this:
+
+```sql
+DROP TABLE IF EXISTS users CASCADE;
+
+CREATE TABLE users (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email         TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  first_name    TEXT NOT NULL,
+  last_name     TEXT NOT NULL,
+  created_at    TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+Otherwise, you can:
+
+```sql
+ALTER TABLE users
+  ADD COLUMN password_hash TEXT;
+```
+
+…and manually populate it later by registering users via the API.
+
+---
+
+## 2. Backend: install auth dependencies
+
+In `backend`:
+
+```bash
+npm install bcryptjs jsonwebtoken
+```
+
+Update `.env` to include a secret:
+
+```env
+JWT_SECRET=super-secret-change-this
+```
+
+---
+
+## 3. Backend: auth middleware
+
+Create **`backend/middleware/auth.js`**:
+
+```js
+// backend/middleware/auth.js
+import jwt from 'jsonwebtoken';
+import { pool } from '../db.js';
+
+export async function requireAuth(req, res, next) {
+  try {
+    const authHeader = req.headers.authorization || '';
+    const token = authHeader.startsWith('Bearer ')
+      ? authHeader.slice(7)
+      : null;
+
+    if (!token) {
+      return res.status(401).json({ error: 'Missing token' });
+    }
+
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const { rows } = await pool.query(
+      'SELECT id, email, first_name, last_name FROM users WHERE id = $1',
+      [payload.userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    req.user = rows[0]; // { id, email, first_name, last_name }
+    next();
+  } catch (err) {
+    console.error('Auth error:', err);
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+}
+```
+
+---
+
+## 4. Backend: auth routes
+
+Create **`backend/routes/auth.js`**:
+
+```js
+// backend/routes/auth.js
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+function createToken(userId) {
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+    expiresIn: '8h',
+  });
+}
+
+/**
+ * POST /api/auth/register
+ * Dev convenience: create a user
+ * Body: { email, first_name, last_name, password }
+ */
+router.post('/register', async (req, res) => {
+  try {
+    const { email, first_name, last_name, password } = req.body;
+
+    if (!email || !first_name || !last_name || !password) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const existing = await pool.query(
+      'SELECT id FROM users WHERE email = $1',
+      [email]
+    );
+    if (existing.rows.length > 0) {
+      return res.status(409).json({ error: 'Email already in use' });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const { rows } = await pool.query(
+      `INSERT INTO users (email, first_name, last_name, password_hash)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, email, first_name, last_name`,
+      [email, first_name, last_name, passwordHash]
+    );
+
+    const user = rows[0];
+    const token = createToken(user.id);
+
+    res.status(201).json({ token, user });
+  } catch (err) {
+    console.error('Register error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * POST /api/auth/login
+ * Body: { email, password }
+ */
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+
+    const { rows } = await pool.query(
+      'SELECT id, email, first_name, last_name, password_hash FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const user = rows[0];
+    const match = await bcrypt.compare(password, user.password_hash);
+
+    if (!match) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = createToken(user.id);
+
+    delete user.password_hash;
+
+    res.json({ token, user });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * GET /api/auth/me
+ * Returns current user from token
+ */
+router.get('/me', requireAuth, (req, res) => {
+  res.json(req.user);
+});
+
+export default router;
+```
+
+---
+
+## 5. Backend: secure your routes
+
+### 5.1. Register auth router in `server.js`
+
+Update **`backend/server.js`**:
+
+```js
+// backend/server.js
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+import incidentsRouter from './routes/incidents.js';
+import sitesRouter from './routes/sites.js';
+import incidentTypesRouter from './routes/incidentTypes.js';
+import authRouter from './routes/auth.js';          // ⬅ ADD
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
+app.use(express.json());
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.use('/api/auth', authRouter);                  // ⬅ ADD
+app.use('/api/incidents', incidentsRouter);
+app.use('/api/sites', sitesRouter);
+app.use('/api/incident-types', incidentTypesRouter);
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Backend listening on port ${PORT}`);
+});
+```
+
+### 5.2. Use `requireAuth` in incidents, sites, incidentTypes
+
+**`backend/routes/incidents.js`** – update:
+
+```js
+// backend/routes/incidents.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/incidents
+ */
+router.get('/', requireAuth, async (req, res) => {
+  // ... same as before ...
+});
+
+/**
+ * GET /api/incidents/:id
+ */
+router.get('/:id', requireAuth, async (req, res) => {
+  // ... same as before ...
+});
+
+/**
+ * POST /api/incidents
+ * Now uses req.user.id as reported_by_id
+ */
+router.post('/', requireAuth, async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      incident_type_id,
+      site_id,
+      occurred_at,
+      severity,
+    } = req.body;
+
+    if (!title || !incident_type_id || !occurred_at) {
+      return res.status(400).json({ error: 'title, incident_type_id, occurred_at are required' });
+    }
+
+    const reportedById = req.user.id;
+
+    const sql = `
+      INSERT INTO incidents
+        (title, description, incident_type_id, site_id, reported_by_id, occurred_at, severity)
+      VALUES
+        ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *;
+    `;
+
+    const { rows } = await pool.query(sql, [
+      title,
+      description || null,
+      incident_type_id,
+      site_id || null,
+      reportedById,
+      occurred_at,
+      severity || null,
+    ]);
+
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Error creating incident:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+**`backend/routes/sites.js`** – add `requireAuth`:
+
+```js
+// backend/routes/sites.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const sql = `
+      SELECT id, name, code
+      FROM sites
+      ORDER BY name ASC;
+    `;
+    const { rows } = await pool.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching sites:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+**`backend/routes/incidentTypes.js`** – add `requireAuth`:
+
+```js
+// backend/routes/incidentTypes.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const sql = `
+      SELECT id, name
+      FROM incident_types
+      ORDER BY name ASC;
+    `;
+    const { rows } = await pool.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching incident types:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+---
+
+## 6. Frontend: auth API helpers
+
+Update **`frontend/src/api.js`**:
+
+```js
+// src/api.js
+const API_BASE = 'http://localhost:4000/api';
+
+function getAuthHeader() {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export async function login(email, password) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Login failed');
+  }
+
+  const data = await res.json();
+  localStorage.setItem('token', data.token);
+  return data.user;
+}
+
+export async function fetchCurrentUser() {
+  const res = await fetch(`${API_BASE}/auth/me`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to load current user');
+  }
+
+  return res.json();
+}
+
+/* Existing incident functions now include Authorization header */
+
+export async function fetchIncidents() {
+  const res = await fetch(`${API_BASE}/incidents`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch incidents');
+  return res.json();
+}
+
+export async function fetchIncident(id) {
+  const res = await fetch(`${API_BASE}/incidents/${id}`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch incident');
+  return res.json();
+}
+
+export async function createIncident(payload) {
+  const res = await fetch(`${API_BASE}/incidents`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create incident');
+  }
+  return res.json();
+}
+
+export async function fetchSites() {
+  const res = await fetch(`${API_BASE}/sites`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch sites');
+  return res.json();
+}
+
+export async function fetchIncidentTypes() {
+  const res = await fetch(`${API_BASE}/incident-types`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch incident types');
+  return res.json();
+}
+```
+
+---
+
+## 7. Frontend: Login page
+
+Create **`frontend/src/LoginPage.jsx`**:
+
+```jsx
+// src/LoginPage.jsx
+import { useState } from 'react';
+import { login } from './api';
+
+export default function LoginPage({ onLogin }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const user = await login(email, password);
+      onLogin(user);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Login failed');
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: 400, margin: '40px auto' }}>
+      <h1>EHS Portal Login</h1>
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
+        <label>
+          Email
+          <input
+            type="email"
+            value={email}
+            autoComplete="username"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          Password
+          <input
+            type="password"
+            value={password}
+            autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </label>
+
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+    </div>
+  );
+}
+```
+
+---
+
+## 8. Frontend: wire login into `App.jsx`
+
+Update **`frontend/src/App.jsx`**:
+
+```jsx
+// src/App.jsx
+import { useEffect, useState } from 'react';
+import IncidentsList from './IncidentsList';
+import NewIncidentForm from './NewIncidentForm';
+import IncidentDetail from './IncidentDetail';
+import LoginPage from './LoginPage';
+import { fetchCurrentUser } from './api';
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [view, setView] = useState('list'); // 'list' | 'new' | 'detail'
+  const [selectedId, setSelectedId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Try to auto-load current user if token exists
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAuthLoading(false);
+      return;
+    }
+
+    fetchCurrentUser()
+      .then((u) => {
+        setUser(u);
+        setAuthLoading(false);
+      })
+      .catch(() => {
+        localStorage.removeItem('token');
+        setAuthLoading(false);
+      });
+  }, []);
+
+  const goToList = () => {
+    setView('list');
+    setSelectedId(null);
+    setRefreshKey((k) => k + 1);
+  };
+
+  const handleCreated = () => {
+    goToList();
+  };
+
+  const handleSelectIncident = (id) => {
+    setSelectedId(id);
+    setView('detail');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    setView('list');
+    setSelectedId(null);
+  };
+
+  if (authLoading) {
+    return <div style={{ padding: 24 }}>Checking session...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div style={{ padding: 24 }}>
+        <LoginPage onLogin={setUser} />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: 24 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
+        <div>
+          <h1>EHS Incident Management (MVP)</h1>
+          <p>Logged in as {user.first_name} {user.last_name}</p>
+        </div>
+        <button onClick={handleLogout}>Logout</button>
+      </header>
+
+      {view === 'list' && (
+        <IncidentsList
+          key={refreshKey}
+          onSelectIncident={handleSelectIncident}
+          onNewIncident={() => setView('new')}
+        />
+      )}
+
+      {view === 'new' && (
+        <NewIncidentForm
+          onCreated={handleCreated}
+          onCancel={goToList}
+        />
+      )}
+
+      {view === 'detail' && selectedId && (
+        <IncidentDetail
+          id={selectedId}
+          onBack={goToList}
+        />
+      )}
+    </div>
+  );
+}
+
+export default App;
+```
+
+> You don’t need to change `NewIncidentForm` now, because the backend pulls `reported_by_id` from `req.user`. The form just sends the other fields.
+
+---
+
+## 9. How to get your first user
+
+With backend running, you can create a user via `POST /api/auth/register` (e.g. Postman or curl):
+
+```bash
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john.doe@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "password": "Passw0rd!"
+  }'
+```
+
+Then in the UI, log in with that email + password.
+
+---
+
+At this point you have:
+
+* **Login / logout**
+* **Current user** loaded from token
+* All **incident / sites / incident-type APIs** protected
+* **Incidents automatically stamped** with the reporting user 🎯
+
+If you want, the next big module I can build out in the same style is **Inspections** (DB + API + React screens) so your app starts to look a lot like a proper EHS suite.
+-----------------------------------------------------------------------------------------------------
+Nice, time to give your app its **second big brain** 🧠 – **Inspections**.
+
+I’ll add:
+
+1. Postgres tables for inspections
+2. Backend routes `/api/inspection-templates` and `/api/inspections`
+3. Frontend API helpers + React components (in a self-contained `InspectionsModule` you can just drop into `App.jsx`)
+
+---
+
+## 1. Database – Inspections schema
+
+Run this SQL in your Postgres DB (same one you’re using now):
+
+```sql
+-- Templates for checklists
+CREATE TABLE IF NOT EXISTS inspection_templates (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  description TEXT,
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS inspection_template_items (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  template_id  UUID NOT NULL REFERENCES inspection_templates(id) ON DELETE CASCADE,
+  label        TEXT NOT NULL,   -- e.g. "Fire extinguishers accessible"
+  category     TEXT             -- e.g. "Fire Safety"
+);
+
+-- Actual inspection records
+CREATE TABLE IF NOT EXISTS inspections (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  template_id    UUID NOT NULL REFERENCES inspection_templates(id),
+  site_id        UUID NOT NULL REFERENCES sites(id),
+  performed_by   UUID NOT NULL REFERENCES users(id),
+  performed_at   TIMESTAMP NOT NULL,
+  status         TEXT NOT NULL CHECK (status IN ('draft', 'completed')) DEFAULT 'completed',
+  overall_result TEXT CHECK (overall_result IN ('pass', 'fail')),
+  created_at     TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS inspection_responses (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  inspection_id    UUID NOT NULL REFERENCES inspections(id) ON DELETE CASCADE,
+  template_item_id UUID NOT NULL REFERENCES inspection_template_items(id),
+  result           TEXT NOT NULL CHECK (result IN ('ok', 'not_ok', 'n/a')),
+  comment          TEXT
+);
+```
+
+Seed a **sample template** so you can use it right away:
+
+```sql
+-- Simple "General Safety Walk" checklist
+INSERT INTO inspection_templates (id, name, description)
+VALUES (
+  gen_random_uuid(),
+  'General Safety Walk',
+  'Basic workplace safety inspection'
+)
+RETURNING id;
+```
+
+Copy the returned `id` (call it `TEMPLATE_ID`) and then:
+
+```sql
+INSERT INTO inspection_template_items (template_id, label, category) VALUES
+(TEMPLATE_ID, 'Walkways are clear of obstructions', 'Housekeeping'),
+(TEMPLATE_ID, 'Fire exits are clearly marked and accessible', 'Fire Safety'),
+(TEMPLATE_ID, 'Emergency lighting is operational', 'Emergency'),
+(TEMPLATE_ID, 'PPE is available and in good condition', 'PPE');
+```
+
+(Replace `TEMPLATE_ID` with the actual UUID.)
+
+---
+
+## 2. Backend – inspection routes
+
+### 2.1 `routes/inspectionTemplates.js`
+
+Create **`backend/routes/inspectionTemplates.js`**:
+
+```js
+// backend/routes/inspectionTemplates.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/inspection-templates
+ * Return all templates (basic info).
+ */
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const sql = `
+      SELECT id, name, description, created_at
+      FROM inspection_templates
+      ORDER BY name ASC;
+    `;
+    const { rows } = await pool.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching inspection templates:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * GET /api/inspection-templates/:id
+ * Return template with its items.
+ */
+router.get('/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const templateSql = `
+      SELECT id, name, description, created_at
+      FROM inspection_templates
+      WHERE id = $1;
+    `;
+    const { rows: templateRows } = await pool.query(templateSql, [id]);
+
+    if (templateRows.length === 0) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+
+    const itemsSql = `
+      SELECT id, label, category
+      FROM inspection_template_items
+      WHERE template_id = $1
+      ORDER BY category NULLS FIRST, label ASC;
+    `;
+    const { rows: itemsRows } = await pool.query(itemsSql, [id]);
+
+    res.json({
+      ...templateRows[0],
+      items: itemsRows,
+    });
+  } catch (err) {
+    console.error('Error fetching inspection template:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+### 2.2 `routes/inspections.js`
+
+Create **`backend/routes/inspections.js`**:
+
+```js
+// backend/routes/inspections.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/inspections
+ * Query params: siteId (optional)
+ */
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const { siteId } = req.query;
+    const params = [];
+    let whereSql = '';
+
+    if (siteId) {
+      params.push(siteId);
+      whereSql = `WHERE i.site_id = $1`;
+    }
+
+    const sql = `
+      SELECT
+        i.id,
+        i.performed_at,
+        i.status,
+        i.overall_result,
+        t.name AS template_name,
+        s.name AS site_name,
+        u.first_name || ' ' || u.last_name AS performed_by_name
+      FROM inspections i
+      JOIN inspection_templates t ON i.template_id = t.id
+      JOIN sites s ON i.site_id = s.id
+      JOIN users u ON i.performed_by = u.id
+      ${whereSql}
+      ORDER BY i.performed_at DESC
+      LIMIT 100;
+    `;
+
+    const { rows } = await pool.query(sql, params);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching inspections:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * GET /api/inspections/:id
+ * Return inspection + responses
+ */
+router.get('/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const inspectionSql = `
+      SELECT
+        i.*,
+        t.name AS template_name,
+        s.name AS site_name,
+        u.first_name || ' ' || u.last_name AS performed_by_name
+      FROM inspections i
+      JOIN inspection_templates t ON i.template_id = t.id
+      JOIN sites s ON i.site_id = s.id
+      JOIN users u ON i.performed_by = u.id
+      WHERE i.id = $1;
+    `;
+    const { rows: inspectionRows } = await pool.query(inspectionSql, [id]);
+
+    if (inspectionRows.length === 0) {
+      return res.status(404).json({ error: 'Inspection not found' });
+    }
+
+    const responsesSql = `
+      SELECT
+        r.id,
+        r.result,
+        r.comment,
+        it.label,
+        it.category
+      FROM inspection_responses r
+      JOIN inspection_template_items it ON r.template_item_id = it.id
+      WHERE r.inspection_id = $1
+      ORDER BY it.category NULLS FIRST, it.label ASC;
+    `;
+    const { rows: responseRows } = await pool.query(responsesSql, [id]);
+
+    res.json({
+      ...inspectionRows[0],
+      responses: responseRows,
+    });
+  } catch (err) {
+    console.error('Error fetching inspection:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * POST /api/inspections
+ * Body: {
+ *   site_id,
+ *   template_id,
+ *   performed_at,
+ *   responses: [
+ *     { template_item_id, result, comment }
+ *   ]
+ * }
+ */
+router.post('/', requireAuth, async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const { site_id, template_id, performed_at, responses } = req.body;
+
+    if (!site_id || !template_id || !performed_at || !Array.isArray(responses) || responses.length === 0) {
+      return res.status(400).json({ error: 'site_id, template_id, performed_at and responses are required' });
+    }
+
+    await client.query('BEGIN');
+
+    const insertInspectionSql = `
+      INSERT INTO inspections
+        (template_id, site_id, performed_by, performed_at, status, overall_result)
+      VALUES
+        ($1, $2, $3, $4, 'completed', null)
+      RETURNING *;
+    `;
+    const { rows: inspectionRows } = await client.query(insertInspectionSql, [
+      template_id,
+      site_id,
+      req.user.id,
+      performed_at,
+    ]);
+    const inspection = inspectionRows[0];
+
+    const insertResponseSql = `
+      INSERT INTO inspection_responses
+        (inspection_id, template_item_id, result, comment)
+      VALUES
+        ($1, $2, $3, $4);
+    `;
+
+    for (const r of responses) {
+      await client.query(insertResponseSql, [
+        inspection.id,
+        r.template_item_id,
+        r.result,
+        r.comment || null,
+      ]);
+    }
+
+    // Optionally compute overall_result = 'pass' if no 'not_ok'
+    const hasNotOk = responses.some((r) => r.result === 'not_ok');
+    const overallResult = hasNotOk ? 'fail' : 'pass';
+
+    await client.query(
+      'UPDATE inspections SET overall_result = $1 WHERE id = $2',
+      [overallResult, inspection.id]
+    );
+
+    await client.query('COMMIT');
+
+    res.status(201).json({
+      ...inspection,
+      overall_result: overallResult,
+    });
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Error creating inspection:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    client.release();
+  }
+});
+
+export default router;
+```
+
+### 2.3 Register new routes in `server.js`
+
+Open **`backend/server.js`** and add:
+
+```js
+import inspectionTemplatesRouter from './routes/inspectionTemplates.js';
+import inspectionsRouter from './routes/inspections.js';
+```
+
+Then register:
+
+```js
+app.use('/api/inspection-templates', inspectionTemplatesRouter);
+app.use('/api/inspections', inspectionsRouter);
+```
+
+Backend side is done ✅
+
+---
+
+## 3. Frontend – API helpers for inspections
+
+Open **`frontend/src/api.js`** and add:
+
+```js
+// ...existing imports / helper...
+
+export async function fetchInspectionTemplates() {
+  const res = await fetch(`${API_BASE}/inspection-templates`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch inspection templates');
+  return res.json();
+}
+
+export async function fetchInspectionTemplate(id) {
+  const res = await fetch(`${API_BASE}/inspection-templates/${id}`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch inspection template');
+  return res.json();
+}
+
+export async function fetchInspections() {
+  const res = await fetch(`${API_BASE}/inspections`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch inspections');
+  return res.json();
+}
+
+export async function fetchInspection(id) {
+  const res = await fetch(`${API_BASE}/inspections/${id}`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch inspection');
+  return res.json();
+}
+
+export async function createInspection(payload) {
+  const res = await fetch(`${API_BASE}/inspections`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create inspection');
+  }
+  return res.json();
+}
+```
+
+---
+
+## 4. Frontend – Inspections React module
+
+We’ll add a self-contained **`InspectionsModule`** and then render it below your incidents UI.
+
+### 4.1 `InspectionsModule.jsx`
+
+Create **`frontend/src/InspectionsModule.jsx`**:
+
+```jsx
+// src/InspectionsModule.jsx
+import { useState } from 'react';
+import InspectionsList from './InspectionsList';
+import NewInspectionForm from './NewInspectionForm';
+import InspectionDetail from './InspectionDetail';
+
+export default function InspectionsModule() {
+  const [view, setView] = useState('list'); // 'list' | 'new' | 'detail'
+  const [selectedId, setSelectedId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const goToList = () => {
+    setView('list');
+    setSelectedId(null);
+    setRefreshKey((k) => k + 1);
+  };
+
+  const handleSelect = (id) => {
+    setSelectedId(id);
+    setView('detail');
+  };
+
+  const handleCreated = () => {
+    goToList();
+  };
+
+  return (
+    <section style={{ marginTop: 40 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+        <h2>Inspections</h2>
+        {view === 'list' && (
+          <button onClick={() => setView('new')}>+ New Inspection</button>
+        )}
+      </div>
+
+      {view === 'list' && (
+        <InspectionsList
+          key={refreshKey}
+          onSelect={handleSelect}
+        />
+      )}
+
+      {view === 'new' && (
+        <NewInspectionForm
+          onCreated={handleCreated}
+          onCancel={goToList}
+        />
+      )}
+
+      {view === 'detail' && selectedId && (
+        <InspectionDetail
+          id={selectedId}
+          onBack={goToList}
+        />
+      )}
+    </section>
+  );
+}
+```
+
+### 4.2 `InspectionsList.jsx`
+
+Create **`frontend/src/InspectionsList.jsx`**:
+
+```jsx
+// src/InspectionsList.jsx
+import { useEffect, useState } from 'react';
+import { fetchInspections } from './api';
+
+export default function InspectionsList({ onSelect }) {
+  const [inspections, setInspections] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchInspections()
+      .then((data) => {
+        if (!isMounted) return;
+        setInspections(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (!isMounted) return;
+        setError('Failed to load inspections');
+        setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) return <p>Loading inspections...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+
+  if (inspections.length === 0) {
+    return <p>No inspections recorded yet.</p>;
+  }
+
+  return (
+    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <thead>
+        <tr>
+          <th align="left">Template</th>
+          <th align="left">Site</th>
+          <th align="left">Performed By</th>
+          <th align="left">Date</th>
+          <th align="left">Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {inspections.map((insp) => (
+          <tr
+            key={insp.id}
+            style={{ cursor: 'pointer' }}
+            onClick={() => onSelect(insp.id)}
+          >
+            <td>{insp.template_name}</td>
+            <td>{insp.site_name}</td>
+            <td>{insp.performed_by_name}</td>
+            <td>{new Date(insp.performed_at).toLocaleString()}</td>
+            <td>{insp.overall_result || '-'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+### 4.3 `NewInspectionForm.jsx`
+
+Create **`frontend/src/NewInspectionForm.jsx`**:
+
+```jsx
+// src/NewInspectionForm.jsx
+import { useEffect, useState } from 'react';
+import {
+  fetchSites,
+  fetchInspectionTemplates,
+  fetchInspectionTemplate,
+  createInspection,
+} from './api';
+
+export default function NewInspectionForm({ onCreated, onCancel }) {
+  const [sites, setSites] = useState([]);
+  const [templates, setTemplates] = useState([]);
+  const [selectedSiteId, setSelectedSiteId] = useState('');
+  const [selectedTemplateId, setSelectedTemplateId] = useState('');
+  const [templateItems, setTemplateItems] = useState([]);
+
+  const [lookupsLoading, setLookupsLoading] = useState(true);
+  const [lookupsError, setLookupsError] = useState('');
+
+  const [performedAt, setPerformedAt] = useState(
+    new Date().toISOString().slice(0, 16)
+  );
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  // Load sites + templates
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadLookups() {
+      try {
+        setLookupsLoading(true);
+        const [sitesData, templatesData] = await Promise.all([
+          fetchSites(),
+          fetchInspectionTemplates(),
+        ]);
+
+        if (!isMounted) return;
+
+        setSites(sitesData);
+        setTemplates(templatesData);
+
+        if (sitesData.length > 0) {
+          setSelectedSiteId(sitesData[0].id);
+        }
+        if (templatesData.length > 0) {
+          const firstTemplateId = templatesData[0].id;
+          setSelectedTemplateId(firstTemplateId);
+        }
+      } catch (err) {
+        console.error(err);
+        if (!isMounted) return;
+        setLookupsError('Failed to load sites or templates');
+      } finally {
+        if (!isMounted) return;
+        setLookupsLoading(false);
+      }
+    }
+
+    loadLookups();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Load template items whenever selectedTemplateId changes
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadTemplateDetails() {
+      if (!selectedTemplateId) {
+        setTemplateItems([]);
+        return;
+      }
+
+      try {
+        const tmpl = await fetchInspectionTemplate(selectedTemplateId);
+        if (!isMounted) return;
+        setTemplateItems(
+          tmpl.items.map((item) => ({
+            ...item,
+            result: 'ok', // default
+            comment: '',
+          }))
+        );
+      } catch (err) {
+        console.error(err);
+        if (!isMounted) return;
+        setTemplateItems([]);
+      }
+    }
+
+    loadTemplateDetails();
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedTemplateId]);
+
+  const handleItemChange = (index, field, value) => {
+    setTemplateItems((items) => {
+      const copy = [...items];
+      copy[index] = { ...copy[index], [field]: value };
+      return copy;
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedSiteId || !selectedTemplateId || templateItems.length === 0) {
+      setError('Site, template and checklist items are required');
+      return;
+    }
+
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const payload = {
+        site_id: selectedSiteId,
+        template_id: selectedTemplateId,
+        performed_at: new Date(performedAt).toISOString(),
+        responses: templateItems.map((item) => ({
+          template_item_id: item.id,
+          result: item.result,
+          comment: item.comment,
+        })),
+      };
+
+      await createInspection(payload);
+      onCreated();
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to create inspection');
+      setSubmitting(false);
+    }
+  };
+
+  if (lookupsLoading) {
+    return (
+      <div>
+        <h3>New Inspection</h3>
+        <p>Loading sites and templates...</p>
+      </div>
+    );
+  }
+
+  if (lookupsError) {
+    return (
+      <div>
+        <h3>New Inspection</h3>
+        <p style={{ color: 'red' }}>{lookupsError}</p>
+        <button onClick={onCancel}>Back</button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h3>New Inspection</h3>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 16 }}>
+        <div style={{ display: 'flex', gap: 16 }}>
+          <label style={{ flex: 1 }}>
+            Site
+            <select
+              value={selectedSiteId}
+              onChange={(e) => setSelectedSiteId(e.target.value)}
+            >
+              {sites.map((site) => (
+                <option key={site.id} value={site.id}>
+                  {site.name} {site.code ? `(${site.code})` : ''}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label style={{ flex: 1 }}>
+            Template
+            <select
+              value={selectedTemplateId}
+              onChange={(e) => setSelectedTemplateId(e.target.value)}
+            >
+              {templates.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label style={{ flex: 1 }}>
+            Performed At
+            <input
+              type="datetime-local"
+              value={performedAt}
+              onChange={(e) => setPerformedAt(e.target.value)}
+              required
+            />
+          </label>
+        </div>
+
+        <div>
+          <h4>Checklist</h4>
+          {templateItems.length === 0 ? (
+            <p>No items in this template.</p>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th align="left">Item</th>
+                  <th align="left">Result</th>
+                  <th align="left">Comment</th>
+                </tr>
+              </thead>
+              <tbody>
+                {templateItems.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>
+                      <strong>{item.label}</strong>
+                      {item.category && (
+                        <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+                          {item.category}
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <select
+                        value={item.result}
+                        onChange={(e) =>
+                          handleItemChange(index, 'result', e.target.value)
+                        }
+                      >
+                        <option value="ok">OK</option>
+                        <option value="not_ok">Not OK</option>
+                        <option value="n/a">N/A</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        value={item.comment}
+                        onChange={(e) =>
+                          handleItemChange(index, 'comment', e.target.value)
+                        }
+                        placeholder="Optional comment"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Saving...' : 'Save Inspection'}
+          </button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+```
+
+### 4.4 `InspectionDetail.jsx`
+
+Create **`frontend/src/InspectionDetail.jsx`**:
+
+```jsx
+// src/InspectionDetail.jsx
+import { useEffect, useState } from 'react';
+import { fetchInspection } from './api';
+
+export default function InspectionDetail({ id, onBack }) {
+  const [inspection, setInspection] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchInspection(id)
+      .then((data) => {
+        if (!isMounted) return;
+        setInspection(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (!isMounted) return;
+        setError('Failed to load inspection');
+        setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
+  if (loading) return <p>Loading inspection...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (!inspection) return <p>Inspection not found.</p>;
+
+  return (
+    <div>
+      <button onClick={onBack} style={{ marginBottom: 16 }}>
+        ← Back to inspections
+      </button>
+
+      <h3>{inspection.template_name}</h3>
+      <p>
+        <strong>Site:</strong> {inspection.site_name}
+      </p>
+      <p>
+        <strong>Performed By:</strong> {inspection.performed_by_name}
+      </p>
+      <p>
+        <strong>Date:</strong>{' '}
+        {inspection.performed_at &&
+          new Date(inspection.performed_at).toLocaleString()}
+      </p>
+      <p>
+        <strong>Status:</strong> {inspection.status}
+      </p>
+      <p>
+        <strong>Overall Result:</strong> {inspection.overall_result || '-'}
+      </p>
+
+      <h4 style={{ marginTop: 24 }}>Checklist Responses</h4>
+      {(!inspection.responses || inspection.responses.length === 0) ? (
+        <p>No responses recorded.</p>
+      ) : (
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th align="left">Item</th>
+              <th align="left">Result</th>
+              <th align="left">Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inspection.responses.map((resp) => (
+              <tr key={resp.id}>
+                <td>
+                  <strong>{resp.label}</strong>
+                  {resp.category && (
+                    <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+                      {resp.category}
+                    </div>
+                  )}
+                </td>
+                <td>{resp.result}</td>
+                <td>{resp.comment || '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## 5. Hook Inspections into your `App.jsx`
+
+Finally, render the inspections module under your existing incidents UI.
+
+Open **`frontend/src/App.jsx`** and:
+
+* Import `InspectionsModule`
+* Render it below the incidents section
+
+Roughly:
+
+```jsx
+// src/App.jsx
+import { useEffect, useState } from 'react';
+import IncidentsList from './IncidentsList';
+import NewIncidentForm from './NewIncidentForm';
+import IncidentDetail from './IncidentDetail';
+import LoginPage from './LoginPage';
+import { fetchCurrentUser } from './api';
+import InspectionsModule from './InspectionsModule'; // ⬅ ADD
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [view, setView] = useState('list');
+  const [selectedId, setSelectedId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setAuthLoading(false);
+      return;
+    }
+
+    fetchCurrentUser()
+      .then((u) => {
+        setUser(u);
+        setAuthLoading(false);
+      })
+      .catch(() => {
+        localStorage.removeItem('token');
+        setAuthLoading(false);
+      });
+  }, []);
+
+  const goToList = () => {
+    setView('list');
+    setSelectedId(null);
+    setRefreshKey((k) => k + 1);
+  };
+
+  const handleCreated = () => {
+    goToList();
+  };
+
+  const handleSelectIncident = (id) => {
+    setSelectedId(id);
+    setView('detail');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+    setView('list');
+    setSelectedId(null);
+  };
+
+  if (authLoading) {
+    return <div style={{ padding: 24 }}>Checking session...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div style={{ padding: 24 }}>
+        <LoginPage onLogin={setUser} />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: 24 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
+        <div>
+          <h1>EHS Portal (MVP)</h1>
+          <p>Logged in as {user.first_name} {user.last_name}</p>
+        </div>
+        <button onClick={handleLogout}>Logout</button>
+      </header>
+
+      {/* Incidents section (unchanged logic) */}
+      <section>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
+          <h2>Incidents</h2>
+          {view === 'list' && (
+            <button onClick={() => setView('new')}>+ New Incident</button>
+          )}
+        </div>
+
+        {view === 'list' && (
+          <IncidentsList
+            key={refreshKey}
+            onSelectIncident={handleSelectIncident}
+            onNewIncident={() => setView('new')}
+          />
+        )}
+
+        {view === 'new' && (
+          <NewIncidentForm
+            onCreated={handleCreated}
+            onCancel={goToList}
+          />
+        )}
+
+        {view === 'detail' && selectedId && (
+          <IncidentDetail
+            id={selectedId}
+            onBack={goToList}
+          />
+        )}
+      </section>
+
+      {/* Inspections module below */}
+      <InspectionsModule />
+    </div>
+  );
+}
+
+export default App;
+```
+
+---
+
+At this point you have:
+
+* **Incidents**: full vertical slice (auth, DB, API, UI)
+* **Inspections**: full vertical slice (template-driven checklists!)
+
+Next natural steps:
+
+* Add **basic admin UI** to create/edit inspection templates (instead of SQL seeding).
+* Add **filters** and simple metrics (e.g. “Last 30 days: X inspections, Y failed”).
+
+If you tell me which admin bit you want first (template editor, site manager, user/role management), I can wire *that* up next.
+
+----------------------------------------------------------------------------------------------------------------------------
+
+Let’s make **Sites Management** the next step 🚧
+
+Incidents *and* Inspections both depend on sites, and right now you can only add them via SQL. So we’ll:
+
+* extend the **backend** to create/update sites
+* add **frontend** pages to list + add + edit sites
+* plug it into your existing app as a small “Admin: Sites” section
+
+---
+
+## 1. Backend – extend `/api/sites` for create + update
+
+You already have `routes/sites.js` with `GET /api/sites`.
+We’ll add **POST** (create) and **PUT** (update).
+
+### 1.1 Update `backend/routes/sites.js`
+
+Replace your existing `routes/sites.js` with this:
+
+```js
+// backend/routes/sites.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/sites
+ * Returns all sites.
+ */
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const sql = `
+      SELECT id, name, code
+      FROM sites
+      ORDER BY name ASC;
+    `;
+    const { rows } = await pool.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching sites:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * POST /api/sites
+ * Body: { name, code }
+ */
+router.post('/', requireAuth, async (req, res) => {
+  try {
+    const { name, code } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: 'name is required' });
+    }
+
+    const sql = `
+      INSERT INTO sites (name, code)
+      VALUES ($1, $2)
+      RETURNING id, name, code, created_at;
+    `;
+    const { rows } = await pool.query(sql, [name, code || null]);
+
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Error creating site:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * PUT /api/sites/:id
+ * Body: { name, code }
+ */
+router.put('/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, code } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: 'name is required' });
+    }
+
+    const sql = `
+      UPDATE sites
+      SET name = $1,
+          code = $2
+      WHERE id = $3
+      RETURNING id, name, code, created_at;
+    `;
+    const { rows } = await pool.query(sql, [name, code || null, id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Site not found' });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Error updating site:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+No changes needed in `server.js` (you already `app.use('/api/sites', sitesRouter)`).
+
+---
+
+## 2. Frontend – API helpers for creating/updating sites
+
+Open **`frontend/src/api.js`** where you already have `fetchSites`, and add two more functions.
+
+```js
+// src/api.js
+const API_BASE = 'http://localhost:4000/api';
+
+function getAuthHeader() {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+// ...login, fetchCurrentUser, incidents, etc...
+
+export async function fetchSites() {
+  const res = await fetch(`${API_BASE}/sites`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) throw new Error('Failed to fetch sites');
+  return res.json();
+}
+
+export async function createSite(payload) {
+  const res = await fetch(`${API_BASE}/sites`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create site');
+  }
+  return res.json();
+}
+
+export async function updateSite(id, payload) {
+  const res = await fetch(`${API_BASE}/sites/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to update site');
+  }
+  return res.json();
+}
+```
+
+---
+
+## 3. Frontend – Sites admin page
+
+We’ll build a simple admin page:
+
+* shows all sites
+* form to **add** a new one
+* when you click a row, it loads into the form for **editing**
+
+### 3.1 Create `SitesPage.jsx`
+
+Create **`frontend/src/SitesPage.jsx`**:
+
+```jsx
+// src/SitesPage.jsx
+import { useEffect, useState } from 'react';
+import { fetchSites, createSite, updateSite } from './api';
+
+export default function SitesPage() {
+  const [sites, setSites] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const [editingId, setEditingId] = useState(null);
+  const [name, setName] = useState('');
+  const [code, setCode] = useState('');
+
+  const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState('');
+
+  const loadSites = () => {
+    setLoading(true);
+    setError('');
+    fetchSites()
+      .then((data) => {
+        setSites(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError('Failed to load sites');
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadSites();
+  }, []);
+
+  const resetForm = () => {
+    setEditingId(null);
+    setName('');
+    setCode('');
+    setFormError('');
+  };
+
+  const handleEditClick = (site) => {
+    setEditingId(site.id);
+    setName(site.name);
+    setCode(site.code || '');
+  };
+
+  const handleCancelEdit = () => {
+    resetForm();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setFormError('');
+
+    try {
+      if (!name.trim()) {
+        setFormError('Name is required');
+        setSaving(false);
+        return;
+      }
+
+      if (editingId) {
+        await updateSite(editingId, { name: name.trim(), code: code.trim() || null });
+      } else {
+        await createSite({ name: name.trim(), code: code.trim() || null });
+      }
+
+      resetForm();
+      loadSites();
+    } catch (err) {
+      console.error(err);
+      setFormError(err.message || 'Failed to save site');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <section style={{ marginTop: 40 }}>
+      <h2>Admin: Sites</h2>
+
+      {loading && <p>Loading sites...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {!loading && !error && (
+        <>
+          {sites.length === 0 ? (
+            <p>No sites defined yet.</p>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
+              <thead>
+                <tr>
+                  <th align="left">Name</th>
+                  <th align="left">Code</th>
+                  <th align="left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sites.map((site) => (
+                  <tr key={site.id}>
+                    <td>{site.name}</td>
+                    <td>{site.code || '-'}</td>
+                    <td>
+                      <button type="button" onClick={() => handleEditClick(site)}>
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+
+          <div style={{ border: '1px solid #ddd', padding: 16, borderRadius: 4, maxWidth: 400 }}>
+            <h3>{editingId ? 'Edit Site' : 'Add New Site'}</h3>
+
+            {formError && <p style={{ color: 'red' }}>{formError}</p>}
+
+            <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
+              <label>
+                Name
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </label>
+
+              <label>
+                Code (optional)
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="e.g. HO, PLANT1"
+                />
+              </label>
+
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button type="submit" disabled={saving}>
+                  {saving ? 'Saving...' : editingId ? 'Update Site' : 'Create Site'}
+                </button>
+                {editingId && (
+                  <button type="button" onClick={handleCancelEdit}>
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+```
+
+---
+
+## 4. Plug Sites admin into your main app
+
+Open **`frontend/src/App.jsx`** and import `SitesPage`, then render it under your existing modules.
+
+At the top:
+
+```jsx
+import SitesPage from './SitesPage';
+```
+
+Then near the bottom of `App`’s return (after `InspectionsModule`), add:
+
+```jsx
+      {/* Inspections module below incidents */}
+      <InspectionsModule />
+
+      {/* Admin section for managing sites */}
+      <SitesPage />
+```
+
+So the tail of `App` looks roughly like:
+
+```jsx
+  return (
+    <div style={{ padding: 24 }}>
+      <header>...your existing header...</header>
+
+      {/* Incidents section */}
+      <section>...existing incidents UI...</section>
+
+      {/* Inspections section */}
+      <InspectionsModule />
+
+      {/* Sites admin section */}
+      <SitesPage />
+    </div>
+  );
+}
+```
+
+---
+
+## 5. What you can do now
+
+From the UI, you can:
+
+* Log in as a user
+* Scroll to **Admin: Sites**
+* Add/edit sites from the browser
+* Those sites are immediately available in:
+
+  * New Incident form
+  * New Inspection form
+
+This makes the app much more maintainable, especially as you add more locations.
+
+---
+
+If you’re up for the next “appropriate” step after this, I’d go for:
+
+* **Inspection Template Editor** (UI to create/edit templates + checklist items),
+  or
+* A tiny **dashboard**: show counts like “Open incidents”, “Inspections (last 30 days)”, etc.
+
+If you want, I can just pick one of those and build it out next, the same way.
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Perfect, next “most appropriate” step is to **get you a UI + API for managing inspection templates and checklist items** (so you never touch SQL for them again).
+
+We’ll:
+
+* Extend the **backend**: create / edit templates and items
+* Add **frontend admin page**: list templates, edit template, add/edit/delete items
+
+---
+
+## 1. Backend – extend `inspectionTemplates` routes
+
+Right now you have `GET /api/inspection-templates` and `GET /api/inspection-templates/:id`.
+
+We’ll add:
+
+* `POST /api/inspection-templates` – create template
+* `PUT /api/inspection-templates/:id` – update template
+* `POST /api/inspection-templates/:id/items` – add item
+* `PUT /api/inspection-templates/:id/items/:itemId` – update item
+* `DELETE /api/inspection-templates/:id/items/:itemId` – delete item
+
+### 1.1 Replace `backend/routes/inspectionTemplates.js` with:
+
+```js
+// backend/routes/inspectionTemplates.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/inspection-templates
+ * Return all templates (basic info).
+ */
+router.get('/', requireAuth, async (req, res) => {
+  try {
+    const sql = `
+      SELECT id, name, description, created_at
+      FROM inspection_templates
+      ORDER BY name ASC;
+    `;
+    const { rows } = await pool.query(sql);
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching inspection templates:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * GET /api/inspection-templates/:id
+ * Return template with its items.
+ */
+router.get('/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const templateSql = `
+      SELECT id, name, description, created_at
+      FROM inspection_templates
+      WHERE id = $1;
+    `;
+    const { rows: templateRows } = await pool.query(templateSql, [id]);
+
+    if (templateRows.length === 0) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+
+    const itemsSql = `
+      SELECT id, label, category
+      FROM inspection_template_items
+      WHERE template_id = $1
+      ORDER BY category NULLS FIRST, label ASC;
+    `;
+    const { rows: itemsRows } = await pool.query(itemsSql, [id]);
+
+    res.json({
+      ...templateRows[0],
+      items: itemsRows,
+    });
+  } catch (err) {
+    console.error('Error fetching inspection template:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * POST /api/inspection-templates
+ * Body: { name, description }
+ */
+router.post('/', requireAuth, async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: 'name is required' });
+    }
+
+    const sql = `
+      INSERT INTO inspection_templates (name, description)
+      VALUES ($1, $2)
+      RETURNING id, name, description, created_at;
+    `;
+    const { rows } = await pool.query(sql, [name, description || null]);
+
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Error creating inspection template:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * PUT /api/inspection-templates/:id
+ * Body: { name, description }
+ */
+router.put('/:id', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: 'name is required' });
+    }
+
+    const sql = `
+      UPDATE inspection_templates
+      SET name = $1,
+          description = $2
+      WHERE id = $3
+      RETURNING id, name, description, created_at;
+    `;
+    const { rows } = await pool.query(sql, [name, description || null, id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Error updating inspection template:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * POST /api/inspection-templates/:id/items
+ * Body: { label, category }
+ */
+router.post('/:id/items', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { label, category } = req.body;
+
+    if (!label) {
+      return res.status(400).json({ error: 'label is required' });
+    }
+
+    // ensure template exists
+    const tmpl = await pool.query(
+      'SELECT id FROM inspection_templates WHERE id = $1',
+      [id]
+    );
+    if (tmpl.rows.length === 0) {
+      return res.status(404).json({ error: 'Template not found' });
+    }
+
+    const sql = `
+      INSERT INTO inspection_template_items (template_id, label, category)
+      VALUES ($1, $2, $3)
+      RETURNING id, label, category;
+    `;
+    const { rows } = await pool.query(sql, [id, label, category || null]);
+
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Error creating template item:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * PUT /api/inspection-templates/:id/items/:itemId
+ * Body: { label, category }
+ */
+router.put('/:id/items/:itemId', requireAuth, async (req, res) => {
+  try {
+    const { itemId } = req.params;
+    const { label, category } = req.body;
+
+    if (!label) {
+      return res.status(400).json({ error: 'label is required' });
+    }
+
+    const sql = `
+      UPDATE inspection_template_items
+      SET label = $1,
+          category = $2
+      WHERE id = $3
+      RETURNING id, label, category;
+    `;
+    const { rows } = await pool.query(sql, [label, category || null, itemId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Item not found' });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Error updating template item:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+/**
+ * DELETE /api/inspection-templates/:id/items/:itemId
+ */
+router.delete('/:id/items/:itemId', requireAuth, async (req, res) => {
+  try {
+    const { itemId } = req.params;
+
+    const sql = `
+      DELETE FROM inspection_template_items
+      WHERE id = $1
+      RETURNING id;
+    `;
+    const { rows } = await pool.query(sql, [itemId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Item not found' });
+    }
+
+    res.status(204).send();
+  } catch (err) {
+    console.error('Error deleting template item:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+No changes needed to `server.js` (you already mounted this router).
+
+---
+
+## 2. Frontend – new API helpers
+
+Open **`frontend/src/api.js`**.
+
+You *already* have:
+
+* `fetchInspectionTemplates`
+* `fetchInspectionTemplate`
+
+We’ll add:
+
+* `createInspectionTemplate`
+* `updateInspectionTemplate`
+* `createTemplateItem`
+* `updateTemplateItem`
+* `deleteTemplateItem`
+
+Add these:
+
+```js
+// src/api.js
+
+// ...existing code...
+
+export async function createInspectionTemplate(payload) {
+  const res = await fetch(`${API_BASE}/inspection-templates`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create inspection template');
+  }
+  return res.json();
+}
+
+export async function updateInspectionTemplate(id, payload) {
+  const res = await fetch(`${API_BASE}/inspection-templates/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to update inspection template');
+  }
+  return res.json();
+}
+
+export async function createTemplateItem(templateId, payload) {
+  const res = await fetch(`${API_BASE}/inspection-templates/${templateId}/items`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create template item');
+  }
+  return res.json();
+}
+
+export async function updateTemplateItem(templateId, itemId, payload) {
+  const res = await fetch(`${API_BASE}/inspection-templates/${templateId}/items/${itemId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to update template item');
+  }
+  return res.json();
+}
+
+export async function deleteTemplateItem(templateId, itemId) {
+  const res = await fetch(`${API_BASE}/inspection-templates/${templateId}/items/${itemId}`, {
+    method: 'DELETE',
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok && res.status !== 204) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete template item');
+  }
+}
+```
+
+---
+
+## 3. Frontend – Inspection Templates admin page
+
+We’ll build a page:
+
+* Left/top: list of templates (click to edit)
+* Right/bottom: form to add/edit template
+* Under template form: checklist items for that template (add/edit/delete)
+
+### 3.1 `TemplatesPage.jsx`
+
+Create **`frontend/src/TemplatesPage.jsx`**:
+
+```jsx
+// src/TemplatesPage.jsx
+import { useEffect, useState } from 'react';
+import {
+  fetchInspectionTemplates,
+  fetchInspectionTemplate,
+  createInspectionTemplate,
+  updateInspectionTemplate,
+  createTemplateItem,
+  updateTemplateItem,
+  deleteTemplateItem,
+} from './api';
+
+export default function TemplatesPage() {
+  const [templates, setTemplates] = useState([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(true);
+  const [templatesError, setTemplatesError] = useState('');
+
+  const [editingTemplateId, setEditingTemplateId] = useState(null);
+  const [templateName, setTemplateName] = useState('');
+  const [templateDescription, setTemplateDescription] = useState('');
+  const [templateSaving, setTemplateSaving] = useState(false);
+  const [templateFormError, setTemplateFormError] = useState('');
+
+  const [items, setItems] = useState([]);
+  const [itemsLoading, setItemsLoading] = useState(false);
+  const [itemsError, setItemsError] = useState('');
+
+  const [editingItemId, setEditingItemId] = useState(null);
+  const [itemLabel, setItemLabel] = useState('');
+  const [itemCategory, setItemCategory] = useState('');
+  const [itemSaving, setItemSaving] = useState(false);
+  const [itemFormError, setItemFormError] = useState('');
+
+  // Load templates
+  const loadTemplates = () => {
+    setLoadingTemplates(true);
+    setTemplatesError('');
+
+    fetchInspectionTemplates()
+      .then((data) => {
+        setTemplates(data);
+        setLoadingTemplates(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setTemplatesError('Failed to load inspection templates');
+        setLoadingTemplates(false);
+      });
+  };
+
+  useEffect(() => {
+    loadTemplates();
+  }, []);
+
+  const resetTemplateForm = () => {
+    setEditingTemplateId(null);
+    setTemplateName('');
+    setTemplateDescription('');
+    setTemplateFormError('');
+    setItems([]);
+    setEditingItemId(null);
+    setItemLabel('');
+    setItemCategory('');
+    setItemsError('');
+  };
+
+  const handleEditTemplateClick = async (template) => {
+    setEditingTemplateId(template.id);
+    setTemplateName(template.name);
+    setTemplateDescription(template.description || '');
+    setTemplateFormError('');
+    setItems([]);
+    setItemsError('');
+    setEditingItemId(null);
+    setItemLabel('');
+    setItemCategory('');
+
+    setItemsLoading(true);
+    try {
+      const full = await fetchInspectionTemplate(template.id);
+      setItems(full.items || []);
+      setItemsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setItemsError('Failed to load template items');
+      setItemsLoading(false);
+    }
+  };
+
+  const handleTemplateSubmit = async (e) => {
+    e.preventDefault();
+    setTemplateSaving(true);
+    setTemplateFormError('');
+
+    try {
+      if (!templateName.trim()) {
+        setTemplateFormError('Name is required');
+        setTemplateSaving(false);
+        return;
+      }
+
+      if (editingTemplateId) {
+        await updateInspectionTemplate(editingTemplateId, {
+          name: templateName.trim(),
+          description: templateDescription.trim() || null,
+        });
+      } else {
+        const created = await createInspectionTemplate({
+          name: templateName.trim(),
+          description: templateDescription.trim() || null,
+        });
+        // Immediately start editing this new one
+        await handleEditTemplateClick(created);
+      }
+
+      loadTemplates();
+      if (!editingTemplateId) {
+        // Already switched to editing new template in handleEditTemplateClick
+      }
+    } catch (err) {
+      console.error(err);
+      setTemplateFormError(err.message || 'Failed to save template');
+    } finally {
+      setTemplateSaving(false);
+    }
+  };
+
+  const handleCancelTemplateEdit = () => {
+    resetTemplateForm();
+  };
+
+  // ------- template items --------
+
+  const startNewItem = () => {
+    setEditingItemId(null);
+    setItemLabel('');
+    setItemCategory('');
+    setItemFormError('');
+  };
+
+  const startEditItem = (item) => {
+    setEditingItemId(item.id);
+    setItemLabel(item.label);
+    setItemCategory(item.category || '');
+    setItemFormError('');
+  };
+
+  const handleItemSubmit = async (e) => {
+    e.preventDefault();
+    if (!editingTemplateId) {
+      setItemFormError('Select or create a template first');
+      return;
+    }
+
+    if (!itemLabel.trim()) {
+      setItemFormError('Label is required');
+      return;
+    }
+
+    setItemSaving(true);
+    setItemFormError('');
+
+    try {
+      if (editingItemId) {
+        await updateTemplateItem(editingTemplateId, editingItemId, {
+          label: itemLabel.trim(),
+          category: itemCategory.trim() || null,
+        });
+      } else {
+        await createTemplateItem(editingTemplateId, {
+          label: itemLabel.trim(),
+          category: itemCategory.trim() || null,
+        });
+      }
+
+      const full = await fetchInspectionTemplate(editingTemplateId);
+      setItems(full.items || []);
+      startNewItem();
+    } catch (err) {
+      console.error(err);
+      setItemFormError(err.message || 'Failed to save item');
+    } finally {
+      setItemSaving(false);
+    }
+  };
+
+  const handleDeleteItem = async (itemId) => {
+    if (!editingTemplateId) return;
+
+    const confirmDelete = window.confirm('Delete this checklist item?');
+    if (!confirmDelete) return;
+
+    try {
+      await deleteTemplateItem(editingTemplateId, itemId);
+      const full = await fetchInspectionTemplate(editingTemplateId);
+      setItems(full.items || []);
+      if (editingItemId === itemId) {
+        startNewItem();
+      }
+    } catch (err) {
+      console.error(err);
+      setItemsError(err.message || 'Failed to delete item');
+    }
+  };
+
+  return (
+    <section style={{ marginTop: 40 }}>
+      <h2>Admin: Inspection Templates</h2>
+
+      {loadingTemplates && <p>Loading templates...</p>}
+      {templatesError && <p style={{ color: 'red' }}>{templatesError}</p>}
+
+      {!loadingTemplates && !templatesError && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1.7fr', gap: 24 }}>
+          {/* Left: templates list + template form */}
+          <div>
+            <h3>Templates</h3>
+
+            {templates.length === 0 ? (
+              <p>No inspection templates yet.</p>
+            ) : (
+              <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 16 }}>
+                <thead>
+                  <tr>
+                    <th align="left">Name</th>
+                    <th align="left">Description</th>
+                    <th align="left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {templates.map((t) => (
+                    <tr key={t.id}>
+                      <td>{t.name}</td>
+                      <td>{t.description || '-'}</td>
+                      <td>
+                        <button type="button" onClick={() => handleEditTemplateClick(t)}>
+                          Edit
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
+            <div style={{ border: '1px solid #ddd', borderRadius: 4, padding: 16 }}>
+              <h3>{editingTemplateId ? 'Edit Template' : 'Add New Template'}</h3>
+
+              {templateFormError && (
+                <p style={{ color: 'red' }}>{templateFormError}</p>
+              )}
+
+              <form onSubmit={handleTemplateSubmit} style={{ display: 'grid', gap: 12 }}>
+                <label>
+                  Name
+                  <input
+                    type="text"
+                    value={templateName}
+                    onChange={(e) => setTemplateName(e.target.value)}
+                    required
+                  />
+                </label>
+
+                <label>
+                  Description (optional)
+                  <textarea
+                    rows="3"
+                    value={templateDescription}
+                    onChange={(e) => setTemplateDescription(e.target.value)}
+                  />
+                </label>
+
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button type="submit" disabled={templateSaving}>
+                    {templateSaving
+                      ? 'Saving...'
+                      : editingTemplateId
+                      ? 'Update Template'
+                      : 'Create Template'}
+                  </button>
+                  {editingTemplateId && (
+                    <button type="button" onClick={handleCancelTemplateEdit}>
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/* Right: checklist items for selected template */}
+          <div>
+            <h3>Checklist Items</h3>
+            {!editingTemplateId && (
+              <p>Select or create a template to manage its items.</p>
+            )}
+
+            {editingTemplateId && (
+              <>
+                {itemsLoading ? (
+                  <p>Loading items...</p>
+                ) : (
+                  <>
+                    {itemsError && (
+                      <p style={{ color: 'red' }}>{itemsError}</p>
+                    )}
+
+                    {items.length === 0 ? (
+                      <p>No items yet for this template.</p>
+                    ) : (
+                      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 16 }}>
+                        <thead>
+                          <tr>
+                            <th align="left">Label</th>
+                            <th align="left">Category</th>
+                            <th align="left">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {items.map((item) => (
+                            <tr key={item.id}>
+                              <td>{item.label}</td>
+                              <td>{item.category || '-'}</td>
+                              <td>
+                                <button
+                                  type="button"
+                                  onClick={() => startEditItem(item)}
+                                  style={{ marginRight: 4 }}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteItem(item.id)}
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+
+                    <div style={{ border: '1px solid #ddd', borderRadius: 4, padding: 16 }}>
+                      <h4>{editingItemId ? 'Edit Item' : 'Add New Item'}</h4>
+
+                      {itemFormError && (
+                        <p style={{ color: 'red' }}>{itemFormError}</p>
+                      )}
+
+                      <form onSubmit={handleItemSubmit} style={{ display: 'grid', gap: 12 }}>
+                        <label>
+                          Label
+                          <input
+                            type="text"
+                            value={itemLabel}
+                            onChange={(e) => setItemLabel(e.target.value)}
+                            required
+                          />
+                        </label>
+
+                        <label>
+                          Category (optional)
+                          <input
+                            type="text"
+                            value={itemCategory}
+                            onChange={(e) => setItemCategory(e.target.value)}
+                            placeholder="e.g. Fire Safety, PPE"
+                          />
+                        </label>
+
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <button type="submit" disabled={itemSaving}>
+                            {itemSaving
+                              ? 'Saving...'
+                              : editingItemId
+                              ? 'Update Item'
+                              : 'Add Item'}
+                          </button>
+                          {editingItemId && (
+                            <button type="button" onClick={startNewItem}>
+                              Cancel
+                            </button>
+                          )}
+                        </div>
+                      </form>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+```
+
+---
+
+## 4. Hook Templates admin into `App.jsx`
+
+Open **`frontend/src/App.jsx`** and:
+
+1. Import `TemplatesPage`
+2. Render it under the other admin bits (e.g. below Sites)
+
+At top:
+
+```jsx
+import TemplatesPage from './TemplatesPage';
+```
+
+At bottom of the `return` (after `SitesPage`), add:
+
+```jsx
+      {/* Admin: Inspection Templates */}
+      <TemplatesPage />
+```
+
+So the end of your layout will roughly be:
+
+```jsx
+      {/* Incidents section */}
+      <section>...</section>
+
+      {/* Inspections section */}
+      <InspectionsModule />
+
+      {/* Admin: Sites */}
+      <SitesPage />
+
+      {/* Admin: Inspection Templates */}
+      <TemplatesPage />
+    </div>
+  );
+}
+```
+
+---
+
+### What you have now
+
+From the UI, as a logged-in user, you can:
+
+* Manage **Sites**
+* Manage **Inspection Templates** and their checklist **items**
+* Run **Inspections** using those templates
+* Manage **Incidents** with sites and users properly wired
+
+That’s already a very WorkEikon-style core.
+
+Natural next improvements (when you’re ready):
+
+* A small **dashboard** (counts + recent activity)
+* Permissions (only admin can see Sites/Templates admin sections)
+* Basic filters + search on Incidents/Inspections
+
+If you tell me you want the **dashboard** next, I’ll add a simple backend stats endpoint and a React dashboard panel that shows things like:
+
+* Open incidents count
+* Inspections in last 30 days
+* Failed inspections count
+* Incidents by severity (simple table).
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nice, let’s give your app a **home dashboard** so it actually *feels* like a product 🧩
+
+We’ll add:
+
+1. Backend: `/api/dashboard/summary`
+2. Frontend: `fetchDashboardSummary()` + `Dashboard.jsx`
+3. Plug `Dashboard` into `App.jsx` above Incidents/Inspections
+
+---
+
+## 1. Backend – dashboard summary endpoint
+
+### 1.1 Create route: `backend/routes/dashboard.js`
+
+```js
+// backend/routes/dashboard.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/dashboard/summary
+ * Returns high-level stats for the dashboard.
+ */
+router.get('/summary', requireAuth, async (req, res) => {
+  try {
+    // Incidents: total, open, last 30 days, by severity
+    const [incidentsCounts, incidentsBySeverity, inspectionsCounts] = await Promise.all([
+      pool.query(`
+        SELECT
+          COUNT(*) AS total_incidents,
+          COUNT(*) FILTER (WHERE status = 'open') AS open_incidents,
+          COUNT(*) FILTER (WHERE occurred_at >= NOW() - INTERVAL '30 days') AS incidents_last_30d
+        FROM incidents;
+      `),
+      pool.query(`
+        SELECT
+          severity,
+          COUNT(*) AS count
+        FROM incidents
+        GROUP BY severity
+        ORDER BY
+          CASE severity
+            WHEN 'critical' THEN 1
+            WHEN 'high' THEN 2
+            WHEN 'medium' THEN 3
+            WHEN 'low' THEN 4
+            ELSE 5
+          END;
+      `),
+      pool.query(`
+        SELECT
+          COUNT(*) FILTER (WHERE performed_at >= NOW() - INTERVAL '30 days') AS inspections_last_30d,
+          COUNT(*) FILTER (
+            WHERE performed_at >= NOW() - INTERVAL '30 days'
+            AND overall_result = 'fail'
+          ) AS inspections_failed_last_30d
+        FROM inspections;
+      `),
+    ]);
+
+    const incidentCountsRow = incidentsCounts.rows[0] || {};
+    const inspectionsCountsRow = inspectionsCounts.rows[0] || {};
+
+    res.json({
+      incidents: {
+        total: Number(incidentCountsRow.total_incidents || 0),
+        open: Number(incidentCountsRow.open_incidents || 0),
+        last_30_days: Number(incidentCountsRow.incidents_last_30d || 0),
+        by_severity: incidentsBySeverity.rows.map((row) => ({
+          severity: row.severity,
+          count: Number(row.count),
+        })),
+      },
+      inspections: {
+        last_30_days: Number(inspectionsCountsRow.inspections_last_30d || 0),
+        failed_last_30_days: Number(
+          inspectionsCountsRow.inspections_failed_last_30d || 0
+        ),
+      },
+    });
+  } catch (err) {
+    console.error('Error fetching dashboard summary:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+### 1.2 Register in `server.js`
+
+Open **`backend/server.js`**, add import + `app.use`:
+
+```js
+import dashboardRouter from './routes/dashboard.js'; // ⬅ add this
+```
+
+and in the routes section:
+
+```js
+app.use('/api/auth', authRouter);
+app.use('/api/incidents', incidentsRouter);
+app.use('/api/sites', sitesRouter);
+app.use('/api/incident-types', incidentTypesRouter);
+app.use('/api/inspection-templates', inspectionTemplatesRouter);
+app.use('/api/inspections', inspectionsRouter);
+app.use('/api/dashboard', dashboardRouter); // ⬅ add this
+```
+
+Backend done ✅
+
+---
+
+## 2. Frontend – dashboard API helper
+
+Open **`frontend/src/api.js`** and add:
+
+```js
+export async function fetchDashboardSummary() {
+  const res = await fetch(`${API_BASE}/dashboard/summary`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to fetch dashboard summary');
+  }
+  return res.json();
+}
+```
+
+---
+
+## 3. Frontend – Dashboard component
+
+Create **`frontend/src/Dashboard.jsx`**:
+
+```jsx
+// src/Dashboard.jsx
+import { useEffect, useState } from 'react';
+import { fetchDashboardSummary } from './api';
+
+export default function Dashboard() {
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchDashboardSummary()
+      .then((data) => {
+        if (!isMounted) return;
+        setSummary(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (!isMounted) return;
+        setError('Failed to load dashboard');
+        setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return <p>Loading dashboard...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
+
+  const { incidents, inspections } = summary;
+
+  return (
+    <section style={{ marginBottom: 32 }}>
+      <h2>Overview</h2>
+
+      {/* High-level KPIs */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: 16,
+          marginBottom: 24,
+        }}
+      >
+        <KpiCard
+          label="Total Incidents"
+          value={incidents.total}
+        />
+        <KpiCard
+          label="Open Incidents"
+          value={incidents.open}
+        />
+        <KpiCard
+          label="Incidents (Last 30 Days)"
+          value={incidents.last_30_days}
+        />
+        <KpiCard
+          label="Inspections (Last 30 Days)"
+          value={inspections.last_30_days}
+        />
+        <KpiCard
+          label="Failed Inspections (Last 30 Days)"
+          value={inspections.failed_last_30_days}
+        />
+      </div>
+
+      {/* Incidents by severity */}
+      <div style={{ maxWidth: 500 }}>
+        <h3>Incidents by Severity</h3>
+        {(!incidents.by_severity || incidents.by_severity.length === 0) ? (
+          <p>No incidents recorded yet.</p>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th align="left">Severity</th>
+                <th align="left">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {incidents.by_severity.map((s) => (
+                <tr key={s.severity || 'unknown'}>
+                  <td>{s.severity || 'Unknown'}</td>
+                  <td>{s.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function KpiCard({ label, value }) {
+  return (
+    <div
+      style={{
+        border: '1px solid #e0e0e0',
+        borderRadius: 8,
+        padding: 16,
+        minHeight: 80,
+      }}
+    >
+      <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>{label}</div>
+      <div style={{ fontSize: '1.8rem', fontWeight: 'bold', marginTop: 8 }}>
+        {value}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## 4. Plug Dashboard into `App.jsx`
+
+Open **`frontend/src/App.jsx`** and:
+
+1. Import `Dashboard`
+2. Render it near the top of the main app (after header, before Incidents)
+
+At top:
+
+```jsx
+import Dashboard from './Dashboard';
+```
+
+Then inside `return` (for the logged-in view), e.g.:
+
+```jsx
+  return (
+    <div style={{ padding: 24 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
+        <div>
+          <h1>EHS Portal (MVP)</h1>
+          <p>Logged in as {user.first_name} {user.last_name}</p>
+        </div>
+        <button onClick={handleLogout}>Logout</button>
+      </header>
+
+      {/* NEW: Dashboard section */}
+      <Dashboard />
+
+      {/* Incidents section */}
+      <section>
+        {/* ...existing incidents UI... */}
+      </section>
+
+      {/* Inspections */}
+      <InspectionsModule />
+
+      {/* Admin: Sites */}
+      <SitesPage />
+
+      {/* Admin: Inspection Templates */}
+      <TemplatesPage />
+    </div>
+  );
+```
+
+---
+
+Now when you log in you’ll see:
+
+* A **summary band** (incidents + inspections stats)
+* A small **“incidents by severity”** table
+* Then the full Incidents / Inspections / Admin sections underneath
+
+From here, natural future tweaks are:
+
+* Filtering stats **by site** or **by date range** (add query params to `/dashboard/summary`)
+* Adding a small **“recent activity”** list (last 5 incidents, last 5 inspections)
+
+If you want, next I can add **role-based access** (e.g. only `admin` sees Sites/Templates, everyone sees Dashboard/Incidents/Inspections).
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Nice, let’s give your app a **home dashboard** so it actually *feels* like a product 🧩
+
+We’ll add:
+
+1. Backend: `/api/dashboard/summary`
+2. Frontend: `fetchDashboardSummary()` + `Dashboard.jsx`
+3. Plug `Dashboard` into `App.jsx` above Incidents/Inspections
+
+---
+
+## 1. Backend – dashboard summary endpoint
+
+### 1.1 Create route: `backend/routes/dashboard.js`
+
+```js
+// backend/routes/dashboard.js
+import express from 'express';
+import { pool } from '../db.js';
+import { requireAuth } from '../middleware/auth.js';
+
+const router = express.Router();
+
+/**
+ * GET /api/dashboard/summary
+ * Returns high-level stats for the dashboard.
+ */
+router.get('/summary', requireAuth, async (req, res) => {
+  try {
+    // Incidents: total, open, last 30 days, by severity
+    const [incidentsCounts, incidentsBySeverity, inspectionsCounts] = await Promise.all([
+      pool.query(`
+        SELECT
+          COUNT(*) AS total_incidents,
+          COUNT(*) FILTER (WHERE status = 'open') AS open_incidents,
+          COUNT(*) FILTER (WHERE occurred_at >= NOW() - INTERVAL '30 days') AS incidents_last_30d
+        FROM incidents;
+      `),
+      pool.query(`
+        SELECT
+          severity,
+          COUNT(*) AS count
+        FROM incidents
+        GROUP BY severity
+        ORDER BY
+          CASE severity
+            WHEN 'critical' THEN 1
+            WHEN 'high' THEN 2
+            WHEN 'medium' THEN 3
+            WHEN 'low' THEN 4
+            ELSE 5
+          END;
+      `),
+      pool.query(`
+        SELECT
+          COUNT(*) FILTER (WHERE performed_at >= NOW() - INTERVAL '30 days') AS inspections_last_30d,
+          COUNT(*) FILTER (
+            WHERE performed_at >= NOW() - INTERVAL '30 days'
+            AND overall_result = 'fail'
+          ) AS inspections_failed_last_30d
+        FROM inspections;
+      `),
+    ]);
+
+    const incidentCountsRow = incidentsCounts.rows[0] || {};
+    const inspectionsCountsRow = inspectionsCounts.rows[0] || {};
+
+    res.json({
+      incidents: {
+        total: Number(incidentCountsRow.total_incidents || 0),
+        open: Number(incidentCountsRow.open_incidents || 0),
+        last_30_days: Number(incidentCountsRow.incidents_last_30d || 0),
+        by_severity: incidentsBySeverity.rows.map((row) => ({
+          severity: row.severity,
+          count: Number(row.count),
+        })),
+      },
+      inspections: {
+        last_30_days: Number(inspectionsCountsRow.inspections_last_30d || 0),
+        failed_last_30_days: Number(
+          inspectionsCountsRow.inspections_failed_last_30d || 0
+        ),
+      },
+    });
+  } catch (err) {
+    console.error('Error fetching dashboard summary:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+export default router;
+```
+
+### 1.2 Register in `server.js`
+
+Open **`backend/server.js`**, add import + `app.use`:
+
+```js
+import dashboardRouter from './routes/dashboard.js'; // ⬅ add this
+```
+
+and in the routes section:
+
+```js
+app.use('/api/auth', authRouter);
+app.use('/api/incidents', incidentsRouter);
+app.use('/api/sites', sitesRouter);
+app.use('/api/incident-types', incidentTypesRouter);
+app.use('/api/inspection-templates', inspectionTemplatesRouter);
+app.use('/api/inspections', inspectionsRouter);
+app.use('/api/dashboard', dashboardRouter); // ⬅ add this
+```
+
+Backend done ✅
+
+---
+
+## 2. Frontend – dashboard API helper
+
+Open **`frontend/src/api.js`** and add:
+
+```js
+export async function fetchDashboardSummary() {
+  const res = await fetch(`${API_BASE}/dashboard/summary`, {
+    headers: {
+      ...getAuthHeader(),
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to fetch dashboard summary');
+  }
+  return res.json();
+}
+```
+
+---
+
+## 3. Frontend – Dashboard component
+
+Create **`frontend/src/Dashboard.jsx`**:
+
+```jsx
+// src/Dashboard.jsx
+import { useEffect, useState } from 'react';
+import { fetchDashboardSummary } from './api';
+
+export default function Dashboard() {
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchDashboardSummary()
+      .then((data) => {
+        if (!isMounted) return;
+        setSummary(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (!isMounted) return;
+        setError('Failed to load dashboard');
+        setLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return <p>Loading dashboard...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
+
+  const { incidents, inspections } = summary;
+
+  return (
+    <section style={{ marginBottom: 32 }}>
+      <h2>Overview</h2>
+
+      {/* High-level KPIs */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: 16,
+          marginBottom: 24,
+        }}
+      >
+        <KpiCard
+          label="Total Incidents"
+          value={incidents.total}
+        />
+        <KpiCard
+          label="Open Incidents"
+          value={incidents.open}
+        />
+        <KpiCard
+          label="Incidents (Last 30 Days)"
+          value={incidents.last_30_days}
+        />
+        <KpiCard
+          label="Inspections (Last 30 Days)"
+          value={inspections.last_30_days}
+        />
+        <KpiCard
+          label="Failed Inspections (Last 30 Days)"
+          value={inspections.failed_last_30_days}
+        />
+      </div>
+
+      {/* Incidents by severity */}
+      <div style={{ maxWidth: 500 }}>
+        <h3>Incidents by Severity</h3>
+        {(!incidents.by_severity || incidents.by_severity.length === 0) ? (
+          <p>No incidents recorded yet.</p>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th align="left">Severity</th>
+                <th align="left">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {incidents.by_severity.map((s) => (
+                <tr key={s.severity || 'unknown'}>
+                  <td>{s.severity || 'Unknown'}</td>
+                  <td>{s.count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function KpiCard({ label, value }) {
+  return (
+    <div
+      style={{
+        border: '1px solid #e0e0e0',
+        borderRadius: 8,
+        padding: 16,
+        minHeight: 80,
+      }}
+    >
+      <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>{label}</div>
+      <div style={{ fontSize: '1.8rem', fontWeight: 'bold', marginTop: 8 }}>
+        {value}
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## 4. Plug Dashboard into `App.jsx`
+
+Open **`frontend/src/App.jsx`** and:
+
+1. Import `Dashboard`
+2. Render it near the top of the main app (after header, before Incidents)
+
+At top:
+
+```jsx
+import Dashboard from './Dashboard';
+```
+
+Then inside `return` (for the logged-in view), e.g.:
+
+```jsx
+  return (
+    <div style={{ padding: 24 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
+        <div>
+          <h1>EHS Portal (MVP)</h1>
+          <p>Logged in as {user.first_name} {user.last_name}</p>
+        </div>
+        <button onClick={handleLogout}>Logout</button>
+      </header>
+
+      {/* NEW: Dashboard section */}
+      <Dashboard />
+
+      {/* Incidents section */}
+      <section>
+        {/* ...existing incidents UI... */}
+      </section>
+
+      {/* Inspections */}
+      <InspectionsModule />
+
+      {/* Admin: Sites */}
+      <SitesPage />
+
+      {/* Admin: Inspection Templates */}
+      <TemplatesPage />
+    </div>
+  );
+```
+
+---
+
+Now when you log in you’ll see:
+
+* A **summary band** (incidents + inspections stats)
+* A small **“incidents by severity”** table
+* Then the full Incidents / Inspections / Admin sections underneath
+
+From here, natural future tweaks are:
+
+* Filtering stats **by site** or **by date range** (add query params to `/dashboard/summary`)
+* Adding a small **“recent activity”** list (last 5 incidents, last 5 inspections)
+
+If you want, next I can add **role-based access** (e.g. only `admin` sees Sites/Templates, everyone sees Dashboard/Incidents/Inspections).
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Here’s a more complete, up-to-date `README.md` that matches everything you’ve built so far 🔧
+
+You can copy–paste this straight into your repo and tweak names / wording as you like.
+
+---
+
+````markdown
+# EHS Portal (MVP)
+
+A small but growing **Environment, Health & Safety (EHS) web app** inspired by platforms like WorkEikon / WorkEikon EHS Suite.
+
+The goal is to provide a modular, extensible system that covers:
+
+- **Incident Management**
+- **Inspection Management** (template-driven checklists)
+- **Dashboard & KPIs**
+- **Admin tools** for:
+  - Sites
+  - Inspection Templates & Checklist Items
+
+Built as a **React + Node + PostgreSQL** stack, with authentication and role-ready architecture.
+
+---
+
+## Features
+
+### 1. Authentication & Users
+
+- Email + password login
+- JWT-based session handling
+- `/api/auth/login`, `/api/auth/register` (for dev), `/api/auth/me`
+- React login page:
+  - Stores JWT in `localStorage`
+  - Loads current user on app startup
+- All core APIs protected with `Authorization: Bearer <token>`
+
+> Note: roles/permissions are not implemented yet, but the structure is ready for it.
+
+---
+
+### 2. Incident Management
+
+Core incident module:
+
+- Record incidents with:
+  - Title, description
+  - Incident type (e.g. Injury, Near Miss, Property Damage)
+  - Site
+  - Severity (`low`, `medium`, `high`, `critical`)
+  - Occurred date & time
+- Each incident is automatically stamped with:
+  - `reported_by_id` = logged-in user
+- Views:
+  - **List view** (table) with type, site, severity, status, occurred date
+  - **Detail view** with all fields
+
+API endpoints:
+
+- `GET /api/incidents`
+- `GET /api/incidents/:id`
+- `POST /api/incidents`
+
+---
+
+### 3. Inspection Management
+
+Template-driven inspections with checklist items:
+
+- **Inspection Templates**
+  - Name + description
+  - Multiple checklist items:
+    - Label (e.g. “Fire exits are clear”)
+    - Category (e.g. “Fire Safety”, “Housekeeping”)
+- **Inspections**
+  - Based on a template + site
+  - Performed by current user
+  - Date/time of inspection
+  - Responses for each checklist item:
+    - Result: `ok`, `not_ok`, `n/a`
+    - Optional comment
+  - `overall_result` auto-calculated:
+    - `fail` if any item is `not_ok`
+    - `pass` otherwise
+
+API endpoints:
+
+- Templates:
+  - `GET /api/inspection-templates`
+  - `GET /api/inspection-templates/:id`
+  - `POST /api/inspection-templates`
+  - `PUT /api/inspection-templates/:id`
+  - `POST /api/inspection-templates/:id/items`
+  - `PUT /api/inspection-templates/:id/items/:itemId`
+  - `DELETE /api/inspection-templates/:id/items/:itemId`
+- Inspections:
+  - `GET /api/inspections`
+  - `GET /api/inspections/:id`
+  - `POST /api/inspections`
+
+Frontend:
+
+- **Inspections list** (table)
+- **New Inspection** form:
+  - Select site
+  - Select template
+  - Pick date/time
+  - Fill checklist (per item: result + comment)
+- **Inspection detail** view:
+  - Shows header info (site, performer, date, result)
+  - Shows all responses in a table
+
+---
+
+### 4. Dashboard
+
+A simple home dashboard showing high-level stats:
+
+- **Incident KPIs**
+  - Total incidents
+  - Open incidents
+  - Incidents in last 30 days
+  - Incidents by severity (table)
+- **Inspection KPIs**
+  - Inspections in last 30 days
+  - Failed inspections in last 30 days
+
+API:
+
+- `GET /api/dashboard/summary`
+
+Used by the `Dashboard` React component on the home screen.
+
+---
+
+### 5. Sites Admin
+
+Admin UI for managing sites/locations:
+
+- List existing sites
+- Create new sites
+- Edit site name & code
+
+API:
+
+- `GET /api/sites`
+- `POST /api/sites`
+- `PUT /api/sites/:id`
+
+Sites are used by:
+
+- Incidents
+- Inspections
+
+---
+
+### 6. Inspection Templates Admin
+
+Admin UI for managing inspection templates & their items:
+
+- View all templates
+- Create/update templates (name + description)
+- For a selected template:
+  - List all checklist items
+  - Add new items
+  - Edit items
+  - Delete items
+
+These templates drive the **New Inspection** form.
+
+---
+
+## Tech Stack
+
+**Frontend**
+
+- React (Vite)
+- Plain hooks (`useState`, `useEffect`)
+- `fetch` for API calls
+- Token stored in `localStorage`
+
+**Backend**
+
+- Node.js
+- Express
+- `pg` PostgreSQL client
+- `bcryptjs` for password hashing
+- `jsonwebtoken` for JWTs
+
+**Database**
+
+- PostgreSQL
+- UUID PKs using `pgcrypto` (`gen_random_uuid()`)
+
+---
+
+## Project Structure
+
+```text
+.
+├── backend/
+│   ├── server.js              # Express app entrypoint
+│   ├── db.js                  # PostgreSQL connection pool
+│   ├── middleware/
+│   │   └── auth.js            # JWT auth middleware (requireAuth)
+│   └── routes/
+│       ├── auth.js            # /api/auth/*
+│       ├── incidents.js       # /api/incidents/*
+│       ├── sites.js           # /api/sites/*
+│       ├── incidentTypes.js   # /api/incident-types/*
+│       ├── inspectionTemplates.js # /api/inspection-templates/*
+│       ├── inspections.js     # /api/inspections/*
+│       └── dashboard.js       # /api/dashboard/summary
+└── frontend/
+    ├── index.html
+    └── src/
+        ├── App.jsx
+        ├── api.js             # API helper functions (auth, incidents, inspections, admin, dashboard)
+        ├── LoginPage.jsx
+        ├── Dashboard.jsx
+        ├── IncidentsList.jsx
+        ├── NewIncidentForm.jsx
+        ├── IncidentDetail.jsx
+        ├── InspectionsModule.jsx
+        ├── InspectionsList.jsx
+        ├── NewInspectionForm.jsx
+        ├── InspectionDetail.jsx
+        ├── SitesPage.jsx
+        └── TemplatesPage.jsx
+````
+
+---
+
+## Database Schema (Overview)
+
+> This is a high-level summary, not full SQL.
+
+**Core tables:**
+
+* `users`
+
+  * `id` (UUID, PK)
+  * `email`, `password_hash`
+  * `first_name`, `last_name`
+  * `created_at`
+
+* `sites`
+
+  * `id` (UUID, PK)
+  * `name`, `code`
+  * `created_at`
+
+* `incident_types`
+
+  * `id` (SERIAL, PK)
+  * `name` (e.g. Injury, Near Miss, Property Damage)
+
+* `incidents`
+
+  * `id` (UUID, PK)
+  * `title`, `description`
+  * `incident_type_id` → `incident_types.id`
+  * `site_id` → `sites.id`
+  * `reported_by_id` → `users.id`
+  * `occurred_at`
+  * `status` (`open`, `under_investigation`, `closed`)
+  * `severity` (`low`, `medium`, `high`, `critical`)
+  * `created_at`, `updated_at`
+
+* `inspection_templates`
+
+  * `id` (UUID, PK)
+  * `name`, `description`
+  * `created_at`
+
+* `inspection_template_items`
+
+  * `id` (UUID, PK)
+  * `template_id` → `inspection_templates.id`
+  * `label`, `category`
+
+* `inspections`
+
+  * `id` (UUID, PK)
+  * `template_id` → `inspection_templates.id`
+  * `site_id` → `sites.id`
+  * `performed_by` → `users.id`
+  * `performed_at`
+  * `status` (`draft`, `completed`)
+  * `overall_result` (`pass`, `fail`)
+  * `created_at`
+
+* `inspection_responses`
+
+  * `id` (UUID, PK)
+  * `inspection_id` → `inspections.id`
+  * `template_item_id` → `inspection_template_items.id`
+  * `result` (`ok`, `not_ok`, `n/a`)
+  * `comment`
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+* Node.js (LTS)
+* PostgreSQL
+* npm
+
+---
+
+### 1. Clone & Install
+
+```bash
+git clone <this-repo-url>
+cd <repo>
+```
+
+**Backend:**
+
+```bash
+cd backend
+npm install
+```
+
+**Frontend:**
+
+```bash
+cd frontend
+npm install
+```
+
+---
+
+### 2. Database Setup
+
+Create database:
+
+```sql
+CREATE DATABASE ehs_db;
+```
+
+Connect to `ehs_db` and enable UUID:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+```
+
+Create tables using your migration SQL (or from the schema defined above).
+At minimum, you’ll need:
+
+* `users`
+* `sites`
+* `incident_types`
+* `incidents`
+* `inspection_templates`
+* `inspection_template_items`
+* `inspections`
+* `inspection_responses`
+
+You can start with seed values, e.g.:
+
+```sql
+INSERT INTO incident_types (name) VALUES
+('Injury'), ('Near Miss'), ('Property Damage')
+ON CONFLICT DO NOTHING;
+```
+
+You can then use the **Admin: Sites** and **Admin: Templates** pages to create sites and templates via the UI.
+
+---
+
+### 3. .env configuration
+
+**Backend** (`backend/.env`):
+
+```env
+DATABASE_URL=postgres://user:password@localhost:5432/ehs_db
+PORT=4000
+JWT_SECRET=super-secret-change-this
+```
+
+Replace `user`, `password`, and DB name as needed.
+
+---
+
+### 4. Run the Backend
+
+```bash
+cd backend
+npm run dev
+```
+
+Check health:
+
+* `http://localhost:4000/api/health` → `{ "status": "ok" }`
+
+---
+
+### 5. Create a User (Dev)
+
+Use the register endpoint (Postman/curl) to create your first user:
+
+```bash
+curl -X POST http://localhost:4000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john.doe@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "password": "Passw0rd!"
+  }'
+```
+
+You’ll receive a `token` and `user` object.
+In the UI, you’ll log in with the same email/password.
+
+---
+
+### 6. Run the Frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+Open the URL Vite shows (e.g. `http://localhost:5173`).
+
+Flow:
+
+1. See **login page** → log in with your user.
+2. Land on the **Dashboard**, showing incident/inspection stats.
+3. Use **Incidents** section to:
+
+   * Create new incidents
+   * View incident list + details
+4. Use **Inspections** section to:
+
+   * Run inspections based on templates
+5. Use **Admin: Sites** to:
+
+   * Manage sites (locations)
+6. Use **Admin: Inspection Templates** to:
+
+   * Define templates and checklist items
+
+---
+
+## Roadmap / Next Steps
+
+Some ideas for future development:
+
+* **Role-based permissions**
+
+  * `admin` vs `manager` vs `worker`
+  * Restrict access to admin sections
+* **Action items**
+
+  * Link corrective actions to incidents & inspection findings
+* **Filters & search**
+
+  * Filter incidents by site, severity, status, date range
+  * Filter inspections by site/date/result
+* **Exports & reporting**
+
+  * CSV / Excel export of incidents & inspections
+  * Printable inspection reports
+* **File uploads**
+
+  * Attach photos/documents to incidents or inspections
+* **Mobile UX**
+
+  * Improve layouts for tablets/phones
+  * Potential PWA mode
+
+---
+
+## License
+
+TBD – choose a license (e.g. MIT) depending on how you want to share/use this project.
+
+```
+
+---
+
+If you’d like, I can also draft a short **CONTRIBUTING.md** or a **high-level architecture diagram description** you could turn into a slide for management / stakeholders.
+::contentReference[oaicite:0]{index=0}
+```
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Gotcha 👌 No more mention of that other product anywhere in your docs. This will be **your** EHS app, and we’ll just use it as inspiration in our heads.
+
+Since you’re going to use Claude Code to *build* this, what you need from me is a **clean spec / blueprint**: clear enough that another AI or dev could implement it without guessing.
+
+Below is a single, self-contained spec you can give to Claude as a “project brief”.
+You can save it as something like `SPEC.md` or `PRODUCT_REQUIREMENTS.md`.
+
+---
+
+## 1. Project Overview
+
+**Working name:** EHS Portal (can be changed anytime)
+
+**Objective:**
+A web application for managing Environment, Health & Safety (EHS) activities in an organisation, starting with:
+
+* Incident reporting & tracking
+* Workplace inspections using templates
+* Overview dashboard with key metrics
+* Basic admin tools (sites, inspection templates)
+
+Built as a **modular system** that can be extended later (training, documents, contractors, etc.).
+
+**Tech stack (target):**
+
+* Frontend: React (with Vite or CRA)
+* Backend: Node.js + Express
+* Database: PostgreSQL
+* Authentication: JWT-based
+
+---
+
+## 2. User Roles & Personas
+
+We won’t implement complex RBAC yet, but the design should anticipate these roles:
+
+1. **Worker / Staff**
+
+   * Can log in
+   * Can create incidents
+   * Can view incidents they reported
+   * Can view relevant inspections (read-only)
+
+2. **Supervisor / Manager**
+
+   * Can view all incidents at their sites (for now: all sites)
+   * Can review incident details
+   * Can see inspection history
+
+3. **EHS Admin**
+
+   * Everything above
+   * Can manage sites
+   * Can manage inspection templates & checklist items
+   * Can view dashboard metrics
+
+> Phase 1 can treat everyone as “authenticated user” with full access, and later restrict admin features by role.
+
+---
+
+## 3. Core Modules & Features (MVP)
+
+### 3.1 Authentication
+
+* Email + password login
+* Ability to create initial users (via an endpoint or manual DB insert)
+* JWT issued on login
+* “Current user” endpoint to check who is logged in
+
+**User stories:**
+
+* As a user, I can log in securely so I can access EHS data.
+* As a user, I stay logged in across page refreshes until the token expires or I log out.
+
+---
+
+### 3.2 Incident Management
+
+**Goal:** Record and track safety incidents.
+
+**Key fields:**
+
+* Title (short)
+* Description (long text)
+* Incident type (e.g. Injury, Near Miss, Property Damage)
+* Site (location)
+* Severity (`low`, `medium`, `high`, `critical`)
+* Status (`open`, `under_investigation`, `closed`)
+* Occurred date/time
+* Reported by (user)
+* Created/updated timestamps
+
+**User stories:**
+
+* As a user, I can create a new incident with the fields above.
+* As a user, I can view a list of all incidents.
+* As a user, I can click an incident and see full details.
+* (Later) As a manager, I can update status and severity.
+
+**MVP Behaviour:**
+
+* On creation, `reported_by` is automatically set to the logged-in user.
+* Status defaults to `open`.
+
+---
+
+### 3.3 Sites (Locations)
+
+**Goal:** Maintain a list of sites/locations to attach to incidents and inspections.
+
+**Fields:**
+
+* Name
+* Code (short identifier, optional)
+* Created timestamp
+
+**User stories:**
+
+* As an admin, I can view a list of sites.
+* As an admin, I can add new sites.
+* As an admin, I can edit site name and code.
+* As a user, I can select a site from a dropdown when creating incidents or inspections.
+
+---
+
+### 3.4 Inspection Templates & Checklist Items
+
+**Goal:** Define reusable templates for inspections.
+
+**Template fields:**
+
+* Name
+* Description (optional)
+
+**Checklist item fields:**
+
+* Label (e.g. “Fire exits are clear”)
+* Category (optional, e.g. “Fire Safety”)
+
+**User stories:**
+
+* As an admin, I can create inspection templates (name + description).
+* As an admin, I can add checklist items to a template (label + optional category).
+* As an admin, I can edit or delete checklist items.
+
+---
+
+### 3.5 Inspections
+
+**Goal:** Perform inspections at sites using templates.
+
+**Inspection fields:**
+
+* Template (chosen from templates)
+* Site
+* Performed by (user)
+* Performed date/time
+* Status (`completed` or `draft` – MVP can use `completed`)
+* Overall result (`pass` or `fail`)
+* Created timestamp
+
+**Response fields (per checklist item):**
+
+* Template item reference
+* Result (`ok`, `not_ok`, `n/a`)
+* Comment (optional)
+
+**User stories:**
+
+* As a user, I can start a new inspection by:
+
+  * Choosing a site
+  * Choosing a template
+  * Selecting date/time
+* As a user, I can see a checklist of items based on the template and record result + comments.
+* As a user, I can save the inspection and see it in a list.
+* As a user, I can click an inspection and see all responses.
+
+**Business rule:**
+
+* Overall result:
+
+  * `fail` if *any* checklist item is `not_ok`
+  * `pass` otherwise
+
+---
+
+### 3.6 Dashboard
+
+**Goal:** Give a quick overview of EHS activity.
+
+**Metrics (initial):**
+
+* Incidents:
+
+  * Total incidents (all time)
+  * Open incidents
+  * Incidents in last 30 days
+  * Incidents grouped by severity
+* Inspections:
+
+  * Inspections in last 30 days
+  * Failed inspections in last 30 days
+
+**User stories:**
+
+* As an EHS admin, I can see the overall state of incidents and inspections when I log in.
+* As a user, I can see whether the site is actively doing inspections and how many issues are being recorded.
+
+---
+
+## 4. High-Level Architecture
+
+**Frontend:**
+
+* React SPA
+* Uses `fetch` or similar to call backend `/api/*` endpoints.
+* Stores JWT token in `localStorage` (or similar).
+* Shows:
+
+  * Login page
+  * Dashboard
+  * Incidents screens
+  * Inspections screens
+  * Admin screens (Sites, Templates)
+
+**Backend:**
+
+* Node.js + Express
+* Routes grouped by domain:
+
+  * `/api/auth`
+  * `/api/incidents`
+  * `/api/sites`
+  * `/api/incident-types`
+  * `/api/inspection-templates`
+  * `/api/inspections`
+  * `/api/dashboard`
+* Auth middleware:
+
+  * Reads `Authorization: Bearer <token>`
+  * Verifies JWT
+  * Loads user and attaches `req.user`
+
+**Database (PostgreSQL):**
+
+* Normalised schema with foreign keys:
+
+  * Users
+  * Sites
+  * Incident types
+  * Incidents
+  * Inspection templates
+  * Template items
+  * Inspections
+  * Inspection responses
+
+---
+
+## 5. Entities & Data Model (Conceptual)
+
+Not exact SQL, but the structure Claude can map to SQL/ORM.
+
+### 5.1 User
+
+* `id` (UUID)
+* `email`
+* `password_hash`
+* `first_name`
+* `last_name`
+* `created_at`
+
+### 5.2 Site
+
+* `id` (UUID)
+* `name`
+* `code` (optional)
+* `created_at`
+
+### 5.3 IncidentType
+
+* `id` (int or UUID)
+* `name` (e.g. “Injury”, “Near Miss”, “Property Damage”)
+
+### 5.4 Incident
+
+* `id` (UUID)
+* `title`
+* `description`
+* `incident_type_id` → IncidentType
+* `site_id` → Site
+* `reported_by_id` → User
+* `occurred_at` (datetime)
+* `status` (`open`, `under_investigation`, `closed`)
+* `severity` (`low`, `medium`, `high`, `critical`)
+* `created_at`, `updated_at`
+
+### 5.5 InspectionTemplate
+
+* `id` (UUID)
+* `name`
+* `description`
+* `created_at`
+
+### 5.6 InspectionTemplateItem
+
+* `id` (UUID)
+* `template_id` → InspectionTemplate
+* `label`
+* `category` (optional)
+
+### 5.7 Inspection
+
+* `id` (UUID)
+* `template_id` → InspectionTemplate
+* `site_id` → Site
+* `performed_by` → User
+* `performed_at` (datetime)
+* `status` (`completed` – MVP)
+* `overall_result` (`pass` / `fail`)
+* `created_at`
+
+### 5.8 InspectionResponse
+
+* `id` (UUID)
+* `inspection_id` → Inspection
+* `template_item_id` → InspectionTemplateItem
+* `result` (`ok`, `not_ok`, `n/a`)
+* `comment` (optional)
+
+---
+
+## 6. API Design (Specification Level)
+
+### 6.1 Auth
+
+**POST `/api/auth/register`** (dev/initial setup)
+Body:
+
+```json
+{ "email": "...", "first_name": "...", "last_name": "...", "password": "..." }
+```
+
+Response:
+
+```json
+{ "token": "...", "user": { "id": "...", "email": "...", "first_name": "...", "last_name": "..." } }
+```
+
+**POST `/api/auth/login`**
+Body:
+
+```json
+{ "email": "...", "password": "..." }
+```
+
+Response: same shape as register.
+
+**GET `/api/auth/me`**
+Header: `Authorization: Bearer <token>`
+Response: current user object.
+
+---
+
+### 6.2 Sites
+
+**GET `/api/sites`**
+Returns list of sites.
+
+**POST `/api/sites`**
+Body:
+
+```json
+{ "name": "Head Office", "code": "HO" }
+```
+
+**PUT `/api/sites/:id`**
+Body:
+
+```json
+{ "name": "Updated Name", "code": "NEWCODE" }
+```
+
+---
+
+### 6.3 Incident Types (static lookup)
+
+**GET `/api/incident-types`**
+Returns list of incident types (pre-seeded).
+
+---
+
+### 6.4 Incidents
+
+**GET `/api/incidents`**
+Optional query params: `status`, `siteId`
+Returns list of incidents (summary).
+
+**GET `/api/incidents/:id`**
+Returns full details of one incident, including joined fields (type name, site name, reported_by name).
+
+**POST `/api/incidents`**
+Body:
+
+```json
+{
+  "title": "Forklift near miss",
+  "description": "Details...",
+  "incident_type_id": 2,
+  "site_id": "site-uuid",
+  "occurred_at": "2025-01-01T10:00:00Z",
+  "severity": "medium"
+}
+```
+
+Backend uses `req.user.id` for `reported_by_id`.
+
+---
+
+### 6.5 Inspection Templates
+
+**GET `/api/inspection-templates`**
+Returns list of templates (id, name, description, created_at).
+
+**GET `/api/inspection-templates/:id`**
+Returns:
+
+```json
+{
+  "id": "...",
+  "name": "...",
+  "description": "...",
+  "created_at": "...",
+  "items": [
+    { "id": "...", "label": "...", "category": "..." }
+  ]
+}
+```
+
+**POST `/api/inspection-templates`**
+Body:
+
+```json
+{ "name": "General Safety Walk", "description": "Basic workplace inspection" }
+```
+
+**PUT `/api/inspection-templates/:id`**
+Body:
+
+```json
+{ "name": "Updated Name", "description": "Updated description" }
+```
+
+**POST `/api/inspection-templates/:id/items`**
+Body:
+
+```json
+{ "label": "Walkways are clear", "category": "Housekeeping" }
+```
+
+**PUT `/api/inspection-templates/:id/items/:itemId`**
+Body:
+
+```json
+{ "label": "Updated label", "category": "Updated category" }
+```
+
+**DELETE `/api/inspection-templates/:id/items/:itemId`**
+
+---
+
+### 6.6 Inspections
+
+**GET `/api/inspections`**
+Optional: `siteId`
+Returns list of inspections (template name, site name, performed_by name, date, overall_result).
+
+**GET `/api/inspections/:id`**
+Returns:
+
+```json
+{
+  "id": "...",
+  "template_id": "...",
+  "template_name": "...",
+  "site_id": "...",
+  "site_name": "...",
+  "performed_by": "...",
+  "performed_by_name": "...",
+  "performed_at": "...",
+  "status": "completed",
+  "overall_result": "pass",
+  "responses": [
+    {
+      "id": "...",
+      "label": "Fire exits are clear",
+      "category": "Fire Safety",
+      "result": "ok",
+      "comment": "..."
+    }
+  ]
+}
+```
+
+**POST `/api/inspections`**
+Body:
+
+```json
+{
+  "site_id": "site-uuid",
+  "template_id": "template-uuid",
+  "performed_at": "2025-01-01T09:00:00Z",
+  "responses": [
+    {
+      "template_item_id": "item-uuid",
+      "result": "ok",
+      "comment": ""
+    }
+  ]
+}
+```
+
+Backend:
+
+* Uses `req.user.id` as `performed_by`.
+* Computes `overall_result`.
+
+---
+
+### 6.7 Dashboard
+
+**GET `/api/dashboard/summary`**
+Returns:
+
+```json
+{
+  "incidents": {
+    "total": 123,
+    "open": 7,
+    "last_30_days": 12,
+    "by_severity": [
+      { "severity": "critical", "count": 1 },
+      { "severity": "high", "count": 3 },
+      { "severity": "medium", "count": 5 },
+      { "severity": "low", "count": 3 }
+    ]
+  },
+  "inspections": {
+    "last_30_days": 10,
+    "failed_last_30_days": 2
+  }
+}
+```
+
+---
+
+## 7. UI / Screen Outline
+
+### 7.1 Login Page
+
+* Email input
+* Password input
+* Login button
+* On success: save token, load current user, navigate to main app
+
+### 7.2 Main Layout
+
+* Header bar:
+
+  * App name
+  * “Logged in as Firstname Lastname”
+  * Logout button
+* Main content area:
+
+  * Dashboard at top
+  * Sections below (Incidents, Inspections, Admin)
+
+### 7.3 Dashboard Section
+
+* KPI cards:
+
+  * Total incidents
+  * Open incidents
+  * Incidents last 30 days
+  * Inspections last 30 days
+  * Failed inspections last 30 days
+* Table: “Incidents by severity” (severity vs count)
+
+### 7.4 Incidents Section
+
+* **List view:**
+
+  * Table columns: Title, Type, Site, Severity, Status, Occurred At
+  * Row click → incident detail
+  * “+ New Incident” button
+* **New incident form:**
+
+  * Title (text)
+  * Incident type (dropdown)
+  * Site (dropdown)
+  * Severity (dropdown)
+  * Occurred at (datetime)
+  * Description (textarea)
+  * Save / Cancel buttons
+* **Detail view:**
+
+  * Shows all fields
+  * Back button
+
+### 7.5 Inspections Section
+
+* **List view:**
+
+  * Table columns: Template, Site, Performed By, Date, Result
+  * Row click → inspection detail
+  * “+ New Inspection” button
+* **New inspection form:**
+
+  * Site (dropdown)
+  * Template (dropdown)
+  * Performed at (datetime)
+  * Checklist:
+
+    * For each item: label, category, `result` dropdown, comment input
+  * Save / Cancel buttons
+* **Detail view:**
+
+  * Header fields (template, site, performed_by, date, overall_result)
+  * Table of responses (item, result, comment)
+
+### 7.6 Admin: Sites
+
+* Table of sites (Name, Code, Edit button)
+* Form to add/edit site:
+
+  * Name
+  * Code
+  * Save / Cancel
+
+### 7.7 Admin: Inspection Templates
+
+* Left side:
+
+  * Table of templates
+  * Form to add/edit template (name, description)
+* Right side:
+
+  * Checklist items for selected template
+  * Table: Label, Category, Actions (Edit/Delete)
+  * Form to add/edit item (label, category)
+
+---
+
+## 8. Implementation Phases
+
+**Phase 1 – Foundation**
+
+* Database schema
+* Auth (register, login, me)
+* Incidents (API + basic React screens)
+* Sites (API + basic admin UI)
+
+**Phase 2 – Inspections**
+
+* Inspection templates & items (API + admin UI)
+* Inspections (API + React screens)
+* Integrate templates into “New Inspection” flow
+
+**Phase 3 – Dashboard & Polish**
+
+* Dashboard summary endpoint and UI
+* Basic error states, loading states
+* Default demo data (seed scripts or simple seed endpoint)
+
+---
+
+You can literally paste this whole spec into Claude Code with something like:
+
+> “Here’s the specification for an EHS Portal app. Please generate the backend project structure (Node + Express + PostgreSQL) according to this spec.”
+
+and then do the same for the frontend.
+
+If you want, next I can **compress this into a shorter “executive summary”** for managers, or a version written as a formal PRD with numbered requirements (FR-1, FR-2, etc.).
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Yep 👍 — what we’ve built together is **more than enough** to start the project, and you can absolutely tell Claude:
+
+> “Implement this so **all functions work end-to-end**.”
+
+To make it super clear for you + Claude, here’s how I’d frame it:
+
+---
+
+## 1. Yes: This is a complete MVP spec
+
+You now have:
+
+* 📐 **Clear architecture** (React + Node + Postgres + JWT)
+* 📊 **Defined modules**:
+
+  * Auth
+  * Incidents
+  * Inspections
+  * Sites (admin)
+  * Inspection Templates (admin)
+  * Dashboard
+* 🧱 **Entities + fields** for all tables
+* 🌐 **API contracts**: endpoints, methods, request/response shapes
+* 🖥️ **Screens**: what each page should show and how they flow
+
+That is exactly what a dev/AI needs to start building a working app.
+
+---
+
+## 2. What Claude Code should do (in order)
+
+You can literally give Claude this checklist:
+
+### Backend
+
+1. **Set up Node + Express project**
+
+   * `express`, `pg`, `bcryptjs`, `jsonwebtoken`, `cors`, `dotenv`
+2. **Implement database layer**
+
+   * Migrations or SQL for all tables described in the spec
+   * Postgres connection pool
+3. **Implement auth routes**
+
+   * `/api/auth/register`
+   * `/api/auth/login`
+   * `/api/auth/me`
+   * JWT middleware (`requireAuth`)
+4. **Implement core business routes**
+
+   * `/api/sites`
+   * `/api/incident-types`
+   * `/api/incidents`
+   * `/api/inspection-templates`
+   * `/api/inspections`
+   * `/api/dashboard/summary`
+5. **Protect routes** with `requireAuth` (except login/register/health).
+6. **Seed basic data**
+
+   * `incident_types` (Injury / Near Miss / Property Damage)
+   * Maybe 1–2 demo sites and a demo user
+
+### Frontend
+
+1. **Set up React (Vite) project**
+2. **Create API helper module** (`api.js`) matching all endpoints
+3. **Build screens:**
+
+   * Login
+   * Dashboard
+   * Incidents (list, new, detail)
+   * Inspections (list, new, detail)
+   * Sites admin
+   * Templates admin
+4. **Wire auth**
+
+   * Save token in `localStorage`
+   * Load current user on app load
+   * Show login if unauthenticated
+5. **Basic UX**
+
+   * Loading states
+   * Error messages
+   * Simple layout (header + sections)
+
+---
+
+## 3. “All functions must work” → Acceptance checklist
+
+When Claude is done, you should be able to walk through these flows **without errors**:
+
+### Auth
+
+* [ ] Register a user via `/api/auth/register` (or direct DB).
+* [ ] Log in via UI.
+* [ ] Page reload → still logged in (token reused).
+* [ ] Logout → back to login screen.
+
+### Sites
+
+* [ ] Open “Admin: Sites”.
+* [ ] Create a new site.
+* [ ] Edit that site.
+* [ ] See new/updated site available in:
+
+  * Incident form
+  * Inspection form
+
+### Incident Management
+
+* [ ] Create a new incident from the UI.
+* [ ] See it appear in the incident list.
+* [ ] Click it → see all fields in the detail view.
+* [ ] Check DB: `reported_by_id` = your user.
+
+### Inspection Templates
+
+* [ ] Open “Admin: Inspection Templates”.
+* [ ] Create a new template.
+* [ ] Add several checklist items.
+* [ ] Edit an item.
+* [ ] Delete an item.
+* [ ] Use that template in the **New Inspection** form.
+
+### Inspections
+
+* [ ] Start a new inspection:
+
+  * Choose a site
+  * Choose a template
+  * Fill in results + comments
+* [ ] Save it.
+* [ ] See it in the inspection list.
+* [ ] Open detail view:
+
+  * Correct site
+  * Correct template name
+  * Correct performed_by name
+  * All checklist responses appear.
+* [ ] If at least one item = `not_ok` → overall result shows `fail`.
+
+### Dashboard
+
+* [ ] Dashboard loads without error.
+* [ ] Incident/inspection counts change when you add new incidents/inspections.
+* [ ] “Incidents by severity” table reflects actual data.
+
+If **all** of those pass, then yes: all core functions are working for this MVP.
+
+---
+
+## 4. How to talk to Claude with this
+
+You can say something like:
+
+> “Here is a specification for an EHS Portal app (paste spec).
+> Please scaffold the backend (Node + Express + PostgreSQL) so that all endpoints described in section 6 exist and behave exactly as specified.”
+
+Then:
+
+> “Now scaffold the frontend (React) so that all screens in section 7 exist and call those endpoints. All flows in section 3 (acceptance checklist) must work end-to-end.”
+
+If you’d like, I can **condense everything into one single prompt** you can paste into Claude Code as the very first message.

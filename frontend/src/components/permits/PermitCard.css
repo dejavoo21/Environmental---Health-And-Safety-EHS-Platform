@@ -1,0 +1,102 @@
+.permit-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.permit-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.permit-card-warning {
+  border-color: #FD7E14;
+  border-width: 2px;
+}
+
+.permit-card-critical {
+  border-color: #DC3545;
+  border-width: 2px;
+  animation: card-pulse 2s ease-in-out infinite;
+}
+
+.permit-card-expired {
+  border-color: #DC3545;
+  background: #FFF5F5;
+}
+
+@keyframes card-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1); }
+}
+
+.permit-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.permit-type-icon {
+  font-size: 1.25rem;
+}
+
+.permit-type-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.5px;
+}
+
+.permit-card-number {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.permit-card-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.location-icon {
+  font-size: 0.875rem;
+}
+
+.permit-card-workers {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.workers-icon {
+  font-size: 0.875rem;
+}
+
+.permit-card-countdown,
+.permit-card-status {
+  margin-top: 0.25rem;
+}
+
+.permit-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.permit-card-actions .btn.small {
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+}

@@ -1,0 +1,61 @@
+.badge {
+  display: inline-block;
+  padding: 0.25em 0.8em;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #fff;
+  background: #888;
+  min-width: 70px;
+  text-align: center;
+}
+
+/* Status colors */
+.status-open {
+  background: #4caf50;
+}
+
+.status-under-investigation, .status-progress {
+  background: #2196f3;
+}
+
+.status-closed, .status-done {
+  background: #757575;
+}
+
+.status-overdue {
+  background: #d97855;
+}
+
+/* Severity colors - distinct for critical, high, medium, low */
+.status-critical {
+  background: #c41c3b !important;
+  color: #fff;
+}
+
+.status-high {
+  background: #ff6f00 !important;
+  color: #fff;
+}
+
+.status-medium {
+  background: #fbc02d !important;
+  color: #222;
+}
+
+.status-low {
+  background: #7cb342 !important;
+  color: #fff;
+}
+
+/* Result colors */
+.status-pass {
+  background: #4caf50 !important;
+  color: #fff;
+}
+
+.status-fail {
+  background: #c41c3b !important;
+  color: #fff;
+}

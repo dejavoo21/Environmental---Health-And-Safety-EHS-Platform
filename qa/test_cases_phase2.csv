@@ -1,0 +1,48 @@
+TC_ID,Story_ID,Phase,Type,Journeys,Checklist_IDs,Description,Preconditions,Steps,Expected_Result,Status
+TC-ACT-01,US-ACT-01,P2,UI,P2-J1,"C20,C22,C23",Create action from incident,Manager logged in. Incident exists.,"1. Open incident detail.
+2. Click Add Action.
+3. Enter title, description, assignee, due date.
+4. Save.","Action is created, linked to the incident, and appears in the incident actions list and All Actions.",
+TC-ACT-02,US-ACT-01,P2,UI,P2-J1,C22,Validation on missing action fields,Manager logged in. Incident exists.,"1. Open incident detail.
+2. Click Add Action.
+3. Leave title empty.
+4. Save.",Validation errors shown; action is not created.,
+TC-ACT-03,US-ACT-02,P2,UI,P2-J2,"C21,C22,C23",Create action from failed inspection item,Manager logged in. Inspection with not_ok item exists.,"1. Open inspection detail.
+2. Click Create Action on failed item.
+3. Enter assignee and due date.
+4. Save.","Action is created and linked to inspection and response item.",
+TC-ACT-04,US-ACT-03,P2,UI,P2-J3,"C25,C23",My Actions list shows assigned items,Worker logged in. Actions assigned to multiple users exist.,"1. Navigate to Actions -> My Actions.
+2. Observe list.",Only actions assigned to current user are shown with status and due dates.,
+TC-ACT-05,US-ACT-03,P2,UI,P2-J3,C23,Assignee updates action status to done,Worker logged in. Action assigned to worker exists.,"1. Open action detail.
+2. Change status to done.
+3. Save.",Status updates to done and is reflected in lists and activity log.,
+TC-ACT-06,US-ACT-03,P2,API,P2-J3,C24,Overdue status set when due date passes,Action exists with due date in the past and status not done.,"1. Run overdue job or trigger overdue check.
+2. Fetch action via API.",Action status becomes overdue and audit log records the change.,
+TC-ACT-07,US-ACT-04,P2,UI,P2-J4,"C26,C27",All Actions filters by status/site/due date,Manager logged in. Actions across sites exist.,"1. Open Actions -> All Actions.
+2. Apply status filter.
+3. Apply site filter.
+4. Apply due date range.",List updates to show only matching actions for each filter.,
+TC-ATT-01,US-ATT-01,P2,UI,P2-J5,"C28,C31,C32",Upload valid attachment to incident,User logged in. Incident exists. Valid file available.,"1. Open incident detail.
+2. Upload a valid file.
+3. Confirm upload.","Attachment appears in list with filename, size, and uploaded date.",
+TC-ATT-02,US-ATT-01,P2,UI,P2-J5,C33,Reject invalid or oversized file on incident,User logged in. Incident exists. Invalid file available.,"1. Open incident detail.
+2. Attempt to upload invalid file.",Clear error message shown; no attachment created.,
+TC-ATT-03,US-ATT-02,P2,UI,P2-J6,"C29,C31,C32",Upload attachment to inspection,Manager logged in. Inspection exists. Valid file available.,"1. Open inspection detail.
+2. Upload a valid file.
+3. Confirm upload.",Attachment appears in inspection attachments list.,
+TC-ATT-04,US-ATT-03,P2,UI,P2-J7,"C30,C31,C32",Upload attachment to action,Assignee logged in. Action exists. Valid file available.,"1. Open action detail.
+2. Upload a valid file.
+3. Confirm upload.",Attachment appears in action attachments list.,
+TC-ATT-05,US-ATT-01,P2,API,P2-J5,"C31,C32",Attachment metadata stored correctly,Attachment uploaded to incident.,"1. Call GET /api/attachments for the incident.
+2. Inspect metadata.","Attachment includes entityType/entityId, filename, fileType, fileSize, uploadedBy, uploadedAt.",
+TC-AUD-01,US-AUD-01,P2,API,P2-J8,"C40,C41,C44",Incident activity log shows create and status change,Manager logged in. Incident exists.,"1. Create or update incident status.
+2. Call GET /api/incidents/:id/audit-log.",Audit log includes created and status_changed entries with timestamps.,
+TC-AUD-02,US-AUD-02,P2,API,P2-J9,"C42,C45",Inspection activity log shows creation,Manager logged in. Inspection exists.,"1. Create inspection.
+2. Call GET /api/inspections/:id/audit-log.",Audit log includes inspection created entry.,
+TC-AUD-03,US-AUD-03,P2,API,P2-J10,C43,Action activity log shows create and status change,Manager logged in. Action exists.,"1. Create action.
+2. Update status.
+3. Call GET /api/actions/:id/audit-log.",Audit log includes created and status_changed entries.,
+TC-AUD-04,US-AUD-01,P2,API,"P2-J8,P2-J9,P2-J10",C46,Audit log is immutable,Admin logged in. Audit entries exist.,"1. Attempt to update or delete audit_log entry via API or direct endpoint.",Operation is rejected and entries remain unchanged.,
+TC-HELP-01,US-HELP-01,P2,UI,P2-J11,"C68,C69,C70",Help page displays content and support contact,User logged in. Help content configured.,"1. Click Help in navigation.
+2. Observe help content.
+3. Locate support contact.","Help content loads with guidance text and support contact details.",

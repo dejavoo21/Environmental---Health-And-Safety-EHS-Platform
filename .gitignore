@@ -1,0 +1,17 @@
+node_modules/
+.env
+.env.local
+.DS_Store
+*.log
+dist/
+build/
+coverage/
+.git/
+nul
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.playwright-mcp/
+uploads/

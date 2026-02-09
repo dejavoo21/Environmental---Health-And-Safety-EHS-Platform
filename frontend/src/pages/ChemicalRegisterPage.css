@@ -1,0 +1,126 @@
+.chemical-register-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.chemical-register-page .page-header h2 {
+  margin: 0;
+}
+
+.filters-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.search-box input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-group select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  min-width: 150px;
+}
+
+.chemical-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.chemical-table th,
+.chemical-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.chemical-table th {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: var(--color-background);
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.clickable-row:hover {
+  background: var(--color-background);
+}
+
+.chemical-name {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.chemical-code {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.pagination-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0.75rem 0;
+}
+
+.pagination-info {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-indicator {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  padding: 0 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .filter-group {
+    flex-direction: column;
+  }
+  
+  .filter-group select {
+    width: 100%;
+  }
+  
+  .pagination-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

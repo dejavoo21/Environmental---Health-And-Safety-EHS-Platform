@@ -1,0 +1,181 @@
+TC-ID,Category,Test Case,C-IDs,US-ID,Precondition,Steps,Expected Result,Priority,Type
+TC-P3-001,Multi-Org,Verify organisations table created,C71,,"Database migrated","Check organisations table exists","Table exists with correct columns",High,Integration
+TC-P3-002,Multi-Org,Verify org has required fields,C71,US-P3-01,"Org exists","GET /api/organisation","Returns id, name, slug, timezone, settings",High,API
+TC-P3-003,Multi-Org,Verify default org created by seed,C71,,"Seed script run","Query organisations table","Default org exists",High,Integration
+TC-P3-004,Multi-Org,Verify CLI creates org and admin,C71,,"CLI available","Run seed-org command","Org and admin user created",High,Integration
+TC-P3-005,Multi-Org,Verify org is_active checked on requests,C71,,"Org exists","Disable org then make request","403 Forbidden",High,API
+TC-P3-006,User-Org,User has organisation_id,C72,US-P3-06,"User created","Query user record","organisation_id is set",High,Integration
+TC-P3-007,User-Org,JWT includes organisationId,C72,,"User exists","Login and decode JWT","organisationId claim present",High,API
+TC-P3-008,User-Org,User can only belong to one org,C72,US-P3-06,"User exists","Check DB constraint","FK to single org",High,Integration
+TC-P3-009,User-Org,Login response includes org info,C72,,"User exists","POST /api/auth/login","Response has organisationId, organisationName",High,API
+TC-P3-010,User-Org,New user assigned to creator's org,C72,US-P3-06,"Admin logged in","Create new user","User has same org_id as admin",High,API
+TC-P3-011,Org-Scope,Incidents scoped by org,C73,,"Multi-org data exists","GET /api/incidents as Org1 user","Only Org1 incidents returned",Critical,API
+TC-P3-012,Org-Scope,Inspections scoped by org,C73,,"Multi-org data exists","GET /api/inspections as Org1 user","Only Org1 inspections returned",Critical,API
+TC-P3-013,Org-Scope,Actions scoped by org,C73,,"Multi-org data exists","GET /api/actions as Org1 user","Only Org1 actions returned",Critical,API
+TC-P3-014,Org-Scope,Sites scoped by org,C73,,"Multi-org data exists","GET /api/sites as Org1 user","Only Org1 sites returned",Critical,API
+TC-P3-015,Org-Scope,Attachments scoped by org,C73,,"Multi-org data exists","GET attachments for entity","Only Org1 attachments",High,API
+TC-P3-016,Org-Scope,Audit log scoped by org,C73,,"Multi-org audit data","GET audit log","Only Org1 entries",High,API
+TC-P3-017,Org-Scope,Dashboard scoped by org,C73,,"Multi-org data exists","GET /api/dashboard/summary","Only Org1 metrics",Critical,API
+TC-P3-018,Org-Scope,Incident types include org-specific,C73,C76,"Custom type for Org1","GET /api/incident-types","Returns system + Org1 types",High,API
+TC-P3-019,Org-Scope,Templates scoped by org,C73,,"Multi-org data exists","GET /api/inspection-templates","Only Org1 templates",High,API
+TC-P3-020,Org-Scope,New incident gets org_id,C73,,"User logged in","POST /api/incidents","Incident has user's org_id",High,API
+TC-P3-021,Cross-Org,Cannot GET other org's incident by ID,C74,,"Org2 incident exists","GET /api/incidents/:org2IncidentId as Org1","404 Not Found",Critical,Security
+TC-P3-022,Cross-Org,Cannot GET other org's inspection by ID,C74,,"Org2 inspection exists","GET /api/inspections/:id as Org1","404 Not Found",Critical,Security
+TC-P3-023,Cross-Org,Cannot GET other org's action by ID,C74,,"Org2 action exists","GET /api/actions/:id as Org1","404 Not Found",Critical,Security
+TC-P3-024,Cross-Org,Cannot GET other org's users,C74,,"Org2 users exist","GET /api/org-users with Org2 id as Org1","403 Forbidden",Critical,Security
+TC-P3-025,Cross-Org,Cannot update other org's incident,C74,,"Org2 incident exists","PUT /api/incidents/:id as Org1","404 Not Found",Critical,Security
+TC-P3-026,Cross-Org,Cannot export other org's data,C74,,"Multi-org data exists","Export as Org1","Only Org1 data in CSV",Critical,Security
+TC-P3-027,Cross-Org,JWT with wrong org_id rejected,C74,,"User exists","Send request with tampered JWT","401 Unauthorized",Critical,Security
+TC-P3-028,Cross-Org,Cannot access inactive org,C74,,"Org marked inactive","Make any request","403 Forbidden",Critical,Security
+TC-P3-029,Cross-Org,Cannot create incident with other org's site,C74,,"Org2 site exists","POST incident with Org2 site_id","400 or 404",High,Security
+TC-P3-030,Cross-Org,Dashboard excludes other org data,C74,,"Multi-org data","GET dashboard summary","Metrics only from user's org",Critical,Security
+TC-P3-031,User-List,Admin can list org users,C77,US-P3-05,"Admin logged in","GET /api/org-users","List of org users returned",High,API
+TC-P3-032,User-List,Manager cannot list users,C77,US-P3-05,"Manager logged in","GET /api/org-users","403 Forbidden",High,API
+TC-P3-033,User-List,Worker cannot list users,C77,US-P3-05,"Worker logged in","GET /api/org-users","403 Forbidden",High,API
+TC-P3-034,User-List,User list shows role badges,C77,US-P3-05,"Users exist","View user list","Role badges displayed",Medium,UI
+TC-P3-035,User-List,User list shows status badges,C77,US-P3-05,"Active/disabled users","View user list","Status badges displayed",Medium,UI
+TC-P3-036,User-Create,Admin creates user successfully,C78,US-P3-06,"Admin logged in","POST /api/org-users with valid data","201 Created",High,API
+TC-P3-037,User-Create,Duplicate email in same org rejected,C78,US-P3-06,"User exists","POST with same email","409 Conflict",High,API
+TC-P3-038,User-Create,Same email allowed in different org,C78,US-P3-06,"User in Org1","Create user with same email in Org2","201 Created",High,API
+TC-P3-039,User-Create,Invalid role rejected,C78,US-P3-06,"Admin logged in","POST with role='superuser'","400 Bad Request",High,API
+TC-P3-040,User-Create,Short password rejected,C78,US-P3-06,"Admin logged in","POST with 5 char password","400 Bad Request",High,API
+TC-P3-041,User-Create,Missing name rejected,C78,US-P3-06,"Admin logged in","POST without name","400 Bad Request",Medium,API
+TC-P3-042,User-Create,Invalid email format rejected,C78,US-P3-06,"Admin logged in","POST with 'notanemail'","400 Bad Request",Medium,API
+TC-P3-043,User-Create,New user can login,C78,US-P3-06,"User created","Login as new user","200 OK with token",High,API
+TC-P3-044,User-Create,User form validation works,C78,US-P3-06,"Modal open","Submit empty form","Validation errors shown",Medium,UI
+TC-P3-045,User-Create,Success message after create,C78,US-P3-06,"Valid data entered","Submit form","Toast shows success",Medium,UI
+TC-P3-046,User-Update,Admin updates user name,C79,US-P3-07,"User exists","PUT /api/org-users/:id with new name","Name updated",High,API
+TC-P3-047,User-Update,Admin cannot change own role,C79,US-P3-07,"Admin logged in","PUT to change own role","400 Bad Request",High,API
+TC-P3-048,User-Update,Admin updates user email,C79,US-P3-07,"User exists","PUT with new email","Email updated",High,API
+TC-P3-049,User-Update,Duplicate email on update rejected,C79,US-P3-07,"Two users exist","Update to other's email","409 Conflict",High,API
+TC-P3-050,User-Update,Admin changes user role,C79,C81,US-P3-07,"Worker exists","PUT with role='manager'","Role updated",High,API
+TC-P3-051,User-Update,Role change reflected on next login,C79,C81,US-P3-07,"Role changed","Login as user","New role in JWT",High,API
+TC-P3-052,User-Update,Edit modal shows current values,C79,US-P3-07,"User exists","Open edit modal","Fields populated",Medium,UI
+TC-P3-053,User-Update,Non-admin cannot update users,C79,US-P3-07,"Manager logged in","PUT /api/org-users/:id","403 Forbidden",High,API
+TC-P3-054,User-Update,Cannot update user in other org,C79,US-P3-07,"Org2 user exists","PUT as Org1 admin","403 or 404",Critical,Security
+TC-P3-055,User-Update,Success message after update,C79,US-P3-07,"Valid data","Submit edit form","Toast shows success",Medium,UI
+TC-P3-056,User-Disable,Admin disables user,C80,US-P3-08,"Active user exists","POST /api/org-users/:id/disable","is_active = false",High,API
+TC-P3-057,User-Disable,Disabled user cannot login,C80,US-P3-08,"User disabled","POST /api/auth/login","401 Account Disabled",Critical,API
+TC-P3-058,User-Disable,Admin cannot disable self,C80,US-P3-08,"Admin logged in","Disable own account","400 Bad Request",High,API
+TC-P3-059,User-Disable,Cannot disable last admin,C80,US-P3-08,"Only one admin","Disable that admin","400 Last Admin",High,API
+TC-P3-060,User-Enable,Admin enables disabled user,C80,US-P3-08,"Disabled user","POST /api/org-users/:id/enable","is_active = true",High,API
+TC-P3-061,User-Enable,Re-enabled user can login,C80,US-P3-08,"User re-enabled","POST /api/auth/login","200 OK with token",High,API
+TC-P3-062,User-Disable,Confirmation dialog shown,C80,US-P3-08,"Click disable","View modal","Warning message displayed",Medium,UI
+TC-P3-063,User-Disable,Disabled badge shown,C80,US-P3-08,"User disabled","View user list","Disabled badge visible",Medium,UI
+TC-P3-064,User-Disable,Cannot disable user in other org,C80,US-P3-08,"Org2 user","Disable as Org1 admin","403 or 404",Critical,Security
+TC-P3-065,User-Disable,Existing JWT still works after disable,C80,US-P3-08,"User disabled with active JWT","Use existing token","Token works until expiry",Medium,API
+TC-P3-066,Role-Assign,Worker role assigned on create,C81,US-P3-06,"Create user","Set role=worker","Role saved correctly",High,API
+TC-P3-067,Role-Assign,Manager role assigned on create,C81,US-P3-06,"Create user","Set role=manager","Role saved correctly",High,API
+TC-P3-068,Role-Assign,Admin role assigned on create,C81,US-P3-06,"Create user","Set role=admin","Role saved correctly",High,API
+TC-P3-069,Role-Assign,Role dropdown shows all options,C81,US-P3-06,"Open user form","View role dropdown","Worker/Manager/Admin shown",Medium,UI
+TC-P3-070,Role-Assign,Role change audit logged,C81,US-P3-07,"Change role","Check audit log","Role change event logged",Medium,Integration
+TC-P3-071,No-Self-Reg,No registration endpoint exists,C82,US-P3-06,"Not logged in","POST /api/auth/register","404 Not Found",High,API
+TC-P3-072,No-Self-Reg,Only admin can create users,C82,US-P3-06,"Manager logged in","POST /api/org-users","403 Forbidden",High,API
+TC-P3-073,No-Self-Reg,Login page has no register link,C82,US-P3-06,"View login page","Check for register link","No register link",Medium,UI
+TC-P3-074,Pwd-Reset,Admin resets user password,C83,US-P3-09,"User exists","POST /api/org-users/:id/reset-password","200 OK",High,API
+TC-P3-075,Pwd-Reset,Short password rejected,C83,US-P3-09,"User exists","Reset with 5 chars","400 Bad Request",High,API
+TC-P3-076,Pwd-Reset,User can login with new password,C83,US-P3-09,"Password reset","Login with new password","200 OK",High,API
+TC-P3-077,Pwd-Reset,Old password no longer works,C83,US-P3-09,"Password reset","Login with old password","401 Unauthorized",High,API
+TC-P3-078,Pwd-Reset,Password reset modal works,C83,US-P3-09,"Open modal","Enter new password","Submit succeeds",Medium,UI
+TC-P3-079,Pwd-Reset,Confirm password must match,C83,US-P3-09,"Open modal","Enter mismatched passwords","Validation error",Medium,UI
+TC-P3-080,Pwd-Reset,Cannot reset other org user,C83,US-P3-09,"Org2 user","Reset as Org1 admin","403 or 404",Critical,Security
+TC-P3-081,Export-Inc,Manager exports incidents,C84,US-P3-10,"Incidents exist","GET /api/exports/incidents","CSV file returned",High,API
+TC-P3-082,Export-Inc,Admin exports incidents,C84,US-P3-10,"Incidents exist","GET /api/exports/incidents","CSV file returned",High,API
+TC-P3-083,Export-Inc,Worker cannot export,C84,US-P3-10,"Worker logged in","GET /api/exports/incidents","403 Forbidden",High,API
+TC-P3-084,Export-Inc,CSV has all columns,C84,US-P3-10,"Incidents exist","Check CSV header","All expected columns",High,API
+TC-P3-085,Export-Inc,CSV data is correct,C84,US-P3-10,"Known incidents","Export and verify","Data matches DB",High,API
+TC-P3-086,Export-Inc,Date range filter works,C87,US-P3-10,"Incidents in range","Export with dates","Only filtered records",High,API
+TC-P3-087,Export-Inc,Site filter works,C87,US-P3-10,"Incidents at site","Export with siteId","Only site records",High,API
+TC-P3-088,Export-Inc,Status filter works,C87,US-P3-10,"Mixed statuses","Export with status=open","Only open records",High,API
+TC-P3-089,Export-Inc,Severity filter works,C87,US-P3-10,"Mixed severities","Export with severity=high","Only high severity",High,API
+TC-P3-090,Export-Inc,Combined filters work,C87,US-P3-10,"Various data","Multiple filters","Correctly filtered",High,API
+TC-P3-091,Export-Insp,Manager exports inspections,C85,US-P3-11,"Inspections exist","GET /api/exports/inspections","CSV file returned",High,API
+TC-P3-092,Export-Insp,CSV has all columns,C85,US-P3-11,"Inspections exist","Check CSV header","All expected columns",High,API
+TC-P3-093,Export-Insp,Date filter works,C87,US-P3-11,"Inspections exist","Export with dates","Filtered records",High,API
+TC-P3-094,Export-Insp,Site filter works,C87,US-P3-11,"Inspections exist","Export with siteId","Filtered records",High,API
+TC-P3-095,Export-Insp,Result filter works,C87,US-P3-11,"Pass/fail exist","Export with result=fail","Only failed",High,API
+TC-P3-096,Export-Insp,Only org inspections,C88,US-P3-11,"Multi-org data","Export","Only user's org",Critical,Security
+TC-P3-097,Export-Insp,Filename correct,C89,US-P3-11,"Export","Check filename","inspections_slug_date.csv",Medium,API
+TC-P3-098,Export-Insp,Worker cannot export,C85,US-P3-11,"Worker logged in","GET /api/exports/inspections","403 Forbidden",High,API
+TC-P3-099,Export-Insp,Empty export returns header only,C85,US-P3-11,"No matching data","Export with strict filter","CSV with header only",Medium,API
+TC-P3-100,Export-Insp,Large export streams correctly,C85,US-P3-11,"5000 inspections","Export all","File downloads completely",Medium,Performance
+TC-P3-101,Export-Act,Manager exports actions,C86,US-P3-12,"Actions exist","GET /api/exports/actions","CSV file returned",High,API
+TC-P3-102,Export-Act,CSV has all columns,C86,US-P3-12,"Actions exist","Check CSV header","All expected columns",High,API
+TC-P3-103,Export-Act,Date filter works,C87,US-P3-12,"Actions exist","Export with dates","Filtered records",High,API
+TC-P3-104,Export-Act,Status filter works,C87,US-P3-12,"Mixed statuses","Export with status","Filtered records",High,API
+TC-P3-105,Export-Act,Due date filter works,C87,US-P3-12,"Actions exist","Export with dueBefore","Filtered records",High,API
+TC-P3-106,Export-Act,Only org actions,C88,US-P3-12,"Multi-org data","Export","Only user's org",Critical,Security
+TC-P3-107,Export-Act,Filename correct,C89,US-P3-12,"Export","Check filename","actions_slug_date.csv",Medium,API
+TC-P3-108,Export-Act,Source name included,C86,US-P3-12,"Actions exist","Check CSV","Source name column populated",Medium,API
+TC-P3-109,Export-Act,Assignee info included,C86,US-P3-12,"Actions assigned","Check CSV","Assignee name and email",Medium,API
+TC-P3-110,Export-Act,Unassigned action handled,C86,US-P3-12,"Unassigned action","Check CSV","Empty assignee fields",Medium,API
+TC-P3-111,Export-Filter,Invalid date format rejected,C87,US-P3-10,"Export","Use invalid date","400 Bad Request",Medium,API
+TC-P3-112,Export-Filter,Future date range allowed,C87,US-P3-10,"Export","Use future dates","Empty result (not error)",Low,API
+TC-P3-113,Export-Filter,Invalid site ID handled,C87,US-P3-10,"Export","Use non-existent siteId","Empty or error",Medium,API
+TC-P3-114,Export-Filter,Invalid status ignored or errors,C87,US-P3-10,"Export","Use invalid status","400 or ignored",Medium,API
+TC-P3-115,Export-Filter,No filters returns all,C87,US-P3-10,"Data exists","Export without filters","All org records",High,API
+TC-P3-116,Export-Filter,Start date only works,C87,US-P3-10,"Data exists","Export with startDate only","Records from that date",Medium,API
+TC-P3-117,Export-Filter,End date only works,C87,US-P3-10,"Data exists","Export with endDate only","Records until that date",Medium,API
+TC-P3-118,Export-Filter,Filter UI updates correctly,C87,US-P3-10,"Reports page","Change filters","URL params update",Medium,UI
+TC-P3-119,Export-Filter,Filters persist on export,C87,US-P3-10,"Filters set","Click export","Filters included in request",Medium,UI
+TC-P3-120,Export-Filter,Clear filters works,C87,US-P3-10,"Filters set","Click clear","Filters reset",Low,UI
+TC-P3-121,Export-Scope,Incident export scoped to org,C88,US-P3-10,"Multi-org data","Export incidents","Only user's org",Critical,Security
+TC-P3-122,Export-Scope,Inspection export scoped to org,C88,US-P3-11,"Multi-org data","Export inspections","Only user's org",Critical,Security
+TC-P3-123,Export-Scope,Action export scoped to org,C88,US-P3-12,"Multi-org data","Export actions","Only user's org",Critical,Security
+TC-P3-124,Export-Scope,Cannot add org_id param to bypass,C88,,"Export","Add org_id query param","Ignored, uses JWT org",Critical,Security
+TC-P3-125,Export-Scope,Export joins use org filter,C88,,"Export","Check SQL","Joins filter by org",High,Integration
+TC-P3-126,Export-File,Filename includes org slug,C89,US-P3-10,"Acme Corp org","Export","acme-corp in filename",Medium,API
+TC-P3-127,Export-File,Filename includes date,C89,US-P3-10,"Export today","Check filename","Today's date in name",Medium,API
+TC-P3-128,Export-File,Content-Disposition header correct,C89,US-P3-10,"Export","Check response headers","attachment; filename=...",Medium,API
+TC-P3-129,Export-Limit,Over 10K rows returns error,C90,US-P3-10,"11000 incidents","Export","400 Too Many Rows",High,API
+TC-P3-130,Export-Limit,Exactly 10K rows succeeds,C90,US-P3-10,"10000 incidents","Export","CSV returned",High,API
+TC-P3-131,Export-Limit,Error message helpful,C90,US-P3-10,"> 10K rows","Export","Message says refine filters",Medium,API
+TC-P3-132,Export-Limit,UI shows error modal,C90,US-P3-10,"> 10K rows","Export","Modal with instructions",Medium,UI
+TC-P3-133,Rate-Limit,First export succeeds,C90,US-P3-10,"No recent exports","Export","200 OK",High,API
+TC-P3-134,Rate-Limit,Second immediate export blocked,C90,US-P3-10,"Just exported","Export again","429 Too Many Requests",High,API
+TC-P3-135,Rate-Limit,429 includes Retry-After,C90,US-P3-10,"Rate limited","Check headers","Retry-After: N",High,API
+TC-P3-136,Rate-Limit,X-RateLimit headers present,C90,US-P3-10,"Any export","Check headers","Limit/Remaining/Reset",Medium,API
+TC-P3-137,Rate-Limit,Resets after 30 seconds,C90,US-P3-10,"Rate limited","Wait 30s then export","200 OK",High,API
+TC-P3-138,Rate-Limit,Per-user not global,C90,US-P3-10,"User A limited","User B exports","200 OK",High,API
+TC-P3-139,Rate-Limit,UI shows countdown,C90,US-P3-10,"Rate limited","View button","Countdown displayed",Medium,UI
+TC-P3-140,Rate-Limit,Toast on rate limit,C90,US-P3-10,"Rate limited","Check UI","Toast message shown",Medium,UI
+TC-P3-141,Org-Get,GET returns org data,C91,US-P3-01,"Org exists","GET /api/organisation","200 with org data",High,API
+TC-P3-142,Org-Get,Worker can GET org,C91,US-P3-01,"Worker logged in","GET /api/organisation","200 OK",High,API
+TC-P3-143,Org-Get,Manager can GET org,C91,US-P3-01,"Manager logged in","GET /api/organisation","200 OK",High,API
+TC-P3-144,Org-Get,Response has all fields,C91,US-P3-01,"Org exists","Check response","All fields present",Medium,API
+TC-P3-145,Org-Update,Admin updates name,C91,US-P3-02,"Admin logged in","PUT /api/organisation","Name updated",High,API
+TC-P3-146,Org-Update,Worker cannot update,C91,US-P3-02,"Worker logged in","PUT /api/organisation","403 Forbidden",High,API
+TC-P3-147,Org-Update,Manager cannot update,C91,US-P3-02,"Manager logged in","PUT /api/organisation","403 Forbidden",High,API
+TC-P3-148,Org-Update,Empty name rejected,C91,US-P3-02,"Admin logged in","PUT with name=''","400 Bad Request",Medium,API
+TC-P3-149,Org-Update,Long name rejected,C91,US-P3-02,"Admin logged in","PUT with 250 char name","400 Bad Request",Medium,API
+TC-P3-150,Org-Update,Update audit logged,C91,US-P3-02,"Admin updates","Check audit log","Event logged",Medium,Integration
+TC-P3-151,Logo,Admin uploads PNG,C92,US-P3-03,"Admin logged in","POST PNG to /logo","200 OK, logo saved",High,API
+TC-P3-152,Logo,Admin uploads JPEG,C92,US-P3-03,"Admin logged in","POST JPEG to /logo","200 OK",High,API
+TC-P3-153,Logo,Admin uploads SVG,C92,US-P3-03,"Admin logged in","POST SVG to /logo","200 OK",High,API
+TC-P3-154,Logo,PDF rejected,C92,US-P3-03,"Admin logged in","POST PDF to /logo","400 Invalid type",High,API
+TC-P3-155,Logo,3MB file rejected,C92,US-P3-03,"Admin logged in","POST 3MB file","400 Too large",High,API
+TC-P3-156,Logo,Logo appears in header,C92,US-P3-03,"Logo uploaded","View any page","Logo visible",High,UI
+TC-P3-157,Logo,Admin deletes logo,C92,US-P3-03,"Logo exists","DELETE /logo","Logo removed",High,API
+TC-P3-158,Logo,Fallback after delete,C92,US-P3-03,"Logo deleted","View header","Org name shown",Medium,UI
+TC-P3-159,Logo,Worker cannot upload,C92,US-P3-03,"Worker logged in","POST to /logo","403 Forbidden",High,API
+TC-P3-160,Logo,New logo replaces old,C92,US-P3-03,"Logo exists","Upload new logo","Old replaced",Medium,API
+TC-P3-161,Timezone,Admin updates timezone,C93,US-P3-02,"Admin logged in","PUT with timezone","Updated",High,API
+TC-P3-162,Timezone,Invalid timezone rejected,C93,US-P3-02,"Admin logged in","PUT with 'Invalid/TZ'","400 Bad Request",High,API
+TC-P3-163,Timezone,Timezone in dropdown,C93,US-P3-02,"Settings page","View dropdown","Common timezones listed",Medium,UI
+TC-P3-164,Timezone,Timezone searchable,C93,US-P3-02,"Settings page","Type in dropdown","Results filtered",Low,UI
+TC-P3-165,Timezone,Dates use org timezone,C93,,"Timezone set","View dates in UI","Formatted correctly",Medium,UI
+TC-P3-166,Threshold,Admin sets thresholds,C94,US-P3-04,"Admin logged in","PUT dashboard-settings","Settings saved",High,API
+TC-P3-167,Threshold,Critical < warning rejected,C94,US-P3-04,"Admin logged in","Set critical=5 warning=10","400 Bad Request",High,API
+TC-P3-168,Threshold,Dashboard uses thresholds,C94,US-P3-04,"Thresholds set","View dashboard","Colors reflect settings",High,UI
+TC-P3-169,Threshold,Warning threshold colors yellow,C94,US-P3-04,"Value at warning","View KPI","Yellow indicator",Medium,UI
+TC-P3-170,Threshold,Critical threshold colors red,C94,US-P3-04,"Value at critical","View KPI","Red indicator",Medium,UI
+TC-P3-171,Threshold,Below warning colors green,C94,US-P3-04,"Value below warning","View KPI","Green indicator",Medium,UI
+TC-P3-172,Threshold,Negative value rejected,C94,US-P3-04,"Admin logged in","Set threshold=-1","400 Bad Request",Medium,API
+TC-P3-173,Threshold,Zero threshold allowed,C94,US-P3-04,"Admin logged in","Set threshold=0","200 OK",Medium,API
+TC-P3-174,Threshold,Worker cannot set,C94,US-P3-04,"Worker logged in","PUT dashboard-settings","403 Forbidden",High,API
+TC-P3-175,Threshold,Partial update works,C94,US-P3-04,"Admin logged in","Update one threshold","Only that one changes",Medium,API
+TC-P3-176,Admin-Only,Worker cannot access org settings,C95,,"Worker logged in","Navigate to /admin/organisation","Redirect or 403",High,UI
+TC-P3-177,Admin-Only,Manager cannot access user mgmt,C95,,"Manager logged in","Navigate to /admin/users","Redirect or 403",High,UI
+TC-P3-178,Admin-Only,Admin menu visible only to admin,C95,,"As different roles","Check sidebar","Only admin sees menu",High,UI
+TC-P3-179,Admin-Only,Direct URL access blocked,C95,,"Worker logged in","Go to /admin/users directly","Redirect",High,UI
+TC-P3-180,Admin-Only,API returns 403 for non-admin,C95,,"Worker/Manager","Call admin APIs","403 Forbidden",High,API

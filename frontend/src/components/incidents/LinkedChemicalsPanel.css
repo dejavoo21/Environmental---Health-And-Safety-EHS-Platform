@@ -1,0 +1,174 @@
+.linked-chemicals-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.panel-header h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.empty-message {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 1rem;
+  margin: 0;
+}
+
+.chemicals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chemical-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--color-background);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.chemical-item:hover {
+  background: #E8F4FD;
+}
+
+.chemical-info {
+  flex: 1;
+}
+
+.chemical-name {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.chemical-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.cas-number {
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+
+.unlink-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  opacity: 0.5;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.unlink-btn:hover {
+  opacity: 1;
+  color: #DC3545;
+}
+
+/* Modal Styles */
+.search-results {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.search-result-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover {
+  background: var(--color-background);
+}
+
+.result-name {
+  font-weight: 500;
+}
+
+.result-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.result-meta span {
+  margin-right: 0.5rem;
+}
+
+.selected-chemical {
+  background: var(--color-background);
+  padding: 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+}
+
+.selected-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.change-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.selected-info {
+  margin-bottom: 1rem;
+}
+
+.searching {
+  color: var(--color-text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+}

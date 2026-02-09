@@ -1,0 +1,329 @@
+/**
+ * RisksListPage Styles - Phase 9
+ */
+
+.risks-list-page {
+  padding: 0;
+}
+
+/* ==================== HEADER ==================== */
+
+.risks-list-page__header {
+  margin-bottom: 24px;
+}
+
+.risks-list-page__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.risks-list-page__title-row h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.risks-list-page__actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* ==================== CONTENT LAYOUT ==================== */
+
+.risks-list-page__content {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+}
+
+.risks-list-page__main {
+  min-width: 0;
+}
+
+.risks-list-page__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ==================== TABLE ==================== */
+
+.risks-table-container {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  overflow-x: auto;
+}
+
+.risks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.risks-table th,
+.risks-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.risks-table th {
+  background: #f5f5f5;
+  font-weight: 600;
+  color: #555;
+  white-space: nowrap;
+}
+
+.risks-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.risks-table th.sortable:hover {
+  background: #e8e8e8;
+}
+
+.sort-indicator {
+  margin-left: 4px;
+}
+
+.risks-table tbody tr.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.risks-table tbody tr.clickable-row:hover {
+  background: #f8f9fa;
+}
+
+.risks-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.risk-reference {
+  font-weight: 600;
+  color: #1976D2;
+  white-space: nowrap;
+}
+
+.risk-title {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overdue {
+  color: #D32F2F;
+  font-weight: 500;
+}
+
+/* ==================== PAGINATION ==================== */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-top: 16px;
+}
+
+.pagination__btn {
+  padding: 8px 16px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.pagination__btn:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.pagination__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination__info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* ==================== SIDEBAR ==================== */
+
+.sidebar-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+}
+
+.sidebar-card h3 {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-empty {
+  color: #999;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.top-risks-list,
+.reviews-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.top-risk-item,
+.review-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.top-risk-item:hover,
+.review-item:hover {
+  background: #f8f9fa;
+  margin: 0 -16px;
+  padding: 10px 16px;
+}
+
+.top-risk-item:last-child,
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.top-risk-title {
+  flex: 1;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.review-reference {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1976D2;
+}
+
+.review-date {
+  font-size: 0.8rem;
+  color: #666;
+  margin-left: auto;
+}
+
+/* ==================== BUTTONS ==================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.btn--primary {
+  background: #1976D2;
+  color: white;
+}
+
+.btn--primary:hover {
+  background: #1565C0;
+}
+
+.btn--secondary {
+  background: white;
+  color: #333;
+  border-color: #e0e0e0;
+}
+
+.btn--secondary:hover {
+  background: #f5f5f5;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 1024px) {
+  .risks-list-page__content {
+    grid-template-columns: 1fr;
+  }
+  
+  .risks-list-page__sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .sidebar-card {
+    flex: 1;
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .risks-list-page__title-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .risks-list-page__actions {
+    width: 100%;
+  }
+  
+  .risks-list-page__actions .btn {
+    flex: 1;
+  }
+  
+  .risks-table th,
+  .risks-table td {
+    padding: 10px 12px;
+  }
+  
+  .risk-title {
+    max-width: 150px;
+  }
+  
+  .sidebar-card {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .pagination__btn {
+    width: 100%;
+  }
+}

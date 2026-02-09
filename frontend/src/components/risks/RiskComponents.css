@@ -1,0 +1,777 @@
+/**
+ * Risk Components Styles - Phase 9
+ */
+
+/* ==================== BADGES ==================== */
+
+.risk-level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: 1px solid;
+  font-size: 0.85rem;
+}
+
+.risk-level-badge--small {
+  padding: 2px 6px;
+  font-size: 0.75rem;
+}
+
+.risk-level-badge--large {
+  padding: 6px 14px;
+  font-size: 1rem;
+}
+
+.risk-level-score {
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.risk-status-badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.risk-status-badge--emerging {
+  background-color: #E3F2FD;
+  color: #1976D2;
+}
+
+.risk-status-badge--active {
+  background-color: #E8F5E9;
+  color: #388E3C;
+}
+
+.risk-status-badge--under-review {
+  background-color: #FFF3E0;
+  color: #F57C00;
+}
+
+.risk-status-badge--closed {
+  background-color: #F5F5F5;
+  color: #757575;
+}
+
+.risk-status-badge--accepted {
+  background-color: #F3E5F5;
+  color: #7B1FA2;
+}
+
+/* ==================== SCORE CARDS ==================== */
+
+.risk-score-card {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.risk-score-card--compact {
+  padding: 12px;
+}
+
+.risk-score-card__header {
+  margin-bottom: 8px;
+}
+
+.risk-score-card__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.risk-score-card__score {
+  font-size: 2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: #1f2a2a;
+  opacity: 1;
+}
+
+.risk-score-card--compact .risk-score-card__score {
+  font-size: 1.5rem;
+}
+
+.risk-score-card__level {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.risk-score-card__progress {
+  height: 8px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.risk-score-card__progress-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.risk-score-card__formula {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.risk-score-card__rationale {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #555;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== SCORING SELECTOR ==================== */
+
+.scoring-selector {
+  margin-bottom: 20px;
+}
+
+.scoring-selector__label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.scoring-selector__options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scoring-selector__option {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scoring-selector__option:hover {
+  background-color: #f5f5f5;
+}
+
+.scoring-selector__option input {
+  margin-right: 12px;
+  margin-top: 3px;
+}
+
+.scoring-selector__option input:checked + .scoring-selector__option-content {
+  color: #1976D2;
+}
+
+.scoring-selector__option:has(input:checked) {
+  border-color: #1976D2;
+  background-color: #E3F2FD;
+}
+
+.scoring-selector__option-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.scoring-selector__option-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 24px;
+}
+
+.scoring-selector__option-label {
+  font-weight: 600;
+}
+
+.scoring-selector__option-desc {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.scoring-selector--error .scoring-selector__options {
+  border-color: #F44336;
+}
+
+.scoring-selector__error {
+  color: #F44336;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  display: block;
+}
+
+/* ==================== HEATMAP ==================== */
+
+.risk-heatmap {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.risk-heatmap__title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.risk-heatmap__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 20px 0;
+}
+
+.risk-heatmap__y-axis-label {
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: rotate(-90deg) translateX(-50%);
+  transform-origin: left center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #666;
+  letter-spacing: 2px;
+}
+
+.risk-heatmap__x-axis-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #666;
+  letter-spacing: 2px;
+  margin-top: 10px;
+}
+
+.risk-heatmap__grid {
+  display: grid;
+  grid-template-columns: 100px repeat(5, 60px);
+  gap: 4px;
+  margin-left: 30px;
+}
+
+.risk-heatmap__corner {
+  /* Empty corner cell - no styles needed */
+  display: block;
+}
+
+.risk-heatmap__header {
+  text-align: center;
+  padding: 4px;
+}
+
+.risk-heatmap__header-value {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.risk-heatmap__header-label {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+.risk-heatmap__row-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 8px;
+}
+
+.risk-heatmap__row-value {
+  font-weight: 700;
+  font-size: 1rem;
+  min-width: 20px;
+}
+
+.risk-heatmap__row-text {
+  font-size: 0.7rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.heatmap-cell {
+  width: 60px;
+  height: 60px;
+  border: 2px solid;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.heatmap-cell--selected {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.risk-heatmap__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.risk-heatmap__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid;
+}
+
+/* ==================== CONTROL CARD ==================== */
+
+.control-card {
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 12px;
+}
+
+.control-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.control-card__index {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1976D2;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.control-card__description {
+  flex: 1;
+  font-weight: 500;
+}
+
+.control-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.control-card__badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.control-card__badge--type {
+  background: #E3F2FD;
+  color: #1976D2;
+}
+
+.control-card__badge--hierarchy {
+  background: #F3E5F5;
+  color: #7B1FA2;
+}
+
+.control-effectiveness--effective {
+  background: #E8F5E9;
+  color: #388E3C;
+}
+
+.control-effectiveness--partial {
+  background: #FFF3E0;
+  color: #F57C00;
+}
+
+.control-effectiveness--ineffective {
+  background: #FFEBEE;
+  color: #D32F2F;
+}
+
+.control-effectiveness--unknown {
+  background: #F5F5F5;
+  color: #757575;
+}
+
+.control-card__details {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.control-card__owner {
+  margin-bottom: 4px;
+}
+
+.control-card__links {
+  font-size: 0.85rem;
+  color: #666;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.control-card__link-item {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.control-card__actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ==================== LINK CARD ==================== */
+
+.link-card {
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.link-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.link-card__icon {
+  font-size: 1.5rem;
+}
+
+.link-card__title {
+  font-weight: 600;
+  color: #333;
+}
+
+.link-card__title--clickable {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1976D2;
+  text-decoration: underline;
+  font-size: inherit;
+  padding: 0;
+}
+
+.link-card__title--clickable:hover {
+  color: #1565C0;
+}
+
+.link-card__details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.link-card__reason {
+  font-size: 0.85rem;
+  color: #555;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.link-card__unlink {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+/* ==================== REVIEW CARD ==================== */
+
+.review-card {
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  margin-bottom: 12px;
+}
+
+.review-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.review-card__date {
+  font-weight: 600;
+}
+
+.review-card__reviewer {
+  color: #666;
+}
+
+.review-card__outcome {
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.review-outcome--improved {
+  background: #E8F5E9;
+  color: #388E3C;
+}
+
+.review-outcome--deteriorated {
+  background: #FFEBEE;
+  color: #D32F2F;
+}
+
+.review-outcome--unchanged {
+  background: #F5F5F5;
+  color: #757575;
+}
+
+.review-outcome--close {
+  background: #E3F2FD;
+  color: #1976D2;
+}
+
+.review-card__scores {
+  display: flex;
+  gap: 24px;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.review-card__controls {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.review-card__notes {
+  font-size: 0.9rem;
+  color: #555;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border-left: 3px solid #1976D2;
+}
+
+/* ==================== RISK FILTERS ==================== */
+
+.risk-filters {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
+.risk-filters__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.risk-filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  min-width: 140px;
+}
+
+.risk-filters__field--search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.risk-filters__field select,
+.risk-filters__field input {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.risk-filters__field select:focus,
+.risk-filters__field input:focus {
+  outline: none;
+  border-color: #1976D2;
+}
+
+.risk-filters__clear {
+  margin-top: 12px;
+}
+
+/* ==================== SUMMARY CARDS ==================== */
+
+.risk-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.risk-summary-card {
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.risk-summary-card__value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  opacity: 1;
+}
+
+.risk-summary-card__label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.risk-summary-card--extreme {
+  border-left: 4px solid #F44336;
+}
+
+.risk-summary-card--extreme .risk-summary-card__value {
+  color: #F44336;
+}
+
+.risk-summary-card--high {
+  border-left: 4px solid #FF9800;
+}
+
+.risk-summary-card--high .risk-summary-card__value {
+  color: #FF9800;
+}
+
+.risk-summary-card--medium {
+  border-left: 4px solid #FFEB3B;
+}
+
+.risk-summary-card--medium .risk-summary-card__value {
+  color: #F9A825;
+}
+
+.risk-summary-card--reviews {
+  border-left: 4px solid #1976D2;
+}
+
+.risk-summary-card--reviews .risk-summary-card__value {
+  color: #1976D2;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .risk-heatmap__grid {
+    grid-template-columns: 80px repeat(5, 48px);
+  }
+  
+  .heatmap-cell {
+    width: 48px;
+    height: 48px;
+    font-size: 1rem;
+  }
+  
+  .risk-filters__row {
+    flex-direction: column;
+  }
+  
+  .risk-filters__field {
+    width: 100%;
+  }
+  
+  .scoring-selector__option-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .risk-summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .risk-summary-card__value {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .risk-heatmap__grid {
+    grid-template-columns: 60px repeat(5, 40px);
+    margin-left: 20px;
+  }
+  
+  .heatmap-cell {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+  }
+  
+  .risk-heatmap__row-text {
+    display: none;
+  }
+  
+  .risk-heatmap__header-label {
+    display: none;
+  }
+  
+  .control-card__badges {
+    flex-direction: column;
+  }
+}

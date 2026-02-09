@@ -1,0 +1,12 @@
+Area,Subarea,Task,Details,Status
+Backend,Analytics,Create analytics aggregate queries,"Implement backend logic and endpoints for trend charts, heatmaps, and KPIs defined for Phase 4 analytics dashboards.",
+Backend,Risk Register,Create risk register schema,"Add tables for risks, controls, assessments, and risk ratings including likelihood/impact fields.",
+Backend,Risk Register,Implement risk register APIs,"Add endpoints for creating/updating/listing risks, and recording assessments and treatment plans.",
+Backend,Tests,Add backend tests for analytics and risk,Verify correctness of analytics calculations and risk rating logic against sample data and Phase 4 TC-IDs.,
+Backend,Handover,Update HANDOVER_TO_CLAUDE.md for Phase 4 backend work,Summarise analytics and risk backend progress with traceability details.,
+Frontend,Analytics Dashboards,Implement advanced analytics dashboard UI,"Create dashboards with charts/tables for trends, hotspots, and KPIs as described in FRONTEND_UX_PHASE4.md.",
+Frontend,Analytics Dashboards,Wire dashboards to analytics APIs,"Call analytics endpoints and bind the results into charts, filters, and drill-downs.",
+Frontend,Risk Register,Build risk register UI,"Implement list, detail, and edit screens for risks and their assessments.",
+Frontend,Risk Register,Wire risk register UI to APIs,Connect risk UI to risk register endpoints; handle validation and error states.,
+Frontend,Tests,Add UI tests for analytics and risk flows,Create tests or scripts that validate key analytics and risk user flows mapped to Phase 4 TC-IDs.,
+Frontend,Handover,Update HANDOVER_TO_CLAUDE.md for Phase 4 frontend work,Summarise analytics and risk UI progress with mapping to US-IDs/C-IDs/TC-IDs.,

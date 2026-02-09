@@ -1,0 +1,353 @@
+/**
+ * Risk Modals Styles - Phase 9
+ */
+
+/* ==================== MODAL OVERLAY ==================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* ==================== MODAL ==================== */
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal--small {
+  max-width: 400px;
+}
+
+.modal--large {
+  max-width: 700px;
+}
+
+/* ==================== MODAL HEADER ==================== */
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f5f5f5;
+}
+
+.modal__header--danger {
+  background: #FFEBEE;
+}
+
+.modal__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal__close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.modal__close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+/* ==================== MODAL BODY ==================== */
+
+.modal__body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal__section {
+  margin-bottom: 24px;
+}
+
+.modal__section:last-child {
+  margin-bottom: 0;
+}
+
+.modal__section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal__hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+/* ==================== MODAL FOOTER ==================== */
+
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  background: #f9f9f9;
+}
+
+/* ==================== FORM FIELDS ==================== */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-field:last-child {
+  margin-bottom: 0;
+}
+
+.form-field--error label,
+.form-field--error {
+  color: #D32F2F;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+  font-family: inherit;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: #1976D2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+.form-field--error input,
+.form-field--error select,
+.form-field--error textarea {
+  border-color: #D32F2F;
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-error {
+  color: #D32F2F;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.required {
+  color: #D32F2F;
+}
+
+/* ==================== SCORE PREVIEW ==================== */
+
+.score-preview {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #E3F2FD;
+  border-radius: 6px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* ==================== CONTROLS CHECKLIST ==================== */
+
+.controls-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+.control-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.control-check:hover {
+  background: #f0f0f0;
+}
+
+.control-check input {
+  margin-top: 3px;
+}
+
+/* ==================== CONTROL SUMMARY ==================== */
+
+.control-summary {
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+/* ==================== WARNING TEXT ==================== */
+
+.warning-text {
+  color: #D32F2F;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+/* ==================== BUTTONS ==================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: #1976D2;
+  color: white;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: #1565C0;
+}
+
+.btn--secondary {
+  background: #f5f5f5;
+  color: #333;
+  border-color: #e0e0e0;
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.btn--danger {
+  background: #D32F2F;
+  color: white;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #C62828;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: #1976D2;
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: rgba(25, 118, 210, 0.1);
+}
+
+.btn--ghost.btn--danger {
+  color: #D32F2F;
+  background: transparent;
+}
+
+.btn--ghost.btn--danger:hover:not(:disabled) {
+  background: rgba(211, 47, 47, 0.1);
+}
+
+.btn--small {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 600px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+  
+  .modal {
+    max-height: 95vh;
+  }
+  
+  .modal__header,
+  .modal__body,
+  .modal__footer {
+    padding: 16px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal__footer {
+    flex-direction: column;
+  }
+  
+  .modal__footer .btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,403 @@
+/**
+ * RiskDetailPage Styles - Phase 9
+ */
+
+.risk-detail-page {
+  padding: 0;
+}
+
+/* ==================== HEADER ==================== */
+
+.risk-detail-page__header {
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  margin-bottom: 16px;
+}
+
+.risk-detail-page__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.risk-detail-page__title {
+  flex: 1;
+}
+
+.risk-detail-page__title .risk-reference {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1976D2;
+  margin-bottom: 4px;
+}
+
+.risk-detail-page__title h1 {
+  margin: 0 0 12px 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-strong);
+}
+
+.risk-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.risk-detail-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ==================== TABS ==================== */
+
+.risk-detail-page__tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--color-border-subtle);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-btn:hover {
+  color: var(--color-text-strong);
+  background: var(--color-row-hover);
+}
+
+.tab-btn--active {
+  color: #1976D2;
+  border-bottom-color: #1976D2;
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--color-border-subtle);
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tab-btn--active .tab-count {
+  background: #1976D2;
+  color: white;
+}
+
+/* ==================== TAB CONTENT ==================== */
+
+.risk-detail-page__content {
+  background: var(--color-bg-card);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-subtle);
+  padding: 24px;
+}
+
+.tab-content {
+  min-height: 300px;
+}
+
+.tab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.tab-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-strong);
+}
+
+.empty-tab {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-text-muted);
+}
+
+.empty-tab p {
+  margin-bottom: 20px;
+}
+
+/* ==================== DETAILS TAB ==================== */
+
+.details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.score-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.details-section {
+  padding: 20px;
+  background: var(--color-row-hover);
+  border-radius: 8px;
+}
+
+.details-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-strong);
+}
+
+.details-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-field span,
+.detail-field p {
+  font-size: 0.95rem;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.detail-field .overdue {
+  color: #D32F2F;
+  font-weight: 500;
+}
+
+.description-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+/* ==================== CONTROLS TAB ==================== */
+
+.controls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ==================== LINKS TAB ==================== */
+
+.links-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* ==================== REVIEWS TAB ==================== */
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ==================== HISTORY TAB ==================== */
+
+.history-timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.history-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-border-subtle);
+}
+
+.history-item {
+  position: relative;
+  padding: 16px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.history-marker {
+  position: absolute;
+  left: -26px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-bg-card);
+  border: 3px solid #1976D2;
+}
+
+.history-marker--review {
+  border-color: #4CAF50;
+}
+
+.history-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-date {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.history-action {
+  font-size: 0.95rem;
+  color: var(--color-text-strong);
+}
+
+/* ==================== BUTTONS ==================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.btn--primary {
+  background: #1976D2;
+  color: white;
+}
+
+.btn--primary:hover {
+  background: #1565C0;
+}
+
+.btn--secondary {
+  background: var(--color-bg-card);
+  color: var(--color-text-strong);
+  border-color: var(--color-border-subtle);
+}
+
+.btn--secondary:hover {
+  background: var(--color-row-hover);
+}
+
+.btn--danger {
+  background: #D32F2F;
+  color: white;
+}
+
+.btn--danger:hover {
+  background: #C62828;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+}
+
+.btn--ghost:hover {
+  background: rgba(25, 118, 210, 0.1);
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .risk-detail-page__title-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .risk-detail-page__actions {
+    flex-wrap: wrap;
+  }
+  
+  .risk-detail-page__actions .btn {
+    flex: 1;
+    min-width: calc(50% - 5px);
+  }
+  
+  .risk-detail-page__tabs {
+    margin-left: -24px;
+    margin-right: -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  
+  .tab-btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .risk-detail-page__content {
+    padding: 16px;
+  }
+  
+  .links-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .score-cards-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .details-fields {
+    grid-template-columns: 1fr;
+  }
+  
+  .risk-detail-page__actions .btn {
+    width: 100%;
+    min-width: 100%;
+  }
+}

@@ -1,0 +1,288 @@
+{\rtf1\ansi
+\b Test Case Catalogue – Phase 1 \b0\par
+\par
+\b TC-AUTH-01 - Successful login with valid credentials\b0\par
+Story ID: US-AUTH-01  Phase: P1  Type: UI\par
+Journeys: P1-J1  Checklist IDs: C1,C20\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User account exists with known email/password. Backend and frontend running.\par
+\i Steps:\i0\par 1. Navigate to login page.
+2. Enter valid email and password.
+3. Click 'Login'.\par
+\i Expected Result:\i0\par User is redirected to the dashboard. A valid token is stored. Dashboard API calls succeed.\par
+\par
+\b TC-AUTH-02 - Login fails with invalid password\b0\par
+Story ID: US-AUTH-01  Phase: P1  Type: UI\par
+Journeys: P1-J1  Checklist IDs: C1,C20\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User account exists.\par
+\i Steps:\i0\par 1. Navigate to login page.
+2. Enter valid email and incorrect password.
+3. Click 'Login'.\par
+\i Expected Result:\i0\par User remains on login page. Clear error message displayed. No token is stored.\par
+\par
+\b TC-AUTH-03 - Protected route rejects unauthenticated access\b0\par
+Story ID: US-AUTH-01  Phase: P1  Type: API\par
+Journeys: P1-J1  Checklist IDs: C20,C21\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par No auth token present in client.\par
+\i Steps:\i0\par 1. Call a protected API (e.g. GET /api/incidents) without Authorization header.\par
+\i Expected Result:\i0\par API returns 401/403 and does not return incident data.\par
+\par
+\b TC-AUTH-04 - /auth/me returns correct role\b0\par
+Story ID: US-AUTH-02  Phase: P1  Type: API\par
+Journeys: P1-J1,P1-J2,P1-J4  Checklist IDs: C20,C21\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in and has a known role in DB.\par
+\i Steps:\i0\par 1. Call GET /api/auth/me with valid Authorization header.\par
+\i Expected Result:\i0\par Response includes user id, email, name, and correct role.\par
+\par
+\b TC-AUTH-05 - Worker cannot see admin-only navigation\b0\par
+Story ID: US-AUTH-02  Phase: P1  Type: UI\par
+Journeys: P1-J1,P1-J4,P1-J5  Checklist IDs: C22\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in as worker.\par
+\i Steps:\i0\par 1. Observe main navigation menu.\par
+\i Expected Result:\i0\par Admin-only items (Sites, Templates/Admin) are not visible.\par
+\par
+\b TC-AUTH-06 - Worker blocked from admin-only endpoints\b0\par
+Story ID: US-AUTH-02  Phase: P1  Type: API\par
+Journeys: P1-J4  Checklist IDs: C22\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in as worker.\par
+\i Steps:\i0\par 1. Call POST /api/sites as worker user.
+2. Observe response.\par
+\i Expected Result:\i0\par API returns 403 or equivalent error. No new site is created.\par
+\par
+\b TC-SITE-01 - Admin creates a new site\b0\par
+Story ID: US-SITE-01  Phase: P1  Type: UI\par
+Journeys: P1-J4  Checklist IDs: C16,C17\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in as admin.\par
+\i Steps:\i0\par 1. Navigate to Admin → Sites.
+2. Click 'Add Site'.
+3. Enter Name='Warehouse 1', Code='WH1'.
+4. Click 'Save'.\par
+\i Expected Result:\i0\par New site appears in site list and is available in incident/inspection site dropdowns.\par
+\par
+\b TC-SITE-02 - Admin edits existing site\b0\par
+Story ID: US-SITE-01  Phase: P1  Type: UI\par
+Journeys: P1-J4  Checklist IDs: C16,C17\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in as admin. At least one site exists.\par
+\i Steps:\i0\par 1. Navigate to Admin → Sites.
+2. Select an existing site.
+3. Edit name/code.
+4. Click 'Save'.\par
+\i Expected Result:\i0\par Updated site data is shown in list and forms use the new values.\par
+\par
+\b TC-SITE-03 - Duplicate site code rejected\b0\par
+Story ID: US-SITE-01  Phase: P1  Type: API\par
+Journeys: P1-J4  Checklist IDs: C18,C19\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in as admin. A site with Code='WH1' exists.\par
+\i Steps:\i0\par 1. Call POST /api/sites with Code='WH1'.\par
+\i Expected Result:\i0\par API returns validation error. No duplicate site is created.\par
+\par
+\b TC-REF-01 - GET /incident-types returns seeded types\b0\par
+Story ID: US-REF-01  Phase: P1  Type: API\par
+Journeys: P1-J2  Checklist IDs: C6,C7\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Database initialised with default incident types.\par
+\i Steps:\i0\par 1. Call GET /api/incident-types as any logged-in user.\par
+\i Expected Result:\i0\par Response list includes Injury, Near Miss, Property Damage (or configured defaults).\par
+\par
+\b TC-REF-02 - New incident form shows incident types dropdown\b0\par
+Story ID: US-REF-01  Phase: P1  Type: UI\par
+Journeys: P1-J2  Checklist IDs: C6,C7\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in. Incident types exist.\par
+\i Steps:\i0\par 1. Navigate to Incidents → New Incident.
+2. Open Incident Type dropdown.\par
+\i Expected Result:\i0\par Dropdown shows available incident types from API.\par
+\par
+\b TC-INC-01 - Create incident – happy path\b0\par
+Story ID: US-INC-01  Phase: P1  Type: UI\par
+Journeys: P1-J2  Checklist IDs: C1,C2,C3\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Worker logged in. At least one site and incident type exist.\par
+\i Steps:\i0\par 1. Navigate to Incidents → New Incident.
+2. Fill all required fields with valid data.
+3. Click 'Save'.\par
+\i Expected Result:\i0\par Incident is created with status 'open', appears in incident list, and is linked to correct site/type.\par
+\par
+\b TC-INC-02 - Validation on missing required field\b0\par
+Story ID: US-INC-01  Phase: P1  Type: UI\par
+Journeys: P1-J2  Checklist IDs: C1,C2\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Worker logged in.\par
+\i Steps:\i0\par 1. Navigate to Incidents → New Incident.
+2. Leave Title empty.
+3. Fill other fields.
+4. Click 'Save'.\par
+\i Expected Result:\i0\par Form shows a clear validation message. Incident is not created.\par
+\par
+\b TC-INC-03 - POST /incidents persists correct data\b0\par
+Story ID: US-INC-01  Phase: P1  Type: API\par
+Journeys: P1-J2  Checklist IDs: C1,C3\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Worker auth token available. Site and incident type IDs known.\par
+\i Steps:\i0\par 1. Call POST /api/incidents with valid JSON body.
+2. Query DB or call GET /api/incidents to verify record.\par
+\i Expected Result:\i0\par Incident stored with correct title, description, type, site, severity, occurred_at, status='open', reported_by set to user.\par
+\par
+\b TC-INC-04 - Incident list shows correct columns\b0\par
+Story ID: US-INC-02  Phase: P1  Type: UI\par
+Journeys: P1-J2,P1-J3  Checklist IDs: C3,C4,C24\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par At least one incident exists.\par
+\i Steps:\i0\par 1. Navigate to Incidents page.\par
+\i Expected Result:\i0\par Table shows Date, Title, Type, Site, Severity, Status columns with correct data for each row.\par
+\par
+\b TC-INC-05 - Filter incidents by status\b0\par
+Story ID: US-INC-02  Phase: P1  Type: UI\par
+Journeys: P1-J2,P1-J3  Checklist IDs: C3,C4\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Incidents with multiple statuses exist.\par
+\i Steps:\i0\par 1. On Incidents page, set filter Status='open'.\par
+\i Expected Result:\i0\par Only incidents with status 'open' are displayed.\par
+\par
+\b TC-INC-06 - Filter incidents by site\b0\par
+Story ID: US-INC-02  Phase: P1  Type: UI\par
+Journeys: P1-J2,P1-J3  Checklist IDs: C3,C4\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Incidents exist for at least two sites.\par
+\i Steps:\i0\par 1. On Incidents page, set filter Site='Head Office'.\par
+\i Expected Result:\i0\par Only incidents for 'Head Office' are displayed.\par
+\par
+\b TC-INC-07 - Manager changes incident status\b0\par
+Story ID: US-INC-03  Phase: P1  Type: UI\par
+Journeys: P1-J3  Checklist IDs: C4,C25\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Manager logged in. Incident exists with status 'open'.\par
+\i Steps:\i0\par 1. Open Incidents list.
+2. Click incident to open detail.
+3. Change status to 'under_investigation' or 'closed'.
+4. Save.\par
+\i Expected Result:\i0\par Incident status updates successfully and list/dashboard reflect new status.\par
+\par
+\b TC-INC-08 - Worker cannot change status (blocked)\b0\par
+Story ID: US-INC-03  Phase: P1  Type: API\par
+Journeys: P1-J3  Checklist IDs: C25\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Worker logged in. Incident exists.\par
+\i Steps:\i0\par 1. Worker attempts PUT/PATCH on incident status endpoint.\par
+\i Expected Result:\i0\par API returns 403 or similar. Status remains unchanged in DB.\par
+\par
+\b TC-INSP-01 - Create template with name & description\b0\par
+Story ID: US-INSP-01  Phase: P1  Type: UI\par
+Journeys: P1-J5  Checklist IDs: C8,C9\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Admin logged in.\par
+\i Steps:\i0\par 1. Navigate to Admin → Inspection Templates.
+2. Click 'New Template'.
+3. Enter name and description.
+4. Save.\par
+\i Expected Result:\i0\par Template appears in templates list.\par
+\par
+\b TC-INSP-02 - Add/edit/delete checklist items\b0\par
+Story ID: US-INSP-01  Phase: P1  Type: UI\par
+Journeys: P1-J5  Checklist IDs: C10,C11\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Admin logged in. Template exists.\par
+\i Steps:\i0\par 1. Open template detail.
+2. Add several items with labels and categories.
+3. Edit one item.
+4. Delete one item.
+5. Save.\par
+\i Expected Result:\i0\par Template shows updated list of items with changes persisted.\par
+\par
+\b TC-INSP-03 - Template and items stored correctly\b0\par
+Story ID: US-INSP-01  Phase: P1  Type: API\par
+Journeys: P1-J5  Checklist IDs: C8,C9,C10,C11\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Admin logged in. Template created via UI or API.\par
+\i Steps:\i0\par 1. Call GET /api/inspection-templates and /:id.
+2. Inspect returned JSON.\par
+\i Expected Result:\i0\par Template includes correct name/description and items list with labels and categories.\par
+\par
+\b TC-INSP-04 - Inspection form shows template checklist\b0\par
+Story ID: US-INSP-02  Phase: P1  Type: UI\par
+Journeys: P1-J6  Checklist IDs: C12,C13\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Manager logged in. At least one site and template with items exist.\par
+\i Steps:\i0\par 1. Navigate to Inspections → New Inspection.
+2. Select a site and a template.\par
+\i Expected Result:\i0\par Inspection form displays all items from the selected template.\par
+\par
+\b TC-INSP-05 - Record results with ok/not_ok/n/a\b0\par
+Story ID: US-INSP-02  Phase: P1  Type: UI\par
+Journeys: P1-J6  Checklist IDs: C14\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Manager logged in. Inspection form showing checklist.\par
+\i Steps:\i0\par 1. For each item, select result from dropdown (ok/not_ok/n/a).
+2. Optionally add comments.
+3. Submit.\par
+\i Expected Result:\i0\par Inspection is created; responses are saved with correct result and comment per item.\par
+\par
+\b TC-INSP-06 - overall_result logic (pass/fail)\b0\par
+Story ID: US-INSP-02  Phase: P1  Type: UNIT\par
+Journeys: P1-J6  Checklist IDs: C15\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Unit test context or isolated service function available.\par
+\i Steps:\i0\par 1. Call logic with all items = ok → expect 'pass'.
+2. Call with at least one item = not_ok → expect 'fail'.\par
+\i Expected Result:\i0\par Logic returns 'pass' when no not_ok items; 'fail' when any not_ok item present.\par
+\par
+\b TC-INSP-07 - Inspection list shows correct columns\b0\par
+Story ID: US-INSP-03  Phase: P1  Type: UI\par
+Journeys: P1-J6  Checklist IDs: C26,C27\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par At least one inspection exists.\par
+\i Steps:\i0\par 1. Navigate to Inspections page.\par
+\i Expected Result:\i0\par Table shows Template, Site, Performed By, Date, Overall Result with correct values.\par
+\par
+\b TC-INSP-08 - Inspection detail shows header + items\b0\par
+Story ID: US-INSP-03  Phase: P1  Type: UI\par
+Journeys: P1-J6  Checklist IDs: C26,C27\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Inspection exists.\par
+\i Steps:\i0\par 1. On Inspections list, click an inspection.
+2. View detail.\par
+\i Expected Result:\i0\par Detail view shows header info and full list of item responses with results and comments.\par
+\par
+\b TC-DASH-01 - /dashboard/summary returns all metrics\b0\par
+Story ID: US-DASH-01  Phase: P1  Type: API\par
+Journeys: P1-J7  Checklist IDs: C28,C29,C30,C31,C32\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Incidents and inspections exist over at least 30 days.\par
+\i Steps:\i0\par 1. Call GET /api/dashboard/summary.\par
+\i Expected Result:\i0\par Response JSON includes incident totals, open count, last_30_days counts, inspections last_30_days, failed inspections, by_type, severity_trend, and recent lists.\par
+\par
+\b TC-DASH-02 - Dashboard shows KPI cards correctly\b0\par
+Story ID: US-DASH-01  Phase: P1  Type: UI\par
+Journeys: P1-J1,P1-J7  Checklist IDs: C28,C29,C30,C31,C32\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par User logged in. Dashboard API working.\par
+\i Steps:\i0\par 1. Navigate to Dashboard page.\par
+\i Expected Result:\i0\par KPI cards show numbers matching /dashboard/summary response.\par
+\par
+\b TC-DASH-03 - Charts render incidents by type and severity trend\b0\par
+Story ID: US-DASH-01  Phase: P1  Type: UI\par
+Journeys: P1-J7  Checklist IDs: C28,C29,C30,C31,C32\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Dashboard data available for multiple incident types and months.\par
+\i Steps:\i0\par 1. Navigate to Dashboard.
+2. Observe bar chart (by type) and line chart (severity trend).\par
+\i Expected Result:\i0\par Charts display data consistent with /dashboard/summary by_type and severity_trend.\par
+\par
+\b TC-DASH-04 - Recent incidents/inspections tables are clickable\b0\par
+Story ID: US-DASH-01  Phase: P1  Type: UI\par
+Journeys: P1-J7  Checklist IDs: C28,C29,C30,C31,C32\par
+Status: [  ] Not Run   [  ] Pass   [  ] Fail   [  ] Blocked\par
+\i Preconditions:\i0\par Recent incidents and inspections exist.\par
+\i Steps:\i0\par 1. Navigate to Dashboard.
+2. In Recent Incidents table, click a row.
+3. In Recent Inspections table, click a row.\par
+\i Expected Result:\i0\par Clicking a row opens the corresponding incident/inspection detail view.\par
+}

@@ -1,0 +1,184 @@
+UAT ID,Wave,Category,Scenario Title,Description,Preconditions,Test Steps,Expected Result,Test Data,Priority,Tester,Test Date,Status,Actual Result,Defects,Comments
+P10-UAT-SSO-01,1,SSO Configuration,"Admin configures SSO provider","Admin sets up Azure AD SSO for organisation","Admin user logged in, no SSO configured","1. Navigate to Settings > Integrations > SSO
+2. Click 'Configure SSO'
+3. Select 'Azure AD' as provider type
+4. Enter Client ID, Client Secret, Tenant ID
+5. Enter allowed domains
+6. Click 'Test Connection'
+7. Click 'Save'","SSO provider created, test connection successful, SSO available for org users","Azure AD credentials for test tenant",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-02,1,SSO Configuration,"Admin configures Okta SSO","Admin sets up Okta SSO provider","Admin user logged in","1. Navigate to Settings > Integrations > SSO
+2. Click 'Configure SSO'
+3. Select 'Okta' as provider type
+4. Enter Okta domain, Client ID, Client Secret
+5. Configure role mappings
+6. Click 'Save'","Okta SSO configured successfully","Okta developer account",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-03,1,SSO Configuration,"Admin configures role mappings","Map IdP groups to EHS roles","SSO provider configured","1. Navigate to SSO settings
+2. Click 'Role Mappings' tab
+3. Add mapping: 'EHS-Admins' group → Admin role
+4. Add mapping: 'EHS-Managers' group → Manager role
+5. Add mapping: 'EHS-Workers' group → Worker role
+6. Save mappings","Role mappings saved, users get correct role on SSO login","IdP groups: EHS-Admins, EHS-Managers, EHS-Workers",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-04,1,SSO Configuration,"Admin tests SSO connection","Test IdP connectivity before enabling","SSO settings entered but not saved","1. Enter SSO configuration
+2. Click 'Test Connection'
+3. Wait for result","Test shows success with IdP details returned (issuer, endpoints)","Valid IdP credentials",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-05,1,SSO Configuration,"Admin enables SSO-only mode","Disable password login for org","SSO configured and working","1. Navigate to SSO settings
+2. Toggle 'SSO-only mode' ON
+3. Confirm warning dialog
+4. Save","Warning shown about blocking password login, SSO-only mode enabled","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-06,1,SSO Login,"User logs in via SSO - existing user","Existing user authenticates via SSO","User exists in EHS, SSO configured for org","1. Go to login page
+2. Enter email from SSO-enabled org
+3. Click 'Sign in with SSO' button
+4. Redirected to IdP
+5. Enter IdP credentials
+6. Authorize application
+7. Redirected back to EHS","User logged in successfully, redirected to dashboard, existing user data preserved","Existing user: ssotest@testorg.com",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-07,1,SSO Login,"JIT user provisioning - new user","New user created automatically on first SSO login","SSO configured with JIT enabled, user NOT in EHS","1. New user goes to login page
+2. Enter email from SSO-enabled org
+3. Click 'Sign in with SSO'
+4. Authenticate at IdP
+5. Return to EHS","New user account created with role from mapping, user logged in, profile populated from IdP claims","New user: newuser@testorg.com in IdP but not EHS",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-08,1,SSO Login,"SSO login with role mapping","User receives correct role from IdP group","User in 'EHS-Managers' group in IdP, role mapping exists","1. User authenticates via SSO
+2. IdP returns groups claim including 'EHS-Managers'
+3. EHS processes login","User logged in with Manager role applied","User in IdP with groups: ['EHS-Managers']",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-09,1,SSO Login,"SSO login failure - invalid credentials","User fails IdP authentication","SSO configured","1. Go to login page
+2. Enter email from SSO-enabled org
+3. Click 'Sign in with SSO'
+4. Enter WRONG IdP credentials","IdP shows authentication error, user not logged in to EHS","Invalid IdP password",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-10,1,SSO Login,"SSO login failure - domain not allowed","User from non-allowed domain rejected","SSO configured with domain restriction to testorg.com","1. User from other-domain.com tries SSO login
+2. Enters email user@other-domain.com","Error: 'SSO not available for this domain', login blocked","Email: user@other-domain.com",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-11,1,SSO Login,"Password login blocked in SSO-only mode","User cannot use password when SSO-only","SSO-only mode enabled for org","1. Go to login page
+2. Enter email from SSO-only org
+3. Try to enter password","Password field hidden or disabled, only SSO button shown, message explains SSO-only","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SSO-12,1,SSO Logout,"User logs out from SSO session","SSO logout terminates IdP session","User logged in via SSO","1. Click profile menu
+2. Click 'Sign Out'
+3. Confirm logout","User logged out of EHS, optionally redirected to IdP logout","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-01,2,API Client Management,"Admin creates API client","Create new API client with scopes","Admin logged in","1. Navigate to Settings > Integrations > API Clients
+2. Click 'Create API Client'
+3. Enter name: 'External Integration'
+4. Enter description
+5. Select scopes: incidents:read, incidents:write
+6. Set rate limit tier: Standard
+7. Click 'Create'","API client created, API key displayed ONCE with copy button, warning to save key","",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-02,2,API Client Management,"Admin views API key only once","API key shown only at creation","Admin logged in","1. Create new API client
+2. Copy displayed API key
+3. Close modal
+4. View API client details","Full API key only shown at creation, details page shows only masked key (ehs_live_xxx...)",Key format: ehs_live_{prefix}_{random},Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-03,2,API Client Management,"Admin regenerates API key","Generate new key, invalidate old","API client exists","1. Navigate to API client details
+2. Click 'Regenerate Key'
+3. Confirm warning about invalidating old key
+4. Copy new key","New key generated and displayed, old key invalidated, new key works, old key returns 401","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-04,2,API Client Management,"Admin suspends API client","Temporarily disable API access","API client active","1. Navigate to API client details
+2. Click 'Suspend'
+3. Confirm action","Client status changed to 'Suspended', API calls return 401 with 'suspended' message","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-05,2,API Client Management,"Admin reactivates API client","Restore suspended client","API client suspended","1. Navigate to API client details
+2. Click 'Reactivate'","Client status changed to 'Active', API key works again","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-06,2,API Client Management,"Admin revokes API client","Permanently revoke API access","API client exists","1. Navigate to API client details
+2. Click 'Revoke'
+3. Confirm permanent action","Client status changed to 'Revoked', cannot be reactivated, API calls return 401","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-07,2,API Client Management,"Admin updates API client scopes","Modify granted scopes","API client exists with incidents:read","1. Edit API client
+2. Add scope: actions:read
+3. Remove scope: incidents:read
+4. Save","Scopes updated, API can now read actions but not incidents","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-API-08,2,API Client Management,"Admin views API client usage stats","View request count and last used","API client with usage history","1. Navigate to API client details
+2. View statistics section","Shows: Total requests, Last used date/time, Requests by endpoint","API client used for 50+ requests",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-01,2,Public API,"API call - list incidents","External system fetches incidents via API","API client with incidents:read scope","1. Call GET /api/public/v1/incidents
+2. Include header: X-API-Key: {key}
+3. Verify response","200 OK, JSON array of incidents for client's organisation, pagination metadata included","Valid API key",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-02,2,Public API,"API call - create incident","External system creates incident via API","API client with incidents:write scope","1. Call POST /api/public/v1/incidents
+2. Include X-API-Key header
+3. Send JSON body with incident data
+4. Verify response","201 Created, incident created in database, ID returned, appears in EHS UI","{title: 'API Test', type_id: 1, severity: 'high'}",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-03,2,Public API,"API call - unauthorized (no key)","API rejects request without API key","API endpoint exists","1. Call GET /api/public/v1/incidents
+2. Do NOT include X-API-Key header","401 Unauthorized, error message: 'API key required'","",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-04,2,Public API,"API call - invalid API key","API rejects invalid key","API endpoint exists","1. Call GET /api/public/v1/incidents
+2. Include header: X-API-Key: invalid_key_here","401 Unauthorized, error message: 'Invalid API key'","Key: invalid_key_here",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-05,2,Public API,"API call - insufficient scope","API rejects call missing required scope","API client with ONLY incidents:read scope","1. Call POST /api/public/v1/incidents (requires incidents:write)
+2. Include valid API key","403 Forbidden, error message: 'Insufficient scope' or 'incidents:write required'","API client without incidents:write",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-06,2,Public API,"Rate limiting - standard tier","API enforces rate limits","API client with Standard tier (1000/min)","1. Make 1000 rapid API calls
+2. Make 1 more call","First 1000 succeed, 1001st returns 429 Too Many Requests with Retry-After header","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-07,2,Public API,"Rate limit headers present","API returns rate limit info","API client exists","1. Make any API call
+2. Check response headers","Headers present: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-08,2,Public API,"Multi-tenant isolation","API only returns own org's data","API clients for Org A and Org B","1. API client for Org A calls GET /api/public/v1/incidents
+2. API client for Org B calls GET /api/public/v1/incidents","Each client only sees their own organisation's incidents, no cross-tenant data","Two orgs with different incidents",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-09,2,Public API,"API call - list actions","Fetch corrective actions via API","API client with actions:read","1. Call GET /api/public/v1/actions
+2. Include valid API key","200 OK, JSON array of actions","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-10,2,Public API,"API call - list risks","Fetch risk register via API","API client with risks:read","1. Call GET /api/public/v1/risks
+2. Include valid API key","200 OK, JSON array of risks","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-11,2,Public API,"API call - list users","Fetch user directory via API","API client with users:read","1. Call GET /api/public/v1/users
+2. Include valid API key","200 OK, JSON array of users (limited fields: id, name, email, role)","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-12,2,Public API,"API call - pagination","API supports pagination parameters","API client with incidents:read, 50+ incidents","1. Call GET /api/public/v1/incidents?page=1&limit=10
+2. Call GET /api/public/v1/incidents?page=2&limit=10","Page 1 returns 10 incidents, Page 2 returns next 10, metadata shows total count","50+ incidents in org",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-PUB-13,2,Public API,"API call - filtering","API supports filter parameters","API client, incidents with various statuses","1. Call GET /api/public/v1/incidents?status=open
+2. Call GET /api/public/v1/incidents?status=closed","Only incidents matching filter status returned","Mix of open/closed incidents",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-01,3,Webhooks,"Admin creates webhook","Create webhook for incident events","Admin logged in","1. Navigate to Settings > Integrations > Webhooks
+2. Click 'Create Webhook'
+3. Enter name: 'Slack Notifications'
+4. Enter URL: https://hooks.slack.com/services/xxx
+5. Select events: incident.created, incident.updated
+6. Click 'Create'","Webhook created, signing secret displayed ONCE","Valid HTTPS webhook URL",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-02,3,Webhooks,"Webhook sends on incident created","Webhook fires when incident created","Webhook configured for incident.created","1. Create new incident in EHS
+2. Check webhook receiver","Webhook received with: event type, timestamp, incident data, valid signature","Webhook receiver/logger",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-03,3,Webhooks,"Webhook signature verification","External system verifies webhook signature","Webhook configured, signing secret known","1. Trigger webhook event
+2. Capture webhook payload and headers
+3. Verify signature: HMAC-SHA256(timestamp.payload, secret)","Signature in X-Webhook-Signature header matches calculated signature","Signing secret from webhook config",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-04,3,Webhooks,"Webhook sends on action completed","Webhook fires for action events","Webhook configured for action.completed","1. Complete an action in EHS
+2. Check webhook receiver","Webhook received with action completion data","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-05,3,Webhooks,"Webhook retry on failure","Failed webhook retried with backoff","Webhook URL temporarily unreachable","1. Configure webhook to unavailable URL
+2. Create incident to trigger webhook
+3. Wait for retries
+4. Make URL available
+5. Wait for retry","Webhook retried up to 5 times with exponential backoff, eventually succeeds","URL that fails then succeeds",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-06,3,Webhooks,"Webhook auto-disabled after failures","Webhook disabled after consecutive failures","Webhook to permanently failing URL","1. Configure webhook to broken URL
+2. Trigger 10+ events
+3. Check webhook status","Webhook auto-disabled after 10 consecutive failures, admin notified","Permanently broken URL",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-07,3,Webhooks,"Admin views webhook delivery history","View webhook event deliveries","Webhook with delivery history","1. Navigate to webhook details
+2. Click 'Delivery History' tab","List of delivery attempts with: event type, timestamp, status, response code, duration","Webhook with 20+ deliveries",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-08,3,Webhooks,"Admin retries failed webhook","Manually retry failed delivery","Webhook with failed delivery","1. Navigate to webhook delivery history
+2. Find failed delivery
+3. Click 'Retry'","Delivery retried, new attempt logged, status updated","Failed webhook event",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-09,3,Webhooks,"Admin sends test webhook","Send test event to verify URL","Webhook configured","1. Navigate to webhook details
+2. Click 'Send Test'","Test event sent, delivery result shown (success/failure with details)","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-10,3,Webhooks,"Admin regenerates webhook secret","Generate new signing secret","Webhook exists","1. Navigate to webhook details
+2. Click 'Regenerate Secret'
+3. Confirm action","New secret generated and displayed, old signatures no longer valid","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-11,3,Webhooks,"Webhook to MS Teams","Webhook formats Adaptive Card for Teams","Teams incoming webhook URL configured","1. Configure webhook with Teams URL
+2. Trigger incident event
+3. Check Teams channel","Message appears in Teams as Adaptive Card with incident details","Teams incoming webhook URL",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-WH-12,3,Webhooks,"Admin toggles webhook active state","Enable/disable webhook","Webhook exists","1. Navigate to webhook details
+2. Toggle 'Active' OFF
+3. Trigger event
+4. Toggle 'Active' ON
+5. Trigger event","Inactive webhook doesn't fire, active webhook fires","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-01,4,Security,"Org A cannot access Org B SSO config","SSO configuration is org-scoped","Two orgs: A and B, each with SSO","1. Admin of Org A navigates to SSO settings
+2. Attempt to view/modify Org B SSO","Only Org A SSO visible, no access to Org B configuration","Two separate organisations",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-02,4,Security,"Org A API client cannot access Org B data","API clients are org-scoped","API clients for Org A and Org B","1. Org A API client calls /api/public/v1/incidents
+2. Response inspected","Only Org A incidents returned, Org B data inaccessible","Both orgs have incidents",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-03,4,Security,"Org A webhooks only fire for Org A events","Webhooks are org-scoped","Webhooks for Org A and Org B","1. Create incident in Org A
+2. Create incident in Org B
+3. Check both webhook receivers","Org A webhook fires for Org A incident only, Org B webhook fires for Org B only","",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-04,4,Security,"Non-admin cannot access integrations","RBAC enforces admin-only access","Manager user logged in","1. Navigate to Settings > Integrations
+2. Attempt to view SSO/API Clients/Webhooks","Access denied or menu hidden for non-admin users","Manager user",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-05,4,Security,"API secrets not logged","API keys and secrets not in logs","API client created, webhook created","1. Create API client
+2. Create webhook
+3. Check backend logs","Full API key and webhook secret not visible in logs, only prefixes/masked","Check server logs",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-06,4,Security,"SSO client secret encrypted at rest","SSO secrets stored encrypted","SSO provider configured","1. Configure SSO provider
+2. Query database directly for sso_providers","client_secret column contains encrypted value, not plaintext","Direct DB access",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-07,4,Security,"API key hash stored not plaintext","API keys are hashed","API client created","1. Create API client
+2. Query database for api_clients","key_hash column contains bcrypt hash, not the actual API key","Direct DB access",Critical,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-08,4,Security,"HTTPS required for webhooks","Webhook URLs must be HTTPS","Creating webhook","1. Try to create webhook with HTTP URL
+2. Try to create webhook with HTTPS URL","HTTP URL rejected with error, HTTPS URL accepted","URL: http://example.com/hook",High,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-09,4,Security,"SSO state expires","PKCE state expires after timeout","SSO flow initiated","1. Start SSO login
+2. Wait 15 minutes without completing
+3. Complete callback","Error: 'SSO state expired', must restart login","Wait for expiry",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-SEC-10,4,Security,"Rate limiting prevents abuse","Cannot bypass rate limiting","API client at rate limit","1. Exhaust rate limit (1000 calls)
+2. Wait for reset
+3. Make calls again","Rate limit enforced consistently, resets after minute","Rapid API calls",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-INT-01,4,Integration Events,"Integration events logged","All integration activity logged","SSO login, API call, webhook delivery","1. Perform SSO login
+2. Make API call
+3. Trigger webhook
+4. Check integration events log","All three events logged with type, timestamp, details, status","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-INT-02,4,Integration Events,"Admin views integration events","Admin can filter and view events","Integration events exist","1. Navigate to Integrations > Activity Log
+2. Filter by event type: 'SSO Login'
+3. Filter by date range","Filtered list of events matching criteria","",Medium,,,☐ Pass / ☐ Fail / ☐ Blocked,,,
+P10-UAT-INT-03,4,Integration Events,"Integration events statistics","Dashboard shows integration stats","Multiple integration events","1. Navigate to Integrations dashboard
+2. View statistics cards","Shows: Total SSO logins, Total API calls, Webhook delivery success rate","",Low,,,☐ Pass / ☐ Fail / ☐ Blocked,,,

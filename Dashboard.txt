@@ -1,0 +1,377 @@
+Cool, let’s level up `/api/dashboard/summary` so it powers:
+
+* KPI tiles
+* “Incidents by type” bar chart
+* “Incidents by severity over time” line chart
+* Recent incidents & inspections tables
+
+I’ll give you a **drop-in replacement spec** you can paste into your master prompt / PRD.
+
+---
+
+## 1. Updated backend spec: `/api/dashboard/summary`
+
+Replace your old dashboard spec with this:
+
+> ### API: GET `/api/dashboard/summary`
+>
+> **Auth:** required (JWT).
+> **Purpose:** Return all data needed for the main dashboard:
+>
+> * KPI tiles
+> * Incidents by type
+> * Incidents by severity over time
+> * Recent incidents
+> * Recent inspections
+>
+> #### Query parameters (optional)
+>
+> * `siteId` (UUID, optional)
+>
+>   * If provided, filter *all* stats and lists by that site.
+> * `months` (int, optional, default = 12)
+>
+>   * Number of months of history for the severity-over-time data.
+>
+> #### Response shape
+>
+> ```json
+> {
+>   "incidents": {
+>     "total": 120,
+>     "open": 7,
+>     "last_30_days": 14,
+>     "by_severity": [
+>       { "severity": "critical", "count": 1 },
+>       { "severity": "high", "count": 3 },
+>       { "severity": "medium", "count": 6 },
+>       { "severity": "low", "count": 4 }
+>     ],
+>     "by_type": [
+>       { "type_id": 1, "type_name": "Injury", "count": 40 },
+>       { "type_id": 2, "type_name": "Near Miss", "count": 60 },
+>       { "type_id": 3, "type_name": "Property Damage", "count": 20 }
+>     ],
+>     "severity_trend": [
+>       {
+>         "month": "2025-01",
+>         "counts": {
+>           "critical": 1,
+>           "high": 2,
+>           "medium": 3,
+>           "low": 1
+>         }
+>       },
+>       {
+>         "month": "2025-02",
+>         "counts": {
+>           "critical": 0,
+>           "high": 1,
+>           "medium": 4,
+>           "low": 2
+>         }
+>       }
+>     ],
+>     "recent": [
+>       {
+>         "id": "incident-uuid",
+>         "title": "Forklift near miss",
+>         "site_name": "Head Office",
+>         "incident_type": "Near Miss",
+>         "severity": "medium",
+>         "status": "open",
+>         "occurred_at": "2025-01-15T10:00:00.000Z"
+>       }
+>     ]
+>   },
+>   "inspections": {
+>     "last_30_days": 10,
+>     "failed_last_30_days": 2,
+>     "recent": [
+>       {
+>         "id": "inspection-uuid",
+>         "template_name": "General Safety Walk",
+>         "site_name": "Warehouse 1",
+>         "performed_by_name": "Jane Doe",
+>         "performed_at": "2025-01-18T09:00:00.000Z",
+>         "overall_result": "fail"
+>       }
+>     ]
+>   }
+> }
+> ```
+>
+> #### Field definitions
+>
+> **`incidents.total`**
+>
+> * Count of all incidents (optionally filtered by siteId).
+>
+> **`incidents.open`**
+>
+> * Count where status in (`open`, `under_investigation`).
+>
+> **`incidents.last_30_days`**
+>
+> * Count where `occurred_at >= NOW() - INTERVAL '30 days'`.
+>
+> **`incidents.by_severity[]`**
+>
+> * Group by `severity` (including null/unknown if you want).
+>
+> **`incidents.by_type[]`**
+>
+> * Group by incident type:
+>
+>   * `type_id` = incident_types.id
+>   * `type_name` = incident_types.name
+>   * `count` = number of incidents of that type (respecting filters).
+>
+> **`incidents.severity_trend[]`**
+>
+> * One element per month for the last `months` months (default 12).
+> * `month` format: `YYYY-MM` (string).
+> * `counts` is an object:
+>
+>   * keys: `critical`, `high`, `medium`, `low`
+>   * values: counts of incidents for that month & severity.
+> * Only include months where there is at least one incident, or include all months with 0s – up to you, but be consistent so the chart can render a continuous line.
+>
+> **`incidents.recent[]`**
+>
+> * 5–10 most recent incidents ordered by `occurred_at DESC`.
+> * Include enough fields to show in a table:
+>
+>   * `id`
+>   * `title`
+>   * `site_name`
+>   * `incident_type`
+>   * `severity`
+>   * `status`
+>   * `occurred_at`
+>
+> **`inspections.last_30_days`**
+>
+> * Count where `performed_at >= NOW() - INTERVAL '30 days'`.
+>
+> **`inspections.failed_last_30_days`**
+>
+> * Same window, `overall_result = 'fail'`.
+>
+> **`inspections.recent[]`**
+>
+> * 5–10 most recent inspections ordered by `performed_at DESC`.
+> * Fields:
+>
+>   * `id`
+>   * `template_name`
+>   * `site_name`
+>   * `performed_by_name`
+>   * `performed_at`
+>   * `overall_result`
+
+You can tell Claude to implement this with a single SQL query per section (or a couple of `Promise.all` calls).
+
+---
+
+## 2. Extra notes for Claude (SQL hints – optional)
+
+You can add this mini-hint so it doesn’t overcomplicate things:
+
+> **Implementation hints for `/api/dashboard/summary`:**
+>
+> * Use `Promise.all` to run multiple queries in parallel:
+>
+>   * KPIs (incidents)
+>   * incidents by severity
+>   * incidents by type
+>   * incidents severity trend (group by YEAR, MONTH, severity)
+>   * recent incidents
+>   * KPI (inspections)
+>   * recent inspections
+>
+> * Severity trend example (Postgres):
+>
+>   ```sql
+>   SELECT
+>     to_char(date_trunc('month', occurred_at), 'YYYY-MM') AS month,
+>     severity,
+>     COUNT(*) AS count
+>   FROM incidents
+>   WHERE occurred_at >= NOW() - INTERVAL '12 months'
+>   GROUP BY month, severity
+>   ORDER BY month ASC;
+>   ```
+>
+>   Then transform rows into the `severity_trend[]` format in JavaScript.
+>
+> * Incidents by type example:
+>
+>   ```sql
+>   SELECT
+>     it.id AS type_id,
+>     it.name AS type_name,
+>     COUNT(*) AS count
+>   FROM incidents i
+>   JOIN incident_types it ON i.incident_type_id = it.id
+>   GROUP BY it.id, it.name
+>   ORDER BY type_name ASC;
+>   ```
+>
+> * Recent incidents example:
+>
+>   ```sql
+>   SELECT
+>     i.id,
+>     i.title,
+>     s.name AS site_name,
+>     it.name AS incident_type,
+>     i.severity,
+>     i.status,
+>     i.occurred_at
+>   FROM incidents i
+>   LEFT JOIN sites s ON i.site_id = s.id
+>   JOIN incident_types it ON i.incident_type_id = it.id
+>   ORDER BY i.occurred_at DESC
+>   LIMIT 10;
+>   ```
+>
+> * Recent inspections example:
+>
+>   ```sql
+>   SELECT
+>     ins.id,
+>     t.name AS template_name,
+>     s.name AS site_name,
+>     u.first_name || ' ' || u.last_name AS performed_by_name,
+>     ins.performed_at,
+>     ins.overall_result
+>   FROM inspections ins
+>   JOIN inspection_templates t ON ins.template_id = t.id
+>   JOIN sites s ON ins.site_id = s.id
+>   JOIN users u ON ins.performed_by = u.id
+>   ORDER BY ins.performed_at DESC
+>   LIMIT 10;
+>   ```
+
+(That’s just guidance; Claude can tweak as needed.)
+
+---
+
+## 3. Update to Dashboard frontend spec
+
+Also tweak your **Dashboard.jsx** spec so it uses the new fields:
+
+> **Dashboard component must:**
+>
+> * Call `fetchDashboardSummary()` on mount.
+>
+> * Render:
+>
+> 1. **KPI row** (from `summary.incidents` & `summary.inspections`):
+>
+>    * Total Incidents (YTD or all, depending on backend choice)
+>    * Open Incidents
+>    * Incidents (Last 30 Days)
+>    * Inspections (Last 30 Days)
+>    * Failed Inspections (Last 30 Days)
+> 2. **Charts row:**
+>
+>    * **Incidents by Type (bar chart)** using `incidents.by_type`.
+>
+>      * X: `type_name`
+>      * Y: `count`
+>    * **Severity Trend (line chart)** using `incidents.severity_trend`.
+>
+>      * X: `month`
+>      * Y: counts per severity (draw 4 lines: low/medium/high/critical).
+> 3. **Tables row:**
+>
+>    * **Recent Incidents** table using `incidents.recent`.
+>    * **Recent Inspections** table using `inspections.recent`.
+>
+> For the MVP, charts can be implemented using a simple chart library like Recharts or any basic charting library. If no chart library is used, at least structure the data handling so charts can be dropped in easily later.
+
+You can add:
+
+> * Use the “UI Style” palette previously defined (primary teal/blue, severity colours, white cards, rounded corners) for the dashboard.
+
+---
+
+If you paste this updated `/api/dashboard/summary` spec + dashboard description into your existing master prompt, Claude will know **exactly** what extra fields to return and how the frontend should use them.
+
+If you’d like, I can next give you a tiny **mock JSON** dataset for `summary` that you can use to quickly test the dashboard UI before wiring the real API.
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Totally fair 😄 — Claude should be able to wire mocks vs real API without hand-holding.
+
+The good news: you already have **everything needed** for a full end-to-end build.
+
+Quick recap of what’s “ready” right now:
+
+1. **Architecture + stack**
+
+   * React frontend, Node/Express backend, PostgreSQL, JWT auth.
+
+2. **Data model**
+
+   * Users, Sites, IncidentTypes, Incidents
+   * InspectionTemplates, TemplateItems, Inspections, InspectionResponses
+
+3. **API spec**
+
+   * Auth: `/api/auth/register`, `/login`, `/me`
+   * Sites: `/api/sites`
+   * IncidentTypes: `/api/incident-types`
+   * Incidents: `/api/incidents`, `/api/incidents/:id`
+   * Inspection Templates: `/api/inspection-templates...`
+   * Inspections: `/api/inspections...`
+   * Dashboard: `/api/dashboard/summary` (upgraded version)
+
+4. **Frontend screens**
+
+   * Login
+   * Dashboard (KPIs + charts + recent tables)
+   * Incidents (list, new, detail)
+   * Inspections (list, new, detail)
+   * Admin: Sites
+   * Admin: Inspection Templates
+
+5. **Extras**
+
+   * Non-functional & competitive requirements (NFRs)
+   * Formal FR list (Phase 1 vs future)
+   * Mock dashboard summary JSON/JS (in a separate file)
+
+So at this point, the only “step” left is:
+
+### 1. Bundle your instructions for Claude
+
+I’d keep three main docs in your repo / notes:
+
+* `SPEC.md` – architecture, modules, data model, API list
+* `PRD.md` – FR / NFR with IDs (we wrote this)
+* `MASTER_PROMPT.txt` – that big instruction block you’ll paste into Claude
+
+You can just merge everything we wrote into those three.
+
+### 2. Tell Claude what to do
+
+Example opening message to Claude Code:
+
+> “Here are my SPEC, PRD, and MASTER_PROMPT (paste them).
+> Please generate the full backend and frontend projects so that **all Phase 1 requirements are implemented and the acceptance checklist passes**.”
+
+Then let it create:
+
+* `backend/` app
+* `frontend/` app
+* DB schema/migration files
+
+### 3. After Claude builds it
+
+Use your acceptance checklist (auth, sites, incidents, templates, inspections, dashboard) and walk through each one in the running app.
+
+If **anything** doesn’t line up with the spec, you can always come back and we’ll tighten that part of the requirements so Claude stops improvising.
+
+If you want, next time we can design **Phase 2** (Actions/CAPA + Attachments) once Phase 1 is running.
+-----------------------------------------------------------------------------------------------------------------------------------------------------

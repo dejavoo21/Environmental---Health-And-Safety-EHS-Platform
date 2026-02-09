@@ -1,0 +1,465 @@
+TC_ID,Story_ID,Phase,Type,Journeys,Checklist_IDs,Description,Preconditions,Steps,Expected_Result,Status
+TC-AUTH-01,US-AUTH-01,P1,UI,P1-J1,"C34,C35",Successful login with valid credentials,User account exists with known email/password. Backend and frontend running.,"1. Navigate to login page.
+2. Enter valid email and password.
+3. Click 'Login'.",User is redirected to the dashboard. A valid token is stored. Dashboard API calls succeed.,
+TC-AUTH-02,US-AUTH-01,P1,UI,P1-J1,"C34,C35",Login fails with invalid password,User account exists.,"1. Navigate to login page.
+2. Enter valid email and incorrect password.
+3. Click 'Login'.",User remains on login page. Clear error message displayed. No token is stored.,
+TC-AUTH-03,US-AUTH-01,P1,API,P1-J1,"C34,C35",Protected route rejects unauthenticated access,No auth token present in client.,1. Call a protected API (e.g. GET /api/incidents) without Authorization header.,API returns 401/403 and does not return incident data.,
+TC-AUTH-04,US-AUTH-02,P1,API,"P1-J1,P1-J2,P1-J4",C36,/auth/me returns correct role,User logged in and has a known role in DB.,1. Call GET /api/auth/me with valid Authorization header.,"Response includes user id, email, name, and correct role (admin, manager, or worker).",
+TC-AUTH-05,US-AUTH-02,P1,UI,"P1-J1,P1-J4,P1-J5","C37,C60",Worker cannot see admin-only navigation,User logged in as worker.,1. Observe main navigation menu.,"Admin-only items (Sites, Incident Types, Templates) are not visible. Actions is visible but disabled (Coming Soon).",
+TC-AUTH-06,US-AUTH-02,P1,API,P1-J4,C37,Worker blocked from admin-only endpoints,User logged in as worker.,"1. Call POST /api/sites as worker user.
+2. Observe response.",API returns 403 or equivalent error. No new site is created.,
+TC-SITE-01,US-SITE-01,P1,UI,P1-J4,"C16,C17",Admin creates a new site,User logged in as admin.,"1. Navigate to Admin -> Sites.
+2. Click 'Add Site'.
+3. Enter Name='Warehouse 1', Code='WH1'.
+4. Click 'Save'.",New site appears in site list and is available in incident/inspection site dropdowns.,
+TC-SITE-02,US-SITE-01,P1,UI,P1-J4,"C16,C17",Admin edits existing site,User logged in as admin. At least one site exists.,"1. Navigate to Admin -> Sites.
+2. Select an existing site.
+3. Edit name/code.
+4. Click 'Save'.",Updated site data is shown in list and forms use the new values.,
+TC-SITE-03,US-SITE-01,P1,API,P1-J4,"C16,C17",Duplicate site code rejected,User logged in as admin. A site with Code='WH1' exists.,1. Call POST /api/sites with Code='WH1'.,API returns validation error. No duplicate site is created.,
+TC-REF-01,US-REF-01,P1,API,P1-J2,"C6,C7,C19",GET /incident-types returns seeded types,Database initialised with default incident types.,1. Call GET /api/incident-types as any logged-in user.,"Response list includes Injury, Near Miss, Property Damage (or configured defaults).",
+TC-REF-02,US-REF-01,P1,UI,P1-J2,"C6,C7",New incident form shows incident types dropdown,User logged in. Incident types exist.,"1. Navigate to Incidents -> New Incident.
+2. Open Incident Type dropdown.",Dropdown shows available incident types from API.,
+TC-REF-03,US-REF-02,P1,UI,P1-J4,"C6,C19",Admin creates incident type,User logged in as admin.,"1. Navigate to Admin -> Incident Types.
+2. Click 'Add Type'.
+3. Enter Name='Fire Hazard'.
+4. Click Save.",New type appears in list and is available in new incident forms.,
+TC-REF-04,US-REF-02,P1,API,P1-J4,"C6,C19",Admin CRUD on incident types via API,User logged in as admin.,"1. POST /api/incident-types with name.
+2. PUT /api/incident-types/:id to update.
+3. PATCH /api/incident-types/:id to deactivate.",Type is created/updated/deactivated. Non-admins get 403.,
+TC-INC-01,US-INC-01,P1,UI,P1-J2,"C1,C7",Create incident - happy path,Worker logged in. At least one site and incident type exist.,"1. Navigate to Incidents -> New Incident.
+2. Fill all required fields with valid data.
+3. Click 'Save'.","Incident is created with status 'open', appears in incident list, and is linked to correct site/type.",
+TC-INC-02,US-INC-01,P1,UI,P1-J2,C1,Validation on missing required field,Worker logged in.,"1. Navigate to Incidents -> New Incident.
+2. Leave Title empty.
+3. Fill other fields.
+4. Click 'Save'.",Form shows a clear validation message. Incident is not created.,
+TC-INC-03,US-INC-01,P1,API,P1-J2,"C1,C7",POST /incidents persists correct data,Worker auth token available. Site and incident type IDs known.,"1. Call POST /api/incidents with valid JSON body.
+2. Query DB or call GET /api/incidents to verify record.","Incident stored with correct title, description, type, site, severity, occurred_at, status='open', reported_by set to user.",
+TC-INC-04,US-INC-02,P1,UI,"P1-J2,P1-J3","C2,C3,C4,C38,C39",Incident list shows correct columns and role-based visibility,Incidents exist for multiple reporters across sites.,"1. Log in as worker and open Incidents page.
+2. Verify only the worker's incidents are shown.
+3. Log in as manager and open Incidents page.
+4. Verify all incidents are shown.",Table shows Date, Title, Type, Site, Severity, Status columns and role-based filtering works.,
+TC-INC-05,US-INC-02,P1,UI,"P1-J2,P1-J3","C2,C4",Filter incidents by status,Incidents with multiple statuses exist.,"1. On Incidents page, set filter Status='open'.",Only incidents with status 'open' are displayed.,
+TC-INC-06,US-INC-02,P1,UI,"P1-J2,P1-J3","C2,C4",Filter incidents by site,Incidents exist for at least two sites.,"1. On Incidents page, set filter Site='Head Office'.",Only incidents for 'Head Office' are displayed.,
+TC-INC-07,US-INC-03,P1,UI,P1-J3,"C4,C5",Manager changes incident status,Manager logged in. Incident exists with status 'open'.,"1. Open Incidents list.
+2. Click incident to open detail.
+3. Change status to 'under_investigation' or 'closed'.
+4. Save.",Incident status updates successfully and list/dashboard reflect new status.,
+TC-INC-08,US-INC-03,P1,API,P1-J3,C5,Worker cannot change status (blocked),Worker logged in. Incident exists.,1. Worker attempts PUT on incident status endpoint.,API returns 403 or similar. Status remains unchanged in DB.,
+TC-INSP-01,US-INSP-01,P1,UI,P1-J5,"C8,C9",Create template with name & description,Admin logged in.,"1. Navigate to Admin -> Inspection Templates.
+2. Click 'New Template'.
+3. Enter name and description.
+4. Save.",Template appears in templates list.,
+TC-INSP-02,US-INSP-01,P1,UI,P1-J5,"C10,C11",Add/edit/delete checklist items,Admin logged in. Template exists.,"1. Open template detail.
+2. Add several items with labels and categories.
+3. Edit one item.
+4. Delete one item.
+5. Save.",Template shows updated list of items with changes persisted.,
+TC-INSP-03,US-INSP-01,P1,API,P1-J5,"C8,C9,C10,C11",Template and items stored correctly,Admin logged in. Template created via UI or API.,"1. Call GET /api/inspection-templates and /:id.
+2. Inspect returned JSON.",Template includes correct name/description and items list with labels and categories.,
+TC-INSP-04,US-INSP-02,P1,UI,P1-J6,"C10,C11",Inspection form shows template checklist,Manager logged in. At least one site and template with items exist.,"1. Navigate to Inspections -> New Inspection.
+2. Select a site and a template.",Inspection form displays all items from the selected template.,
+TC-INSP-05,US-INSP-02,P1,UI,P1-J6,C12,Record results with ok/not_ok/na,Manager logged in. Inspection form showing checklist.,"1. For each item, select result from dropdown (ok/not_ok/na).
+2. Optionally add comments.
+3. Submit.",Inspection is created; responses are saved with correct result and comment per item.,
+TC-INSP-06,US-INSP-02,P1,UNIT,P1-J6,C13,overall_result logic (pass/fail),Unit test context or isolated service function available.,"1. Call logic with all items = ok -> expect 'pass'.
+2. Call with at least one item = not_ok -> expect 'fail'.",Logic returns 'pass' when no not_ok items; 'fail' when any not_ok item present.,
+TC-INSP-07,US-INSP-03,P1,UI,P1-J6,C14,Inspection list shows correct columns,At least one inspection exists.,1. Navigate to Inspections page.,"Table shows Template, Site, Performed By, Date, Overall Result with correct values.",
+TC-INSP-08,US-INSP-03,P1,UI,P1-J6,C15,Inspection detail shows header + items,Inspection exists.,"1. On Inspections list, click an inspection.
+2. View detail.",Detail view shows header info and full list of item responses with results and comments.,
+TC-DASH-01,US-DASH-01,P1,API,P1-J7,"C47,C48,C49,C50,C51",/dashboard/summary returns all metrics,Incidents and inspections exist over at least 30 days.,1. Call GET /api/dashboard/summary.,"Response JSON includes incident totals, open count, last_30_days counts, inspections last_30_days, failed inspections, by_type, severity_trend, and recent lists.",
+TC-DASH-02,US-DASH-01,P1,UI,"P1-J1,P1-J7","C47,C48,C49,C50,C51",Dashboard shows KPI cards correctly,User logged in. Dashboard API working.,1. Navigate to Dashboard page.,KPI cards show numbers matching /dashboard/summary response.,
+TC-DASH-03,US-DASH-01,P1,UI,P1-J7,"C52,C53",Charts render incidents by type and severity trend,Dashboard data available for multiple incident types and months.,"1. Navigate to Dashboard.
+2. Observe bar chart (by type) and line chart (severity trend).",Charts display data consistent with /dashboard/summary by_type and severity_trend.,
+TC-DASH-04,US-DASH-01,P1,UI,P1-J7,"C54,C55",Recent incidents/inspections tables are clickable,Recent incidents and inspections exist.,"1. Navigate to Dashboard.
+2. In Recent Incidents table, click a row.
+3. In Recent Inspections table, click a row.",Clicking a row opens the corresponding incident/inspection detail view.,
+TC-ACT-01,US-ACT-01,P2,UI,P2-J1,"C20,C22,C23",Create action from incident,Manager logged in. Incident exists.,"1. Open incident detail.
+2. Click Add Action.
+3. Enter title, description, assignee, due date.
+4. Save.","Action is created, linked to the incident, and appears in the incident actions list and All Actions.",
+TC-ACT-02,US-ACT-01,P2,UI,P2-J1,C22,Validation on missing action fields,Manager logged in. Incident exists.,"1. Open incident detail.
+2. Click Add Action.
+3. Leave title empty.
+4. Save.",Validation errors shown; action is not created.,
+TC-ACT-03,US-ACT-02,P2,UI,P2-J2,"C21,C22,C23",Create action from failed inspection item,Manager logged in. Inspection with not_ok item exists.,"1. Open inspection detail.
+2. Click Create Action on failed item.
+3. Enter assignee and due date.
+4. Save.","Action is created and linked to inspection and response item.",
+TC-ACT-04,US-ACT-03,P2,UI,P2-J3,"C25,C23",My Actions list shows assigned items,Worker logged in. Actions assigned to multiple users exist.,"1. Navigate to Actions -> My Actions.
+2. Observe list.",Only actions assigned to current user are shown with status and due dates.,
+TC-ACT-05,US-ACT-03,P2,UI,P2-J3,C23,Assignee updates action status to done,Worker logged in. Action assigned to worker exists.,"1. Open action detail.
+2. Change status to done.
+3. Save.",Status updates to done and is reflected in lists and activity log.,
+TC-ACT-06,US-ACT-03,P2,API,P2-J3,C24,Overdue status set when due date passes,Action exists with due date in the past and status not done.,"1. Run overdue job or trigger overdue check.
+2. Fetch action via API.",Action status becomes overdue and audit log records the change.,
+TC-ACT-07,US-ACT-04,P2,UI,P2-J4,"C26,C27",All Actions filters by status/site/due date,Manager logged in. Actions across sites exist.,"1. Open Actions -> All Actions.
+2. Apply status filter.
+3. Apply site filter.
+4. Apply due date range.",List updates to show only matching actions for each filter.,
+TC-ATT-01,US-ATT-01,P2,UI,P2-J5,"C28,C31,C32",Upload valid attachment to incident,User logged in. Incident exists. Valid file available.,"1. Open incident detail.
+2. Upload a valid file.
+3. Confirm upload.","Attachment appears in list with filename, size, and uploaded date.",
+TC-ATT-02,US-ATT-01,P2,UI,P2-J5,C33,Reject invalid or oversized file on incident,User logged in. Incident exists. Invalid file available.,"1. Open incident detail.
+2. Attempt to upload invalid file.",Clear error message shown; no attachment created.,
+TC-ATT-03,US-ATT-02,P2,UI,P2-J6,"C29,C31,C32",Upload attachment to inspection,Manager logged in. Inspection exists. Valid file available.,"1. Open inspection detail.
+2. Upload a valid file.
+3. Confirm upload.",Attachment appears in inspection attachments list.,
+TC-ATT-04,US-ATT-03,P2,UI,P2-J7,"C30,C31,C32",Upload attachment to action,Assignee logged in. Action exists. Valid file available.,"1. Open action detail.
+2. Upload a valid file.
+3. Confirm upload.",Attachment appears in action attachments list.,
+TC-ATT-05,US-ATT-01,P2,API,P2-J5,"C31,C32",Attachment metadata stored correctly,Attachment uploaded to incident.,"1. Call GET /api/attachments for the incident.
+2. Inspect metadata.","Attachment includes entityType/entityId, filename, fileType, fileSize, uploadedBy, uploadedAt.",
+TC-AUD-01,US-AUD-01,P2,API,P2-J8,"C40,C41,C44",Incident activity log shows create and status change,Manager logged in. Incident exists.,"1. Create or update incident status.
+2. Call GET /api/incidents/:id/audit-log.",Audit log includes created and status_changed entries with timestamps.,
+TC-AUD-02,US-AUD-02,P2,API,P2-J9,"C42,C45",Inspection activity log shows creation,Manager logged in. Inspection exists.,"1. Create inspection.
+2. Call GET /api/inspections/:id/audit-log.",Audit log includes inspection created entry.,
+TC-AUD-03,US-AUD-03,P2,API,P2-J10,C43,Action activity log shows create and status change,Manager logged in. Action exists.,"1. Create action.
+2. Update status.
+3. Call GET /api/actions/:id/audit-log.",Audit log includes created and status_changed entries.,
+TC-AUD-04,US-AUD-01,P2,API,"P2-J8,P2-J9,P2-J10",C46,Audit log is immutable,Admin logged in. Audit entries exist.,"1. Attempt to update or delete audit_log entry via API or direct endpoint.",Operation is rejected and entries remain unchanged.,
+TC-HELP-01,US-HELP-01,P2,UI,P2-J11,"C68,C69,C70",Help page displays content and support contact,User logged in. Help content configured.,"1. Click Help in navigation.
+2. Observe help content.
+3. Locate support contact.","Help content loads with guidance text and support contact details.",
+TC-ORG-01,US-ORG-01,P3,API,P3-J3,"C60,C61",Org A user cannot see Org B data,"Two orgs exist (Org A, Org B). Logged in as Org A user. Each org has its own incidents.","1. As Org A user, call GET /api/incidents.
+2. Inspect response.",Only Org A incidents returned; no records from Org B.,
+TC-ORG-02,US-ORG-01,P3,API,P3-J3,"C60,C61",Org B user cannot see Org A data,Same as TC-ORG-01 but logged in as Org B user.,"1. As Org B user, call GET /api/incidents.
+2. Inspect response.",Only Org B incidents returned; no records from Org A.,
+TC-EXP-01,US-EXPORT-01,P3,UI,P3-J2,"C40,C41",Export incidents with active filters,Manager logged in. Incidents exist. Filters available.,"1. Apply date and site filters on Incidents page.
+2. Click 'Export CSV/Excel'.",Downloaded file contains only incidents matching active filters.,
+TC-EXP-02,US-EXPORT-01,P3,Manual,P3-J2,"C40,C42",Verify exported file matches UI data,CSV/Excel export obtained in TC-EXP-01.,"1. Open exported file in Excel.
+2. Compare a sample of rows to filtered Incidents UI.",Data (columns and values) in file matches the UI for the same filters.,
+TC-AN-01,US-AN-01,P5,API,P5-J1,"C70,C71",Analytics API returns correct data,Test dataset with known counts by site/type and fail rates configured.,"1. Call analytics API endpoint (e.g. GET /api/analytics/summary).
+2. Compare counts to known test dataset.","API returns incident-by-site, incident-by-type, and fail-rate metrics matching expected values.",
+TC-AN-02,US-AN-01,P5,UI,P5-J1,"C70,C71",Analytics screen shows hotspots,Analytics API working and returning data with one or more 'hotspot' sites.,"1. Navigate to Analytics page.
+2. Observe charts and lists.",UI surfaces hotspots clearly (e.g. site with highest incident rate visibly distinguishable).,
+TC-RISK-01,US-RISK-01,P5,UI,P5-J2,"C72,C73",Create new risk with correct scoring,Risk owner logged in.,"1. Navigate to Risk Register.
+2. Click 'New Risk'.
+3. Fill title, description, likelihood, impact, owner.
+4. Save.",Risk appears in list with calculated risk score consistent with likelihood - impact or configured model.,
+TC-RISK-02,US-RISK-01,P5,UI,P5-J2,"C72,C73",Update risk status and verify matrix,At least one risk exists.,"1. Edit risk to change status or scores.
+2. Save.
+3. Open risk matrix/summary view.",Risk matrix and risk details reflect the updated status and scores.,
+TC-EXT-01,US-INT-01,P6,API,P6-J2,"C83,C84",Valid API key creates incident,API key configured for an organisation. Known site/type IDs exist.,"1. Call external incident endpoint with valid API key and payload.
+2. Fetch incidents list for that org.",New incident created with fields from payload and linked to correct org.,
+TC-EXT-02,US-INT-01,P6,API,P6-J2,"C83,C84",Invalid API key rejected,No or invalid API key provided.,1. Call external incident endpoint without key or with wrong key.,API responds with auth error; no incident created.,
+TC-SSO-01,US-SSO-01,P6,E2E,P6-J3,"C85,C86",Successful SSO login,Test IdP and SSO configuration set up for org. User exists in IdP.,"1. Click 'Login with SSO'.
+2. Authenticate at IdP with valid credentials.
+3. Observe redirect back to app.",User ends up logged into EHS Portal with appropriate role based on IdP mapping.,
+TC-SSO-02,US-SSO-01,P6,E2E,P6-J3,"C85,C86",Failed SSO login path,IdP available. User enters wrong password.,"1. Click 'Login with SSO'.
+2. Enter invalid credentials at IdP.
+3. Observe outcome.",User is not logged into the EHS Portal and sees a clear error message or is returned to login screen.,
+TC-NOTIF-P4-01,US-NOTIF-01,P4,API,P4-J1,"C-096",Action assigned creates notification,User exists; action module enabled.,"1. Create action with assigned_to user.
+2. Query notifications for assignee.",In-app notification created with type action_assigned.,
+TC-NOTIF-P4-02,US-NOTIF-01,P4,API,P4-J1,"C-096",Action assigned sends email if enabled,User has email preference enabled.,"1. Create action with assigned_to user.
+2. Check email logs.",Email sent to assignee with action details.,
+TC-NOTIF-P4-03,US-NOTIF-05,P4,API,P4-J1,"C-098",High-severity incident notifies managers,At least one manager in org.,"1. Create incident with severity=critical.
+2. Query notifications for managers.",All managers have HIGH priority notification.,
+TC-NOTIF-P4-04,US-NOTIF-03,P4,API,P4-J2,"C-104",GET /notifications returns user notifications,User has notifications.,"1. GET /api/notifications.
+2. Check response.",Returns array of user's notifications.,
+TC-NOTIF-P4-05,US-NOTIF-03,P4,API,P4-J2,"C-103",Unread count endpoint works,User has 5 unread notifications.,"1. GET /api/notifications/unread-count.
+2. Check response.",Returns count: 5.,
+TC-NOTIF-P4-06,US-NOTIF-03,P4,API,P4-J2,"C-104",Mark notification as read,Unread notification exists.,"1. PUT /api/notifications/:id/read.
+2. Check notification.",is_read=true and read_at is set.,
+TC-NOTIF-P4-07,US-NOTIF-03,P4,API,P4-J2,"C-104",Mark all as read works,Multiple unread notifications.,"1. PUT /api/notifications/mark-all-read.
+2. Query notifications.",All notifications have is_read=true.,
+TC-NOTIF-P4-08,US-NOTIF-04,P4,API,P4-J3,"C-105",Delete notification works,Notification exists.,"1. DELETE /api/notifications/:id.
+2. Query notification.",Notification no longer exists.,
+TC-NOTIF-P4-09,US-NOTIF-04,P4,UI,P4-J3,"C-105",Notification filtering by type,User has multiple notification types.,"1. On Notifications page set filter Type.
+2. Check list.",Only matching notifications shown.,
+TC-NOTIF-P4-10,US-SYS-01,P4,API,P4-J2,"C-110",Cross-org notifications blocked,Two orgs exist.,"1. User in Org A queries notifications.
+2. Check for Org B notifications.",No Org B notifications returned.,
+TC-PREF-P4-01,US-PREF-01,P4,API,P4-J4,"C-108",GET preferences returns settings,User has preferences saved.,"1. GET /api/preferences/notifications.
+2. Check response.",Returns all preference fields.,
+TC-PREF-P4-02,US-PREF-01,P4,API,P4-J4,"C-108",PUT preferences updates settings,User has preferences.,"1. PUT /api/preferences/notifications with new values.
+2. GET preferences.",Values updated correctly.,
+TC-PREF-P4-03,US-PREF-02,P4,API,P4-J4,"C-102",Manager gets weekly digest default,New manager user.,"1. Create manager user.
+2. GET preferences.",digestFrequency is 'weekly'.,
+TC-PREF-P4-04,US-PREF-01,P4,UI,P4-J4,"C-109",Preferences UI loads correctly,User logged in.,"1. Navigate to /settings/notifications.
+2. Check form.",All preference fields visible.,
+TC-PREF-P4-05,US-PREF-01,P4,UI,P4-J4,"C-109",Save shows success toast,User on preferences page.,"1. Change preference.
+2. Click Save.
+3. Check toast.",Success toast displayed.,
+TC-DIGEST-P4-01,US-DIGEST-01,P4,Scheduled,P4-J5,"C-100",Daily digest job runs at scheduled time,Job scheduler configured.,"1. Wait for 07:00.
+2. Check job runs table.",Job run record created with status completed.,
+TC-DIGEST-P4-02,US-DIGEST-01,P4,Scheduled,P4-J5,"C-100",Daily digest contains correct content,Incidents and actions exist.,"1. Run daily digest job.
+2. Check email content.",Email contains incidents and actions due.,
+TC-DIGEST-P4-03,US-DIGEST-02,P4,Scheduled,P4-J5,"C-101",Weekly digest runs on Monday,Job scheduler configured.,"1. Wait for Monday 07:00.
+2. Check job runs table.",Job run record created.,
+TC-DIGEST-P4-04,US-SYS-01,P4,API,P4-J5,"C-111",Admin can trigger digest manually,Admin user.,"1. POST /admin/jobs/digest/trigger.
+2. Check job runs.",Job executed.,
+TC-ESC-P4-01,US-ESC-01,P4,Scheduled,P4-J6,"C-106",Escalation job runs daily,Job scheduler configured.,"1. Wait for 08:00.
+2. Check job runs table.",Job run record created.,
+TC-ESC-P4-02,US-ESC-01,P4,Scheduled,P4-J6,"C-106",Overdue actions escalated correctly,Actions overdue by org threshold.,"1. Run escalation job.
+2. Check notifications and emails.",Escalation notifications and emails sent.,
+TC-ESC-P4-03,US-ESC-02,P4,API,P4-J7,"C-107",Admin can update escalation settings,Admin user.,"1. PUT /admin/organisation/escalation.
+2. Check settings.",Settings updated.,
+TC-ESC-P4-04,US-ESC-02,P4,API,P4-J7,"C-107",Non-admin cannot update settings,Manager user.,"1. PUT escalation settings.
+2. Check response.",Returns 403 Forbidden.,
+TC-ESC-P4-05,US-ESC-01,P4,Scheduled,P4-J6,"C-106",Already-escalated actions not re-escalated,Action already escalated.,"1. Run escalation job twice.
+2. Check email count.",Only one escalation email sent.,
+TC-AN-P5-01,US-AN-01,P5,UI,P5-J1,"C-120",View time-series incidents chart,Manager logged in. Incidents exist over multiple months.,"1. Navigate to /analytics.
+2. View incidents time-series chart.",Chart shows incidents per month stacked by severity.,
+TC-AN-P5-02,US-AN-02,P5,UI,P5-J1,"C-121",View site comparison chart,Manager logged in. Incidents exist across sites.,"1. Navigate to /analytics.
+2. View incidents by site chart.",Bar chart shows incident count per site.,
+TC-AN-P5-03,US-AN-03,P5,UI,P5-J1,"C-122",View KPI cards with trends,Manager logged in. Data exists for current and previous period.,"1. Navigate to /analytics.
+2. View KPI cards.",Cards show values with trend arrows (up/down/neutral).,
+TC-AN-P5-04,US-AN-04,P5,UI,P5-J1,"C-123",Filter analytics by date range,Manager logged in.,"1. Navigate to /analytics.
+2. Select Last 30 Days.",Charts and KPIs refresh to show only last 30 days data.,
+TC-AN-P5-05,US-AN-04,P5,UI,P5-J1,"C-123",Filter analytics by site,Manager logged in. Multiple sites exist.,"1. Navigate to /analytics.
+2. Select specific sites in filter.",Charts show only data for selected sites.,
+TC-AN-P5-06,US-AN-04,P5,UI,P5-J1,"C-123",Clear all filters resets to defaults,Manager logged in. Filters applied.,"1. Apply filters.
+2. Click Clear All.",All filters reset. Data shows defaults.,
+TC-AN-P5-07,US-RISK-01,P5,API,P5-J1,"C-124",Risk score calculated correctly,Site has known incident/action/inspection counts.,"1. Run risk calculation job.
+2. GET /api/analytics/risk-scores/:siteId.",Score matches formula: (Crit×10)+(High×5)+(Med×2)+(Low×1)+(Overdue×3)+(Failed×2).,
+TC-AN-P5-08,US-RISK-01,P5,API,P5-J1,"C-124",Risk category assigned correctly,Site score is 25.,"1. View risk score.
+2. Check category.",Category is Medium (score 11-30).,
+TC-AN-P5-09,US-RISK-02,P5,UI,P5-J1,"C-125",Top 5 high-risk sites widget displays,Risk scores calculated for 10+ sites.,"1. Navigate to /analytics.
+2. View Top Risk Sites widget.",Widget shows top 5 sites by risk score descending.,
+TC-AN-P5-10,US-RISK-02,P5,UI,P5-J1,"C-125",Click risk site drills down to incidents,Top risk sites displayed.,"1. Click on a site in Top Risk widget.
+2. Check navigation.",Navigates to /incidents filtered by that site.,
+TC-AN-P5-11,US-RISK-03,P5,UI,P5-J1,"C-126",Top incident types widget displays,Incidents of various types exist.,"1. Navigate to /analytics.
+2. View Top Incident Types widget.",Shows top 5 types with count and percentage.,
+TC-AN-P5-12,US-RISK-04,P5,UI,P5-J5,"C-127",Risk score help tooltip visible,User on analytics page.,"1. Hover over risk score info icon.
+2. View tooltip.",Tooltip shows formula explanation.,
+TC-AN-P5-13,US-VIEW-01,P5,UI,P5-J2,"C-128",Save current view,User has filters applied.,"1. Apply filters.
+2. Click Save View.
+3. Enter name.
+4. Save.",View saved and appears in dropdown.,
+TC-AN-P5-14,US-VIEW-02,P5,UI,P5-J2,"C-129",Load saved view,User has saved views.,"1. Select view from dropdown.
+2. Wait for load.",All saved filters applied. Charts refresh.,
+TC-AN-P5-15,US-VIEW-03,P5,UI,P5-J6,"C-130",Delete saved view,User has saved views.,"1. Open manage views.
+2. Delete a view.
+3. Confirm.",View removed from dropdown.,
+TC-AN-P5-16,US-VIEW-03,P5,UI,P5-J6,"C-130",Set view as default,User has saved views.,"1. Set a view as default.
+2. Navigate away.
+3. Return to analytics.",Default view automatically loaded.,
+TC-AN-P5-17,US-VIEW-04,P5,UI,P5-J4,"C-131",Generate PDF report,User on analytics page.,"1. Click Generate PDF Report.
+2. Wait for generation.",PDF file downloads with charts and KPIs.,
+TC-AN-P5-18,US-VIEW-04,P5,API,P5-J4,"C-131",PDF generated within 30 seconds,User requests PDF.,"1. POST /api/analytics/report/pdf.
+2. Measure time.",Response received in < 30 seconds.,
+TC-AN-P5-19,US-DRILL-01,P5,UI,P5-J3,"C-132",Drill down from incidents chart,Time-series chart displayed.,"1. Click on a bar in incidents chart.
+2. Check navigation.",Navigates to /incidents with month and severity filters.,
+TC-AN-P5-20,US-DRILL-01,P5,UI,P5-J3,"C-132",Drill down from KPI card,KPI cards displayed.,"1. Click on Open Actions KPI.
+2. Check navigation.",Navigates to /actions?status=open.,
+TC-AN-P5-21,US-DRILL-02,P5,UI,P5-J3,"C-133",Cursor changes on hover,User viewing charts.,"1. Hover over a chart bar.
+2. Check cursor.",Cursor changes to pointer.,
+TC-AN-P5-22,US-PERF-01,P5,Performance,P5-J1,"C-134",Load time < 2s for small data,Database has 500 incidents.,"1. Load analytics page.
+2. Measure time.",Page fully loaded in < 2 seconds.,
+TC-AN-P5-23,US-PERF-01,P5,Performance,P5-J1,"C-134",Load time < 5s for medium data,Database has 5000 incidents.,"1. Load analytics page.
+2. Measure time.",Page fully loaded in < 5 seconds.,
+TC-AN-P5-24,US-PERF-02,P5,Scheduled,N/A,"C-135",Aggregation job runs nightly,Job scheduler configured.,"1. Wait for 02:00 UTC.
+2. Check job runs table.",Job completed. analytics_daily_summary populated.,
+TC-AN-P5-25,US-PERF-02,P5,API,N/A,"C-135",Hybrid query merges aggregated and live data,Data exists in both tables.,"1. Query analytics API.
+2. Check results.",Data from aggregated table + last 48h from live tables.,
+TC-AN-P5-26,Security,P5,API,N/A,"C-123",Multi-tenant isolation verified,Two orgs with separate data.,"1. Login as Org A user.
+2. GET /api/analytics/summary.",Only Org A data returned.,
+TC-AN-P5-27,Security,P5,API,N/A,"C-128",Cannot access other org saved views,Org B has saved views.,"1. Login as Org A.
+2. GET /api/analytics/views/:orgBViewId.",Returns 404 or 403.,
+TC-P6-001,US-ACCESS-01,P6,E2E,P6-J1,"C-140,C-141",Submit valid access request,Organisation with self-registration enabled exists.,"1. Navigate to /request-access.
+2. Enter full name.
+3. Enter email address.
+4. Enter valid organisation code.
+5. Select requested role.
+6. Accept terms.
+7. Click Submit Request.","Success message displayed. Reference number shown. Confirmation email sent. Request appears in admin queue.",
+TC-P6-002,US-ACCESS-01,P6,E2E,P6-J1,"C-140",Reject invalid organisation code,User is on request access page.,"1. Enter all required fields.
+2. Enter invalid organisation code 'INVALID-CODE'.
+3. Click Submit Request.","Error message: 'Organisation code not found'. Request not submitted.",
+TC-P6-003,US-ACCESS-02,P6,E2E,P6-J2,"C-142,C-143",Admin approves access request,Admin logged in. Pending request exists.,"1. Navigate to /admin/access-requests.
+2. Click Approve on pending request.
+3. Select role.
+4. Optionally assign sites.
+5. Click Approve & Create User.","Request status changes to approved. User account created. Welcome email sent with temp password.",
+TC-P6-004,US-PWRESET-01,P6,E2E,P6-J3,"C-144,C-145",Request password reset,User account exists with valid email.,"1. Navigate to /forgot-password.
+2. Enter registered email.
+3. Click Send Reset Link.","Success message shown. Same message for valid/invalid emails. Reset email sent (if user exists).",
+TC-P6-005,US-PWRESET-02,P6,E2E,P6-J3,"C-146",Reset password with valid token,Password reset requested. Token is valid.,"1. Click link in reset email.
+2. Enter new password.
+3. Enter confirm password.
+4. Click Reset Password.","Password changed successfully. Success message shown. Redirected to login. Old password no longer works.",
+TC-P6-006,US-PWRESET-02,P6,E2E,P6-J3,"C-146",Reject expired token,Token is older than 30 minutes.,"1. Click link in old reset email.
+2. Attempt to reset password.","'Link expired' message shown. 'Request new link' button displayed.",
+TC-P6-007,US-2FA-01,P6,E2E,P6-J4,"C-148,C-149,C-150",Enable 2FA successfully,User logged in. 2FA not enabled.,"1. Navigate to Security Centre.
+2. Click Enable Two-Factor Authentication.
+3. Scan QR code with authenticator app.
+4. Enter TOTP code.
+5. Confirm backup codes saved.
+6. Click Complete Setup.","2FA enabled for account. Backup codes displayed. Status shows 'Enabled'.",
+TC-P6-008,US-2FA-02,P6,E2E,P6-J5,"C-151",Login with TOTP,User has 2FA enabled. User not logged in.,"1. Navigate to login page.
+2. Enter email and password.
+3. Click Login.
+4. Enter TOTP code from authenticator.
+5. Click Verify.","2FA prompt appears after password. Valid TOTP grants access. Dashboard displayed.",
+TC-P6-009,US-2FA-03,P6,E2E,P6-J5,"C-152",Login with backup code,User has 2FA enabled. Backup codes available.,"1. Login with email/password.
+2. Click 'Use backup code instead'.
+3. Enter unused backup code.
+4. Click Verify.","Access granted. Backup code marked as used. Dashboard displayed.",
+TC-P6-010,US-AUDIT-01,P6,Integration,P6-J7,"C-154,C-155",Audit log captures login events,N/A.,"1. Attempt login with correct credentials.
+2. Attempt login with wrong password.
+3. Check audit log.","LOGIN_SUCCESS event logged. LOGIN_FAILURE event logged. Both include IP and user-agent.",
+TC-P6-011,US-SECURITY-01,P6,E2E,P6-J6,"C-156,C-157",View Security Centre,User logged in.,"1. Navigate to Security Centre.
+2. View Account Status section.","Status shows Active/Inactive. Member since date shown. 2FA status displayed. Login history visible.",
+TC-P6-012,US-THEME-01,P6,E2E,P6-J8,"C-162,C-163",Switch to dark theme,User logged in with light theme.,"1. Click theme toggle in header.
+2. Select Dark mode.","UI changes to dark colour scheme. All components render correctly. Preference saved.",
+TC-P6-013,US-SECURITY-02,P6,E2E,P6-J9,"C-158,C-159",Lockout after failed attempts,User has failed 4 login attempts.,"1. Attempt login with wrong password (5th attempt).","Account locked. Error: 'Account temporarily locked'. Lockout duration shown (15 min).",
+TC-P6-014,Security,P6,Security,N/A,"C-145",No email enumeration,N/A.,"1. Request reset for valid email.
+2. Request reset for invalid email.
+3. Compare responses.","Both responses identical. No indication if email exists.",
+TC-P6-015,Security,P6,Security,N/A,"C-150",TOTP secrets encrypted at rest,2FA enabled for user.,"1. Query user_2fa table directly.
+2. Examine totp_secret_encrypted column.","Value is encrypted (not base32). Cannot decode without key.",
+TC-P8-001,US-TRAIN-01,P8,API,P8-J1,"C-200",List training categories,User logged in as admin.,"1. GET /api/training/categories.","Returns list of categories with hierarchy.",
+TC-P8-002,US-TRAIN-01,P8,UI,P8-J1,"C-200",Create training category,User logged in as admin.,"1. Navigate to Training Settings > Categories.
+2. Click Add Category.
+3. Enter name and code.
+4. Save.","Category created and visible in list.",
+TC-P8-003,US-TRAIN-02,P8,API,P8-J1,"C-201,C-202",Create training course,User logged in as admin.,"1. POST /api/training/courses with full payload.","Course created with all fields including prerequisites.",
+TC-P8-004,US-TRAIN-02,P8,UI,P8-J1,"C-201,C-202",Create course with prerequisites,User logged in as admin. Other courses exist.,"1. Navigate to Training Catalogue.
+2. Click Add Course.
+3. Fill details and add prerequisites.
+4. Save.","Course created with prerequisite links visible.",
+TC-P8-005,US-TRAIN-02,P8,API,P8-J1,"C-203",Upload course attachment,Course exists.,"1. POST /api/training/courses/:id/attachments with file.","File uploaded and accessible via download URL.",
+TC-P8-006,US-TRAIN-02,P8,UI,P8-J1,"C-207",Link refresher course,Initial course and refresher course exist.,"1. Edit initial course.
+2. Set refresher course link.
+3. Save.","Refresher course linked and displayed on course detail.",
+TC-P8-007,US-TRAIN-03,P8,API,P8-J2,"C-204",Schedule training session,Course exists.,"1. POST /api/training/sessions with session details.","Session created with correct date time location capacity.",
+TC-P8-008,US-TRAIN-03,P8,UI,P8-J2,"C-204",Schedule session with pre-enrollments,Course exists users have assignments.,"1. Navigate to Training Sessions.
+2. Click Schedule Session.
+3. Select course enter details pre-enroll users.
+4. Save.","Session scheduled with users enrolled.",
+TC-P8-009,US-TRAIN-03,P8,API,P8-J2,"C-204",Update session details,Session exists.,"1. PUT /api/training/sessions/:id with updated details.","Session updated enrollees notified.",
+TC-P8-010,US-TRAIN-03,P8,UI,P8-J2,"C-204",Cancel session with enrollees,Session with enrollments exists.,"1. Click Cancel on session.
+2. Confirm cancellation.","Session cancelled enrollees notified via in-app notification.",
+TC-P8-011,US-TRAIN-04,P8,API,P8-J3,P8-J5,"C-206",Enroll user in session,Session with capacity exists.,"1. POST /api/training/sessions/:id/enrollments.","User enrolled enrollment count updated.",
+TC-P8-012,US-TRAIN-04,P8,UI,P8-J5,"C-206",Worker self-enrolls in session,Worker has assignment session available.,"1. Navigate to My Training.
+2. View assignment.
+3. Click Book Session.
+4. Select available session.","Worker enrolled and appears in Upcoming Sessions.",
+TC-P8-013,US-TRAIN-04,P8,API,P8-J2,"C-206",Session capacity enforcement,Session at capacity.,"1. Attempt to enroll another user.","Enrollment rejected with capacity exceeded message.",
+TC-P8-014,US-TRAIN-05,P8,API,P8-J4,"C-208,C-209",Record session attendance,Session exists with enrollments.,"1. POST /api/training/sessions/:id/attendance with all attendees.","Attendance recorded completions created for passed attendees.",
+TC-P8-015,US-TRAIN-05,P8,UI,P8-J4,"C-208,C-209",Trainer marks attendance and results,Session completed trainer logged in.,"1. Open session detail.
+2. Click Record Attendance.
+3. Mark each participant attended/absent.
+4. Enter scores for attended.
+5. Save.","Attendance saved completions created session marked complete.",
+TC-P8-016,US-TRAIN-06,P8,API,P8-J3,"C-210,C-211",Create individual assignment,Course and user exist.,"1. POST /api/training/assignments with single user.","Assignment created user notified.",
+TC-P8-017,US-TRAIN-06,P8,UI,P8-J3,"C-210,C-211",Supervisor assigns training to team member,Supervisor logged in course exists.,"1. Navigate to Assign Training.
+2. Select Individual tab.
+3. Select user and course.
+4. Set due date.
+5. Click Assign.","Assignment created visible in user's My Training.",
+TC-P8-018,US-TRAIN-07,P8,API,P8-J6,"C-212",Bulk assign by role,Role with users exists.,"1. POST /api/training/assignments/bulk with role filter.","Assignments created for all users with role.",
+TC-P8-019,US-TRAIN-07,P8,UI,P8-J6,"C-212",Admin bulk assigns by role,Admin logged in role with users exists.,"1. Navigate to Assign Training.
+2. Select By Role tab.
+3. Select role and course.
+4. Click Assign.","Preview shows user count assignments created.",
+TC-P8-020,US-TRAIN-07,P8,API,P8-J6,"C-213",Bulk assign by site,Site with users exists.,"1. POST /api/training/assignments/bulk with site filter.","Assignments created for all users at site.",
+TC-P8-021,US-TRAIN-08,P8,API,P8-J7,"C-214",Create auto-assignment rule,Course exists.,"1. POST /api/training/assignment-rules with role criteria.","Rule created and active.",
+TC-P8-022,US-TRAIN-08,P8,E2E,P8-J7,"C-214",Auto-assignment applies to new user,Auto-assignment rule exists.,"1. Create new user with matching role.
+2. Wait for AutoAssignmentJob.","User receives assignments matching rule criteria.",
+TC-P8-023,US-TRAIN-09,P8,API,P8-J8,"C-216,C-217",Record completion with evidence,Assignment exists.,"1. POST /api/training/completions with evidence file.","Completion recorded evidence attached.",
+TC-P8-024,US-TRAIN-09,P8,UI,P8-J8,"C-216,C-217",Supervisor records completion,Supervisor logged in user has assignment.,"1. Navigate to Record Completions.
+2. Select user and course.
+3. Enter completion details.
+4. Upload evidence.
+5. Submit.","Completion recorded assignment marked complete.",
+TC-P8-025,US-TRAIN-10,P8,API,P8-J8,P8-J9,"C-218",Record external training,User exists.,"1. POST /api/training/completions with source_type=external.","External completion created with pending_verification status.",
+TC-P8-026,US-TRAIN-10,P8,UI,P8-J8,P8-J9,"C-218",Submit external training for verification,User completed external training.,"1. Navigate to Record Completions.
+2. Select External Training tab.
+3. Enter details upload certificate.
+4. Submit.","Submission created admin notified of pending verification.",
+TC-P8-027,US-TRAIN-10,P8,UI,P8-J9,"C-217",Admin verifies external completion,External completion pending.,"1. Navigate to verification queue.
+2. Review submission.
+3. Click Verify.","Completion verified status updated user notified.",
+TC-P8-028,US-TRAIN-11,P8,API,P8-J10,"C-219",Get my training dashboard,User has assignments and completions.,"1. GET /api/training/my-training.","Returns summary cards assignments completions expiring items.",
+TC-P8-029,US-TRAIN-11,P8,UI,P8-J10,"C-219",Worker views My Training,Worker logged in with training data.,"1. Navigate to My Training.","Summary cards show counts assignments list visible upcoming sessions shown.",
+TC-P8-030,US-TRAIN-11,P8,UI,P8-J10,"C-220",View expiring certifications,User has completions expiring soon.,"1. Navigate to My Training.
+2. View Expiring Soon section.","Certifications expiring within 30 days listed.",
+TC-P8-031,US-TRAIN-12,P8,API,P8-J11,"C-220,C-222",Get training matrix,Team with training data exists.,"1. GET /api/training/matrix with site filter.","Matrix of users vs courses with status indicators returned.",
+TC-P8-032,US-TRAIN-12,P8,UI,P8-J11,"C-220,C-222",Manager views training matrix,Manager logged in team has training data.,"1. Navigate to Training Matrix.
+2. Filter by site.","Grid shows users vs courses with status icons.",
+TC-P8-033,US-TRAIN-12,P8,UI,P8-J11,"C-222",Click matrix cell for details,Matrix displayed.,"1. Click on a cell in the matrix.","Popup shows completion details or assignment details.",
+TC-P8-034,US-TRAIN-13,P8,API,P8-J12,"C-221",Get training gaps,Role requirements configured.,"1. GET /api/training/matrix?gaps_only=true.","Only users with missing or expired training returned.",
+TC-P8-035,US-TRAIN-13,P8,UI,P8-J12,"C-221",Filter matrix to gaps only,Role requirements configured.,"1. Navigate to Training Matrix.
+2. Click Gaps Only filter.","Matrix shows only cells with gaps highlighted.",
+TC-P8-036,US-TRAIN-14,P8,API,P8-J13,"C-223,C-224",Create role requirement,Admin logged in.,"1. POST /api/training/role-requirements.","Requirement created for role-course combination.",
+TC-P8-037,US-TRAIN-14,P8,UI,P8-J13,"C-223,C-224",Configure role requirements,Admin logged in.,"1. Navigate to Training Settings > Role Requirements.
+2. Select role.
+3. Add required courses.
+4. Save.","Requirements saved used in gap analysis.",
+TC-P8-038,US-TRAIN-14,P8,API,P8-J13,"C-224",Create site requirement,Admin logged in.,"1. POST /api/training/site-requirements.","Requirement created for site-course combination.",
+TC-P8-039,US-TRAIN-15,P8,API,P8-J14,"C-225,C-226",Generate compliance report,Training data exists.,"1. GET /api/training/reports/compliance.","Report with compliance rate by role and site returned.",
+TC-P8-040,US-TRAIN-15,P8,UI,P8-J14,"C-225,C-226",Manager generates compliance report,Manager logged in training data exists.,"1. Navigate to Training Reports.
+2. Select Compliance Overview.
+3. Apply filters.
+4. Click Generate.","PDF generated with compliance statistics overdue list.",
+TC-P8-041,US-TRAIN-15,P8,API,P8-J14,"C-226",Export training history,User has completions.,"1. GET /api/training/reports/history?user_id=X.","Training history with all completions returned.",
+TC-P8-042,US-TRAIN-16,P8,E2E,P8-J15,"C-215,C-227",Expiry notification sent at 30 days,Completion expiring in 30 days.,"1. Wait for ExpiryCheckJob.","In-app notification created for user about expiring certification.",
+TC-P8-043,US-TRAIN-16,P8,E2E,P8-J15,"C-227",Expiry notification sent at 7 days,Completion expiring in 7 days.,"1. Wait for ExpiryCheckJob.","Second notification created with higher urgency.",
+TC-P8-044,US-TRAIN-17,P8,E2E,P8-J15,"C-229",Due date reminder sent,Assignment due date approaching.,"1. Wait for ReminderJob.","Notification created reminding user of upcoming due date.",
+TC-P8-045,US-TRAIN-18,P8,API,P8-J16,"C-230",Link training to action,Action and course exist.,"1. PUT /api/actions/:id with training_course_id.","Training course linked to action.",
+TC-P8-046,US-TRAIN-18,P8,UI,P8-J16,"C-230",Link training from action detail,Action exists courses exist.,"1. Open action.
+2. Edit action.
+3. Link training course.
+4. Save.","Training course linked shown on action detail.",
+TC-P8-047,US-TRAIN-19,P8,Integration,N/A,"C-231",Training metrics in analytics,Training data exists.,"1. Run TrainingAnalyticsAggregationJob.
+2. GET /api/analytics/summary.","Training metrics included in analytics response.",
+TC-P8-048,Security,P8,Security,N/A,"C-200",Multi-tenant training isolation,Multiple organisations exist.,"1. Create training data in org A.
+2. Query as user in org B.","Org B cannot see org A training data.",
+TC-P8-049,Security,P8,Security,N/A,"C-219",Worker can only view own training,Worker and manager exist.,"1. Worker calls my-training.
+2. Attempt to view other user's training.","Worker sees only own data cannot access others.",
+TC-P8-050,Security,P8,Security,N/A,"C-203",Evidence file validation,N/A.,"1. Attempt to upload invalid file type.
+2. Attempt to upload oversized file.","Invalid uploads rejected with clear error message.",
+TC-P9-001,US-RISK-01,P9,UI,P9-J1,"C-240",View risk register as Manager,Logged in as Manager role.,"1. Navigate to Risk Register page. 2. Observe the risk list.","Risk list displays with all columns (Ref, Title, Category, Inherent Score, Residual Score, Status, Owner, Next Review).",
+TC-P9-002,US-RISK-01,P9,UI,P9-J1,"C-240",Filter risks by status,Risk register page loaded with various statuses.,"1. Click Status filter. 2. Select 'Open'. 3. Observe results.","Only risks with status 'Open' are displayed.",
+TC-P9-003,US-RISK-01,P9,UI,P9-J1,"C-240",Filter risks by risk level,Risk register page loaded with various levels.,"1. Click Level filter. 2. Select 'High'. 3. Observe results.","Only risks with residual level 'High' are displayed.",
+TC-P9-004,US-RISK-01,P9,UI,P9-J1,"C-240",Filter risks by category,Risk register page loaded; categories exist.,"1. Click Category filter. 2. Select 'Physical Hazards'. 3. Observe.","Only risks in 'Physical Hazards' category displayed.",
+TC-P9-005,US-RISK-02,P9,UI,P9-J2,"C-241",Create risk with required fields,Logged in as Manager.,"1. Click 'Add Risk'. 2. Enter Title, Category, Scores. 3. Save.","Risk created with reference RISK-YYYY-NNNN; redirected to detail page.",
+TC-P9-006,US-RISK-02,P9,UI,P9-J2,"C-241",Create risk with all fields,Logged in as Manager.,"1. Click 'Add Risk'. 2. Complete all form steps. 3. Save.","Risk created with all fields populated correctly.",
+TC-P9-007,US-RISK-02,P9,UI,P9-J2,"C-241",Validation: missing required fields,Logged in as Manager; on risk form.,"1. Leave Title empty. 2. Try to save.","Validation error: 'Title is required'.",
+TC-P9-008,US-RISK-03,P9,UI,P9-J3,"C-242",View risk detail page with tabs,Risk exists; logged in as Manager.,"1. Navigate to risk detail page. 2. Observe tabs.","Tabs displayed: Details, Controls, Links, Reviews, History.",
+TC-P9-009,US-RISK-03,P9,UI,P9-J3,"C-242",View inherent and residual scores,Risk with scores exists.,"1. View risk detail page. 2. Observe score cards.","Scores display with correct level colours.",
+TC-P9-010,US-RISK-03,P9,UI,P9-J3,"C-242",Edit risk and save changes,Risk exists; logged in as owner.,"1. Click Edit. 2. Change Title. 3. Save.","Title updated; success message displayed.",
+TC-P9-011,US-RISK-04,P9,UI,P9-J3,"C-243",Add control to risk,Risk exists; logged in as Manager.,"1. Navigate to Controls tab. 2. Click Add Control. 3. Fill details. 4. Save.","Control added and appears in controls list.",
+TC-P9-012,US-RISK-04,P9,UI,P9-J3,"C-243",Verify control effectiveness,Control exists; logged in as Manager.,"1. Click Verify on control. 2. Select effectiveness. 3. Add notes. 4. Save.","Control verified; last_verified_at updated.",
+TC-P9-013,US-RISK-05,P9,UI,P9-J3,"C-244",Link risk to incident,Risk and incident exist.,"1. Navigate to Links tab. 2. Click Link Item. 3. Select incident. 4. Save.","Link created; incident appears in links list.",
+TC-P9-014,US-RISK-05,P9,UI,P9-J3,"C-244",Link risk to action,Risk and action exist.,"1. Navigate to Links tab. 2. Click Link Item. 3. Select action. 4. Save.","Link created; action appears in links list.",
+TC-P9-015,US-RISK-06,P9,UI,P9-J4,"C-245",Record periodic review,Risk with review_frequency exists.,"1. Navigate to Reviews tab. 2. Click Add Review. 3. Enter review data. 4. Save.","Review recorded; next_review_date updated.",
+TC-P9-016,US-RISK-07,P9,UI,P9-J5,"C-246",View risk heatmap,Manager logged in; risks exist.,"1. Navigate to Risk Heatmap page. 2. Observe matrix.","5x5 matrix displayed with risk counts per cell.",
+TC-P9-017,US-RISK-07,P9,UI,P9-J5,"C-246",Click heatmap cell for drill-down,Heatmap displayed with risks.,"1. Click cell with risks. 2. Observe results.","Risk list filtered to show only risks in that L×I cell.",
+TC-P9-018,US-RISK-08,P9,API,P9-J5,"C-247",Get top risks endpoint,Risks exist with various scores.,"1. Call GET /api/risks/analytics/top-risks","Returns top 10 risks by residual score.",
+TC-P9-019,US-RISK-08,P9,UI,P9-J5,"C-247",View upcoming reviews widget,Risks with upcoming reviews exist.,"1. View analytics. 2. Check upcoming reviews.","Shows risks due for review in next 30 days.",
+TC-P9-020,US-RISK-09,P9,Security,N/A,"C-248",Multi-tenant risk isolation,Multiple organisations exist.,"1. Create risk in org A. 2. Query as user in org B.","Org B cannot see org A risk data.",
+TC-P10-001,US-SSO-01,P10,UI,P10-J1,"C-270",Admin configures SSO provider,Admin logged in.,"1. Navigate to Settings > Integrations > SSO. 2. Configure provider. 3. Save.","SSO provider created; test connection succeeds.",
+TC-P10-002,US-SSO-01,P10,UI,P10-J1,"C-274",Admin creates role mapping,SSO provider configured.,"1. Navigate to Role Mappings. 2. Add mapping. 3. Save.","Role mapping saved; applied to SSO logins.",
+TC-P10-003,US-SSO-02,P10,UI,P10-J2,"C-271",SSO login redirects to IdP,SSO provider configured.,"1. Go to login. 2. Click SSO button. 3. Observe redirect.","Redirected to IdP authorization URL.",
+TC-P10-004,US-SSO-02,P10,E2E,P10-J2,"C-271",SSO callback creates session,User authenticated at IdP.,"1. Complete IdP auth. 2. Callback to app.","User logged in with valid JWT.",
+TC-P10-005,US-SSO-03,P10,E2E,P10-J2,"C-296",JIT creates user on first login,User in IdP not in EHS.,"1. Login via SSO with new user.","New user created with IdP attributes.",
+TC-P10-006,US-SSO-03,P10,E2E,P10-J2,"C-274",Role mapped from IdP groups,Role mappings configured.,"1. Login via SSO. 2. IdP returns group claim.","User assigned correct role from mapping.",
+TC-P10-007,US-SSO-04,P10,Security,P10-J2,"C-271",Invalid SSO state rejected,SSO flow initiated.,"1. Start SSO. 2. Modify state in callback.","Callback returns 401 - invalid state.",
+TC-P10-008,US-SSO-04,P10,UI,P10-J1,"C-275",SSO-only mode blocks password,SSO-only mode enabled.,"1. Navigate to login. 2. Try password login.","Password form hidden; SSO-only message shown.",
+TC-P10-009,US-API-01,P10,UI,P10-J3,"C-276",Admin creates API client,Admin logged in.,"1. Navigate to API Clients. 2. Create client. 3. Copy key.","API key displayed once with copy button.",
+TC-P10-010,US-API-01,P10,Security,P10-J3,"C-278",API key hash stored not plaintext,API client created.,"1. Query api_clients table.","key_hash contains bcrypt hash; no plaintext.",
+TC-P10-011,US-API-02,P10,API,N/A,"C-278",Valid API key authenticates,Active API client exists.,"1. Send request with X-API-Key header.","Request authenticated; 200 response.",
+TC-P10-012,US-API-02,P10,API,N/A,"C-278",Invalid API key returns 401,None.,"1. Send request with invalid key.","401 Unauthorized.",
+TC-P10-013,US-API-02,P10,API,N/A,"C-277",Revoked client rejected,API client revoked.,"1. Send request with revoked key.","401 Unauthorized - revoked.",
+TC-P10-014,US-API-03,P10,API,N/A,"C-279",Rate limiting enforced,API client with tier.,"1. Exceed rate limit. 2. Observe response.","429 Too Many Requests after limit.",
+TC-P10-015,US-API-03,P10,API,N/A,"C-279",Rate limit headers returned,Active API client.,"1. Make API request. 2. Check headers.","X-RateLimit-* headers present.",
+TC-P10-016,US-API-04,P10,API,N/A,"C-277",Scope check enforced,API client with limited scopes.,"1. Request endpoint outside scope.","403 Forbidden - insufficient scope.",
+TC-P10-017,US-API-05,P10,UI,P10-J3,"C-276",Regenerate API key,Active API client.,"1. Click Regenerate. 2. Try old key. 3. Try new key.","Old key fails; new key works.",
+TC-P10-018,US-API-05,P10,UI,P10-J3,"C-277",Suspend API client,Active API client.,"1. Click Suspend. 2. Attempt request.","Client suspended; requests return 401.",
+TC-P10-019,US-WEBHOOK-01,P10,UI,P10-J4,"C-283",Admin creates webhook,Admin logged in.,"1. Navigate to Webhooks. 2. Create webhook. 3. Save.","Webhook created with signing secret.",
+TC-P10-020,US-WEBHOOK-02,P10,E2E,P10-J4,"C-283",Webhook delivers event,Active webhook configured.,"1. Trigger event. 2. Check receiver.","Receiver gets POST with event payload.",
+TC-P10-021,US-WEBHOOK-02,P10,API,P10-J4,"C-286",Webhook signature included,Webhook with secret.,"1. Trigger delivery. 2. Check X-EHS-Signature.","Signature header present and verifiable.",
+TC-P10-022,US-WEBHOOK-03,P10,E2E,P10-J4,"C-287",Webhook retry on failure,Webhook to failing URL.,"1. Trigger event. 2. Check retries.","Retried with exponential backoff.",
+TC-P10-023,US-WEBHOOK-03,P10,E2E,P10-J4,"C-288",Webhook auto-disabled on failures,Consecutive failures.,"1. Cause 10 failures. 2. Check status.","Webhook suspended; admin notified.",
+TC-P10-024,US-WEBHOOK-04,P10,UI,P10-J4,"C-289",Teams webhook Adaptive Card,Teams webhook configured.,"1. Trigger event. 2. Check Teams.","Adaptive Card posted with details.",
+TC-P10-025,US-WEBHOOK-05,P10,UI,P10-J4,"C-285",View webhook delivery history,Webhook with deliveries.,"1. View webhook details. 2. Check history.","Delivery attempts with status shown.",
+TC-P10-026,US-WEBHOOK-05,P10,UI,P10-J4,"C-287",Manual retry failed webhook,Failed delivery exists.,"1. Click Retry button.","Webhook re-delivered; status updated.",
+TC-P10-027,US-INT-01,P10,UI,P10-J1,"C-293",View integration activity log,Integration events exist.,"1. Navigate to Activity Log tab.","SSO, API, webhook events displayed.",
+TC-P10-028,Security,P10,Security,N/A,"C-270",SSO secrets encrypted at rest,SSO provider saved.,"1. Query sso_providers table.","client_secret encrypted; not readable.",
+TC-P10-029,Security,P10,Security,N/A,"C-280",IP allowlist enforced,API client with allowlist.,"1. Request from non-allowed IP.","403 Forbidden - IP not allowed.",
+TC-P10-030,Security,P10,Security,N/A,"C-294",Multi-tenant integration isolation,Multiple organisations.,"1. Create integration in org A. 2. Query as org B.","Org B cannot see org A integrations.",

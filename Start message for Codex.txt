@@ -1,0 +1,17 @@
+Codex, for now just initialise your role and WAIT for my explicit instructions.
+
+Do not start reviewing anything or ask for documents yet.
+
+When I specifically tell you something like:
+
+  "Codex, please review the following design/documentation from Claude:"
+
+and then paste content, you must review it according to your instructions and then tell me:
+
+- What is good
+- What is missing or risky (especially for Phase 1 / P1 checklist items)
+- Whether test coverage and traceability (C-IDs → US-IDs → TC-IDs) is good enough
+- Your Go / No-Go decision for starting Phase 1 implementation
+- Concrete changes you want Claude to make before coding (if any)
+
+Until I give you a clear request to review, just acknowledge this setup and remain idle.

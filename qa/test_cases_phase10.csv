@@ -1,0 +1,179 @@
+ID,Category,Title,Description,Preconditions,Steps,Expected Result,Priority,Status,Capability
+TC-P10-001,SSO,SSO login redirects to IdP,Verify SSO login button redirects to configured IdP authorization endpoint,SSO provider configured for organisation,"1. Navigate to login page
+2. Click 'Sign in with SSO' button
+3. Observe redirect",User is redirected to IdP authorization URL with correct parameters (client_id, redirect_uri, scope, state, nonce),High,Not Run,C-271
+TC-P10-002,SSO,SSO callback creates session,Verify successful SSO callback creates user session,User authenticated at IdP,"1. Complete IdP authentication
+2. IdP redirects to callback URL
+3. Observe session creation",User is logged in and redirected to dashboard with valid JWT,High,Not Run,C-271
+TC-P10-003,SSO,JIT creates user on first login,Verify Just-In-Time provisioning creates user on first SSO login,User exists in IdP but not in EHS,"1. Login via SSO with new user
+2. Complete authentication
+3. Check user creation",New user created in EHS with attributes from IdP claims,High,Not Run,C-296
+TC-P10-004,SSO,Role mapped from IdP groups,Verify user role is assigned based on IdP group claims,Role mappings configured,"1. Login via SSO
+2. IdP returns group claim
+3. Check assigned role",User assigned highest priority matching role from mappings,High,Not Run,C-274
+TC-P10-005,SSO,Invalid state rejected,Verify SSO callback rejects invalid state parameter,SSO flow initiated,"1. Start SSO login
+2. Modify state parameter in callback
+3. Complete flow",Callback returns 401 error - invalid state,Critical,Not Run,C-271
+TC-P10-006,SSO,Expired token rejected,Verify expired ID tokens are rejected,SSO provider configured,"1. Receive callback with expired token
+2. Process callback",Callback returns 401 error - token expired,Critical,Not Run,C-271
+TC-P10-007,SSO,SSO-only mode blocks password,Verify password login is blocked when SSO-only mode enabled,SSO-only mode enabled for org,"1. Navigate to login page
+2. Attempt password login for SSO-only org",Password form hidden or login rejected with SSO-only message,Medium,Not Run,C-275
+TC-P10-008,SSO,Test connection validates IdP,Verify test connection button validates IdP configuration,SSO provider in draft/active status,"1. Navigate to SSO configuration
+2. Click Test Connection
+3. Observe result",Connection test shows success/failure with IdP metadata validation,Medium,Not Run,C-270
+TC-P10-009,SSO,SSO login audited,Verify SSO login attempts are logged to sso_login_attempts,SSO provider configured,"1. Perform SSO login (success or failure)
+2. Query sso_login_attempts table",Login attempt recorded with status, provider_id, external_id,Medium,Not Run,C-294
+TC-P10-010,SSO,User attributes sync on login,Verify user attributes update from IdP claims on each login,Existing SSO user,"1. Update user attributes in IdP
+2. Login via SSO
+3. Check user record",User name and email updated from IdP claims,Medium,Not Run,C-297
+TC-P10-011,SSO,SSO provider CRUD operations,Verify admin can create, read, update, delete SSO providers,Admin logged in,"1. Create SSO provider
+2. Read provider details
+3. Update configuration
+4. Delete provider",All CRUD operations succeed with proper validation,High,Not Run,C-270
+TC-P10-012,SSO,Role mapping CRUD operations,Verify admin can manage role mappings for SSO provider,SSO provider exists,"1. Create role mapping
+2. Update priority
+3. Delete mapping",Role mappings saved and applied to SSO logins,High,Not Run,C-274
+TC-P10-013,SSO,Secrets encrypted at rest,Verify client_secret is encrypted in database,SSO provider with secret saved,"1. Query sso_providers table
+2. Check client_secret column",client_secret is encrypted - not readable as plain text,Critical,Not Run,C-270
+TC-P10-014,SSO,Default role applied,Verify default role assigned when no mapping matches,SSO provider with default_role configured,"1. Login with user whose groups match no mappings
+2. Check assigned role",User assigned default_role from SSO provider config,Medium,Not Run,C-274
+TC-P10-015,SSO,Deactivation on IdP removal,Verify user deactivated when IdP attribute indicates removed,SSO provider with deactivation rule,"1. Set user attribute in IdP to indicate disabled
+2. Login via SSO",User account deactivated in EHS - login denied,Medium,Not Run,C-298
+TC-P10-016,API Client,Create API client returns key,Verify API client creation returns one-time visible key,Admin logged in with manage_integrations permission,"1. Navigate to API Clients
+2. Create new API client
+3. Observe key display",API key displayed once with copy button - key is plaintext,High,Not Run,C-276
+TC-P10-017,API Client,API key authenticates request,Verify valid API key authenticates public API request,Active API client exists,"1. Send request with X-API-Key header
+2. Include valid key",Request authenticated - 200 response returned,Critical,Not Run,C-278
+TC-P10-018,API Client,Invalid key returns 401,Verify invalid API key is rejected,None,"1. Send request with X-API-Key header
+2. Include invalid/malformed key",401 Unauthorized with error code 'invalid_api_key',Critical,Not Run,C-278
+TC-P10-019,API Client,Revoked client rejected,Verify revoked API client cannot authenticate,API client in revoked status,"1. Send request with revoked client's key
+2. Observe response",401 Unauthorized with error code 'auth_revoked',Critical,Not Run,C-277
+TC-P10-020,API Client,Rate limiting enforced,Verify rate limiting prevents excessive requests,API client with rate limit tier,"1. Send requests up to rate limit
+2. Send one more request
+3. Wait for window reset
+4. Send request",Rate limit exceeded returns 429 - after window reset returns 200,High,Not Run,C-279
+TC-P10-021,API Client,Scope check enforced,Verify requests outside client scope are rejected,API client with limited scopes,"1. Send request to endpoint outside client scopes
+2. Observe response",403 Forbidden with error code 'insufficient_scope',Critical,Not Run,C-277
+TC-P10-022,API Client,IP allowlist blocks denied IPs,Verify requests from non-allowed IPs are rejected,API client with IP allowlist configured,"1. Send request from IP not in allowlist
+2. Observe response",403 Forbidden with error code 'ip_not_allowed',High,Not Run,C-280
+TC-P10-023,API Client,Key regeneration invalidates old,Verify regenerating API key invalidates previous key,Active API client exists,"1. Note current API key
+2. Regenerate key
+3. Try old key
+4. Try new key",Old key returns 401 - new key works,High,Not Run,C-276
+TC-P10-024,API Client,Usage stats updated,Verify API client usage statistics are tracked,Active API client,"1. Make several API requests
+2. Check api_clients usage columns",last_used_at updated - usage_count incremented,Low,Not Run,C-281
+TC-P10-025,API Client,Suspend client blocks access,Verify suspended client cannot authenticate,Admin with manage_integrations,"1. Suspend API client
+2. Attempt request with client key",401 Unauthorized with suspended status message,High,Not Run,C-277
+TC-P10-026,API Client,Rate limit headers returned,Verify rate limit headers in API responses,Active API client,"1. Make API request
+2. Check response headers",X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset headers present,Medium,Not Run,C-279
+TC-P10-027,API Client,API client list and filter,Verify admin can list and filter API clients,Multiple API clients exist,"1. Navigate to API Clients
+2. Apply status filter
+3. Apply search",Clients filtered by status and name search correctly,Medium,Not Run,C-276
+TC-P10-028,API Client,API key hash stored,Verify only hashed API key is stored in database,API client created,"1. Query api_clients table
+2. Check key_hash column",key_hash contains bcrypt hash - no plain text key stored,Critical,Not Run,C-278
+TC-P10-029,API Client,Expires at enforced,Verify API client with expiration is rejected after date,API client with expires_at set,"1. Set expires_at to past date
+2. Attempt request",401 Unauthorized with error code 'client_expired',Medium,Not Run,C-276
+TC-P10-030,API Client,Edit client details,Verify admin can edit API client name and description,Active API client exists,"1. Edit API client
+2. Update name and scopes
+3. Save",Client updated - changes reflected in list,Medium,Not Run,C-276
+TC-P10-031,Webhook,Webhook delivers event,Verify webhook delivers event to configured URL,Active webhook configured,"1. Trigger event matching webhook subscription
+2. Check webhook receiver",Webhook receiver receives POST with event payload,High,Not Run,C-283
+TC-P10-032,Webhook,Signature included,Verify webhook includes HMAC signature header,Webhook with secret configured,"1. Trigger webhook delivery
+2. Check X-EHS-Signature header",Signature header present - verifiable with secret,Critical,Not Run,C-286
+TC-P10-033,Webhook,Retry on failure,Verify webhook retries on delivery failure,Webhook with failing endpoint,"1. Configure webhook to failing URL
+2. Trigger event
+3. Check retry attempts",Webhook retried with exponential backoff up to max attempts,High,Not Run,C-287
+TC-P10-034,Webhook,Max retries then fail,Verify webhook fails after max retry attempts,Webhook to failing endpoint,"1. Trigger event
+2. Wait for all retries
+3. Check event status",Event status = failed after max retries exhausted,Medium,Not Run,C-287
+TC-P10-035,Webhook,Auto-disable on failures,Verify webhook auto-disabled after consecutive failures,Webhook with consecutive_failures threshold,"1. Cause 5 consecutive failures
+2. Check webhook status",Webhook status changed to suspended - notification sent,Medium,Not Run,C-288
+TC-P10-036,Webhook,Teams card formatting,Verify Teams webhook formats as Adaptive Card,Webhook with teams_channel content_type,"1. Configure Teams webhook
+2. Trigger event
+3. Check Teams channel",Adaptive Card posted to Teams with event details,Medium,Not Run,C-289
+TC-P10-037,Webhook,Manual retry works,Verify admin can manually retry failed webhook,Failed webhook event,"1. View failed event
+2. Click Retry button
+3. Observe delivery",Webhook re-delivered - status updated on success/failure,Medium,Not Run,C-287
+TC-P10-038,Webhook,Event filtering works,Verify webhook only receives subscribed event types,Webhook with specific event_types,"1. Configure webhook for incident.created only
+2. Trigger incident.created
+3. Trigger action.created",Only incident.created delivered - action.created ignored,High,Not Run,C-284
+TC-P10-039,Webhook,Webhook CRUD operations,Verify admin can create update delete webhooks,Admin logged in,"1. Create webhook
+2. Update URL
+3. Toggle enabled
+4. Delete webhook",All operations succeed with proper validation,High,Not Run,C-283
+TC-P10-040,Webhook,Secret regeneration,Verify admin can regenerate webhook secret,Active webhook,"1. Regenerate secret
+2. Check new deliveries",New deliveries signed with new secret,Medium,Not Run,C-286
+TC-P10-041,Webhook,Test webhook delivery,Verify test button sends test event,Configured webhook,"1. Click Test button
+2. Check receiver",Test event delivered with sample payload,Medium,Not Run,C-283
+TC-P10-042,Webhook,Delivery latency logged,Verify webhook delivery time is recorded,Active webhook,"1. Trigger webhook
+2. Check webhook_events record",response_time_ms populated with delivery latency,Low,Not Run,C-285
+TC-P10-043,Webhook,Event payload complete,Verify webhook payload includes all required fields,Active webhook,"1. Trigger event
+2. Inspect payload",Payload includes id, type, timestamp, data, organisation info,High,Not Run,C-285
+TC-P10-044,Webhook,Activity log shows events,Verify admin can view webhook delivery history,Webhook with deliveries,"1. Navigate to Webhooks
+2. View activity for webhook",List of deliveries with status and timestamp shown,Medium,Not Run,C-285
+TC-P10-045,Webhook,Multiple webhooks supported,Verify multiple webhooks can subscribe to same event,2+ webhooks for same event type,"1. Configure 2 webhooks for incident.created
+2. Create incident",Both webhooks receive the event,Medium,Not Run,C-283
+TC-P10-046,Public API,List incidents returns data,Verify GET /api/public/v1/incidents returns incidents,API client with incidents:read scope,"1. Call GET /incidents
+2. Parse response",200 with array of incidents in data field,High,Not Run,C-282
+TC-P10-047,Public API,Get incident by ID,Verify GET /api/public/v1/incidents/:id returns single incident,API client with incidents:read,"1. Call GET /incidents/{id}
+2. Parse response",200 with incident object matching ID,High,Not Run,C-282
+TC-P10-048,Public API,Create incident via API,Verify POST /api/public/v1/incidents creates incident,API client with incidents:write,"1. POST incident data
+2. Check response
+3. Verify in database",201 with created incident - record in database,High,Not Run,C-282
+TC-P10-049,Public API,Pagination works correctly,Verify pagination parameters work,Multiple records exist,"1. Call with limit=10 page=1
+2. Call with limit=10 page=2",Results paginated correctly with total count in response,Medium,Not Run,C-282
+TC-P10-050,Public API,Filtering works correctly,Verify filter parameters work,Multiple records with varying status,"1. Call with status=open filter
+2. Check results",Only open incidents returned,Medium,Not Run,C-282
+TC-P10-051,Public API,Response includes rate headers,Verify rate limit info in response headers,Any API client,"1. Make API request
+2. Check headers",X-RateLimit-Limit and remaining headers present,Medium,Not Run,C-279
+TC-P10-052,Public API,Org scoping enforced,Verify API only returns org's data,API client for specific org,"1. Call API
+2. Check all returned records",All records belong to API client's organisation,Critical,Not Run,C-282
+TC-P10-053,Public API,List actions endpoint,Verify GET /api/public/v1/actions works,API client with actions:read,"1. Call GET /actions
+2. Parse response",200 with array of actions,High,Not Run,C-282
+TC-P10-054,Public API,List risks endpoint,Verify GET /api/public/v1/risks works,API client with risks:read,"1. Call GET /risks
+2. Parse response",200 with array of risks,High,Not Run,C-282
+TC-P10-055,Public API,Training status endpoint,Verify GET /api/public/v1/training/status works,API client with training:read,"1. Call GET /training/status
+2. Parse response",200 with training compliance summary,High,Not Run,C-282
+TC-P10-056,Public API,User list endpoint,Verify GET /api/public/v1/users works,API client with users:read,"1. Call GET /users
+2. Parse response",200 with array of users (limited fields),High,Not Run,C-282
+TC-P10-057,Public API,Update action via API,Verify PUT /api/public/v1/actions/:id works,API client with actions:write,"1. PUT action update
+2. Check response",200 with updated action,Medium,Not Run,C-282
+TC-P10-058,Public API,Error response format,Verify API errors follow standard format,API client,"1. Make invalid request
+2. Check error response",Error response has error.code, error.message structure,Medium,Not Run,C-282
+TC-P10-059,Public API,Date range filtering,Verify date filters work,Records with various dates,"1. Call with from and to date params
+2. Check results",Only records within date range returned,Medium,Not Run,C-282
+TC-P10-060,Public API,Sort parameter works,Verify sort parameter orders results,Multiple records,"1. Call with sort=created_at
+2. Check order",Results ordered by specified field,Low,Not Run,C-282
+TC-P10-061,Admin UI,Integrations page loads,Verify integrations page accessible to admin,Admin logged in,"1. Navigate to /settings/integrations
+2. Observe page",Page loads with SSO/API/Webhooks tabs,High,Not Run,C-290
+TC-P10-062,Admin UI,SSO config wizard works,Verify SSO configuration wizard flow,Admin on integrations page,"1. Click Configure SSO
+2. Complete 3-step wizard
+3. Save",SSO provider created - appears in list,High,Not Run,C-290
+TC-P10-063,Admin UI,API key display security,Verify API key shown once then hidden,Admin creating API client,"1. Create API client
+2. Close modal
+3. Reopen client details",Key visible once on creation - not visible after,High,Not Run,C-291
+TC-P10-064,Admin UI,Activity log displays events,Verify integration activity log works,Integration events exist,"1. Navigate to Activity Log tab
+2. Filter by type
+3. Check details",Events listed with filtering and detail view,Medium,Not Run,C-292
+TC-P10-065,Admin UI,Export configuration,Verify admin can export integration config,Integrations configured,"1. Click Export button
+2. Download JSON",JSON export of SSO/API/webhook configs (secrets excluded),Medium,Not Run,C-295
+TC-P10-066,Audit,SSO login audit trail,Verify SSO logins appear in audit log,SSO login performed,"1. Login via SSO
+2. Check audit log",Audit entry for sso_login with provider and user details,Medium,Not Run,C-294
+TC-P10-067,Audit,Integration changes audited,Verify integration config changes are audited,Admin modifying integration,"1. Create/update SSO provider
+2. Check audit log",Audit entry for integration_config with before/after values,Medium,Not Run,C-293
+TC-P10-068,Security,PKCE enforced,Verify PKCE is used in OIDC flow,SSO provider configured,"1. Start SSO login
+2. Inspect authorization request",code_challenge and code_challenge_method present in request,High,Not Run,C-271
+TC-P10-069,Security,Nonce validated,Verify nonce is validated in ID token,SSO flow in progress,"1. Complete SSO login
+2. Inspect token validation",Nonce in ID token matches stored nonce,Critical,Not Run,C-271
+TC-P10-070,Security,Secrets not in logs,Verify secrets not logged,Logging enabled,"1. Perform SSO operations
+2. Check application logs",No client secrets or API keys appear in logs,Critical,Not Run,C-270
+TC-P10-071,Performance,SSO callback under 2s,Verify SSO callback completes quickly,SSO configured,"1. Start SSO login
+2. Measure callback time",Callback to dashboard redirect under 2 seconds,Medium,Not Run,C-271
+TC-P10-072,Performance,API response under 500ms,Verify API responses are fast,API client active,"1. Call public API endpoints
+2. Measure response time",P95 response time under 500ms,Medium,Not Run,C-282
+TC-P10-073,Performance,Rate limit accurate,Verify rate limiting is accurate,API client with tier,"1. Send exactly rate limit requests
+2. Check limit enforcement",Rate limiting within ±5% of configured limit,Medium,Not Run,C-279
+TC-P10-074,Integration,Event emission on incident,Verify incident events trigger webhooks,Webhook for incident events,"1. Create incident
+2. Check webhook delivery",incident.created event delivered to webhook,High,Not Run,C-284
+TC-P10-075,Integration,Event emission on action,Verify action events trigger webhooks,Webhook for action events,"1. Create action
+2. Check webhook delivery",action.created event delivered to webhook,High,Not Run,C-284

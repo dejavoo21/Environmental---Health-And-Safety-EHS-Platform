@@ -1,0 +1,498 @@
+CREATE DATABASE ehs_db;
+
+
+Enable UUID and create tables:
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+CREATE TABLE IF NOT EXISTS users (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email         TEXT UNIQUE NOT NULL,
+  first_name    TEXT NOT NULL,
+  last_name     TEXT NOT NULL,
+  created_at    TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS sites (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  code        TEXT UNIQUE,
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS incident_types (
+  id    SERIAL PRIMARY KEY,
+  name  TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS incidents (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title           TEXT NOT NULL,
+  description     TEXT,
+  incident_type_id INTEGER NOT NULL REFERENCES incident_types(id),
+  site_id         UUID REFERENCES sites(id),
+  reported_by_id  UUID REFERENCES users(id),
+  occurred_at     TIMESTAMP NOT NULL,
+  status          TEXT NOT NULL CHECK (status IN ('open', 'under_investigation', 'closed')) DEFAULT 'open',
+  severity        TEXT CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+  created_at      TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+
+Seed some basic data:
+
+INSERT INTO incident_types (name) VALUES
+('Injury'), ('Near Miss'), ('Property Damage')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO sites (name, code) VALUES
+('Head Office', 'HO'),
+('Factory A', 'FA')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO users (email, first_name, last_name)
+VALUES ('john.doe@example.com', 'John', 'Doe')
+ON CONFLICT DO NOTHING;
+
+
+2. Backend
+
+cd backend
+npm install
+
+
+Create .env:
+
+DATABASE_URL=postgres://user:password@localhost:5432/ehs_db
+PORT=4000
+
+
+Run dev server:
+
+npm run dev
+
+
+Health check:
+Open http://localhost:4000/api/health
+
+3. Frontend
+
+cd frontend
+npm install
+npm run dev
+
+
+Open the URL Vite gives you (e.g. http://localhost:5173).
+
+You should be able to:
+
+View incidents table (empty or seeded)
+
+Create a new incident
+
+Click an incident row to view details
+
+Roadmap
+
+Add filters (status, site, date range) to incident list
+
+Add Sites dropdown to incident form
+
+Implement authentication and use reported_by_id
+
+Add modules:
+
+Inspections (templates + responses)
+
+Training assignments
+
+Document centre
+
+
+---
+
+## 2. `docs/architecture.md`
+
+```markdown
+# Architecture Overview
+
+## High-Level Design
+
+This project is structured as a **classic web app** with:
+
+- **React frontend** (SPA)
+- **REST API backend** (Node.js + Express)
+- **PostgreSQL database**
+
+Communication is done via JSON over HTTP.
+
+```text
+[ React SPA ]  <——>  [ Express API ]  <——>  [ PostgreSQL ]
+
+Frontend
+
+Framework: React (Vite)
+
+Responsibilities:
+
+Render Incident list, create form, and detail view
+
+Call backend API for data (incidents)
+
+Basic local state management (useState, useEffect)
+
+Views
+
+IncidentsList
+
+Shows a table of incidents
+
+Clicking a row opens detail view
+
+“+ New Incident” button opens create form
+
+NewIncidentForm
+
+Form to create a new incident
+
+Sends POST request to /api/incidents
+
+IncidentDetail
+
+Shows full details for a single incident
+
+Backend
+
+Framework: Node.js + Express
+
+Database integration: pg (PostgreSQL client)
+
+Responsibilities:
+
+Expose REST endpoints for Incident CRUD (read + create in MVP)
+
+Validate and persist data to Postgres
+
+Handle basic error responses (400, 404, 500)
+
+Main Modules
+
+server.js
+
+Express app
+
+Global middleware (JSON, CORS)
+
+Registers /api/incidents routes
+
+db.js
+
+Creates and exports a Postgres Pool
+
+Uses DATABASE_URL from environment
+
+routes/incidents.js
+
+GET /api/incidents
+
+GET /api/incidents/:id
+
+POST /api/incidents
+
+Database
+
+RDBMS: PostgreSQL
+
+Design principle: Keep it simple, normalized and extensible
+
+Core tables in MVP:
+
+users — basic user records (id, name, email)
+
+sites — locations/facilities
+
+incident_types — lookup for incident types
+
+incidents — main incident records
+
+Security & Auth (Future)
+
+Current MVP has no authentication (for simplicity).
+Planned enhancements:
+
+JWT-based auth
+
+Role-based access control:
+
+admin – manage users, sites, config
+
+manager – view all incidents, manage status
+
+worker – create incidents, view their own
+
+Deployment (Future)
+
+Local dev uses:
+
+Frontend dev server (Vite)
+
+Backend dev server (Express via nodemon)
+
+Local or Dockerized Postgres
+
+Production options:
+
+Frontend: static hosting (e.g. S3, Netlify, Vercel)
+
+Backend: Node server on a VM or container (Docker, ECS, etc.)
+
+Database: Managed Postgres (RDS, Supabase, Neon, etc.)
+
+
+---
+
+## 3. `docs/database-schema.md`
+
+```markdown
+# Database Schema – Incident Management MVP
+
+## Extensions
+
+```sql
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+
+Used for gen_random_uuid() in UUID primary keys.
+
+Tables
+1. users
+
+Stores basic user information.
+
+Column	Type	Notes
+id	UUID PK	DEFAULT gen_random_uuid()
+email	TEXT	Unique, required
+first_name	TEXT	Required
+last_name	TEXT	Required
+created_at	TIMESTAMP	Defaults to NOW()
+
+Used by incidents.reported_by_id.
+
+2. sites
+
+Represents locations/facilities.
+
+Column	Type	Notes
+id	UUID PK	DEFAULT gen_random_uuid()
+name	TEXT	Required
+code	TEXT	Unique, optional
+created_at	TIMESTAMP	Defaults to NOW()
+
+Used by incidents.site_id.
+
+3. incident_types
+
+Lookup table for incident types.
+
+Column	Type	Notes
+id	SERIAL	PK
+name	TEXT	Unique, e.g. 'Injury', 'Near Miss', 'Property Damage'
+
+Used by incidents.incident_type_id.
+
+4. incidents
+
+Main incident record.
+
+Column	Type	Notes
+id	UUID PK	DEFAULT gen_random_uuid()
+title	TEXT	Required
+description	TEXT	Optional
+incident_type_id	INTEGER	FK → incident_types(id), required
+site_id	UUID	FK → sites(id), optional
+reported_by_id	UUID	FK → users(id), optional for now (will be filled when auth exists)
+occurred_at	TIMESTAMP	Required
+status	TEXT	open, under_investigation, closed (default: open)
+severity	TEXT	Optional: low, medium, high, critical
+created_at	TIMESTAMP	DEFAULT NOW()
+updated_at	TIMESTAMP	DEFAULT NOW() (can be updated via trigger or app logic)
+
+Sample seed data:
+
+INSERT INTO incident_types (name) VALUES
+('Injury'), ('Near Miss'), ('Property Damage')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO sites (name, code) VALUES
+('Head Office', 'HO'),
+('Factory A', 'FA')
+ON CONFLICT DO NOTHING;
+
+INSERT INTO users (email, first_name, last_name)
+VALUES ('john.doe@example.com', 'John', 'Doe')
+ON CONFLICT DO NOTHING;
+
+Future Tables (Planned)
+
+incident_actions – actions linked to an incident
+
+inspection_templates, inspections, inspection_responses
+
+training_courses, training_assignments
+
+documents
+
+
+---
+
+## 4. `docs/api/incidents.md`
+
+```markdown
+# Incidents API
+
+Base URL (dev):
+
+```text
+http://localhost:4000/api
+
+
+All endpoints are JSON.
+
+GET /incidents
+
+Returns a list of incidents.
+
+Query Parameters
+
+status (optional): open | under_investigation | closed
+
+siteId (optional): UUID of a site
+
+limit (optional): default 50
+
+offset (optional): default 0
+
+Response (200)
+[
+  {
+    "id": "e7ff88d8-1b7b-4a54-9f9b-123456789abc",
+    "title": "Forklift near miss",
+    "status": "open",
+    "severity": "medium",
+    "occurred_at": "2025-01-08T10:15:00.000Z",
+    "site_name": "Head Office",
+    "incident_type": "Near Miss"
+  }
+]
+
+
+Fields:
+
+id — incident ID (UUID)
+
+title — short title
+
+status — incident status
+
+severity — risk level (if provided)
+
+occurred_at — timestamp when incident took place
+
+site_name — joined from sites
+
+incident_type — joined from incident_types
+
+GET /incidents/:id
+
+Returns details of a single incident.
+
+Path Parameters
+
+:id — incident UUID
+
+Response (200)
+{
+  "id": "e7ff88d8-1b7b-4a54-9f9b-123456789abc",
+  "title": "Forklift near miss",
+  "description": "Forklift reversed into a pedestrian walkway, no injury.",
+  "incident_type_id": 2,
+  "site_id": "b3e8a004-2a90-4a5f-8a2b-123456789abc",
+  "reported_by_id": "c1b3a004-aaaa-bbbb-cccc-123456789abc",
+  "occurred_at": "2025-01-08T10:15:00.000Z",
+  "status": "open",
+  "severity": "medium",
+  "created_at": "2025-01-08T11:00:00.000Z",
+  "updated_at": "2025-01-08T11:00:00.000Z",
+  "site_name": "Head Office",
+  "incident_type": "Near Miss",
+  "reported_by_name": "John Doe"
+}
+
+Errors
+
+404 Not Found if incident does not exist.
+
+POST /incidents
+
+Creates a new incident.
+
+Request Body
+{
+  "title": "Forklift near miss",
+  "description": "Forklift reversed into a pedestrian walkway, no injury.",
+  "incident_type_id": 2,
+  "site_id": "b3e8a004-2a90-4a5f-8a2b-123456789abc",
+  "reported_by_id": "c1b3a004-aaaa-bbbb-cccc-123456789abc",
+  "occurred_at": "2025-01-08T10:15:00.000Z",
+  "severity": "medium"
+}
+
+
+Required fields:
+
+title
+
+incident_type_id
+
+occurred_at
+
+Optional fields:
+
+description
+
+site_id
+
+reported_by_id
+
+severity
+
+Response (201)
+{
+  "id": "generated-uuid",
+  "title": "Forklift near miss",
+  "description": "Forklift reversed into a pedestrian walkway, no injury.",
+  "incident_type_id": 2,
+  "site_id": "b3e8a004-2a90-4a5f-8a2b-123456789abc",
+  "reported_by_id": "c1b3a004-aaaa-bbbb-cccc-123456789abc",
+  "occurred_at": "2025-01-08T10:15:00.000Z",
+  "status": "open",
+  "severity": "medium",
+  "created_at": "2025-01-08T11:00:00.000Z",
+  "updated_at": "2025-01-08T11:00:00.000Z"
+}
+
+Errors
+
+400 Bad Request — if required fields are missing.
+
+500 Internal Server Error — unexpected failure during insert.
+
+
+---
+
+If you want, next I can:
+
+- Add documentation + code for the **next module** (Inspections or Training), using the same pattern, or  
+- Turn this into a more formal “spec doc” you could hand to another developer (like a mini PRD for the Incident module).
+::contentReference[oaicite:0]{index=0}

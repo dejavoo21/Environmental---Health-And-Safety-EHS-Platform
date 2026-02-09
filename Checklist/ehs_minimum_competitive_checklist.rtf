@@ -1,0 +1,116 @@
+{\rtf1\ansi
+\par
+\b Core Incident & Inspection Flows\b0\par
+\i Incidents – MUST HAVE\i0\par
+- [Must-have] Users can log in and create an incident with title, type, site, severity, date/time, description.\par
+- [Must-have] Users can see all incidents in a list with basic filters.\par
+- [Must-have] Users can open any incident and see full details.\par
+- [Must-have] Incident statuses include: open, under_investigation, closed.\par
+- [Must-have] Incident status can be updated (e.g. from open to under_investigation to closed).\par
+- [Must-have] Incident types are configurable by an admin (e.g. Injury, Near Miss, Property Damage).\par
+- [Must-have] Incidents are always linked to a site (or deliberately marked as having no site with a clear rule).\par
+\i Inspections – MUST HAVE\i0\par
+- [Must-have] Admins can create inspection templates with name and description.\par
+- [Must-have] Inspection templates contain ordered checklist items with label and optional category.\par
+- [Must-have] Users can start a new inspection by choosing site, template, and date/time.\par
+- [Must-have] Inspection checklist is auto-generated from the selected template.\par
+- [Must-have] For each checklist item, users can record result (ok, not_ok, n/a) and an optional comment.\par
+- [Must-have] System automatically sets overall_result to fail if any item is not_ok, otherwise pass.\par
+- [Must-have] Inspections list shows template, site, performed-by, date, and overall result.\par
+- [Must-have] Users can click an inspection row to view full details and all responses.\par
+\par
+\par
+\b Sites & Admin Basics\b0\par
+\i Sites & Admin Basics\i0\par
+- [Must-have] Admin can create new sites (locations).\par
+- [Must-have] Admin can edit existing sites (name and code).\par
+- [Must-have] Sites are used consistently in incidents and inspections.\par
+- [Must-have] Incident types are seeded on install but can be extended by admin without breaking the system.\par
+\par
+\par
+\b CAPA / Action Items\b0\par
+\i Actions from incidents & inspections\i0\par
+- [Must-have] From an incident detail view, users can create one or more action items linked to that incident.\par
+- [Must-have] From an inspection detail view, users can create action items from failed/not_ok checklist items.\par
+\i Action Items – behaviour\i0\par
+- [Must-have] Action items have title, description, source (incident or inspection), assigned_to, due_date, status.\par
+- [Must-have] Action item statuses include: open, in_progress, done, overdue.\par
+- [Must-have] System automatically marks action items as overdue when due_date is past and status is not done.\par
+- [Must-have] Users have a 'My Actions' view listing action items assigned to them.\par
+- [Must-have] Admins/managers have an 'All Actions' view listing all action items.\par
+- [Must-have] Action lists can be filtered by status, site, due date.\par
+\par
+\par
+\b Attachments / Evidence\b0\par
+\i Attachments / Evidence\i0\par
+- [Must-have] Users can upload files to incidents (e.g. photos, documents).\par
+- [Must-have] Users can upload files to inspections (evidence of findings).\par
+- [Must-have] Optionally, users can attach files to action items.\par
+- [Must-have] Each attachment stores linked entity type and ID, file name, file type, file size, uploaded_by, uploaded_at.\par
+- [Must-have] Incident and inspection detail views show a list of attachments with download links.\par
+- [Must-have] System enforces max file size and allowed file types.\par
+\par
+\par
+\b Security, RBAC & Audit\b0\par
+\i Auth & RBAC\i0\par
+- [Must-have] Passwords are hashed securely (e.g. bcrypt); no plain-text storage.\par
+- [Must-have] All sensitive APIs require JWT-based authentication.\par
+- [Must-have] User roles include admin, manager, worker.\par
+- [Must-have] Admin-only routes like site and template management are protected by role checks.\par
+- [Must-have] Workers can create incidents, view their own incidents, view their own actions, and see inspections read-only.\par
+- [Must-have] Managers can view and manage incidents, inspections, and actions for their organisation.\par
+\i Audit Logging\i0\par
+- [Must-have] System records audit logs when incidents are created.\par
+- [Must-have] System records audit logs when incident status or severity changes.\par
+- [Must-have] System records audit logs when inspections are created.\par
+- [Must-have] System records audit logs when action items are created or their status changes.\par
+- [Must-have] Incident detail view includes an Activity Log showing who did what and when.\par
+- [Must-have] Inspection detail view includes an Activity Log showing who did what and when.\par
+- [Must-have] Audit log records are immutable and cannot be edited.\par
+\par
+\par
+\b Dashboard, Analytics & Reporting\b0\par
+\i Dashboard KPIs\i0\par
+- [Must-have] Dashboard shows total incident count.\par
+- [Must-have] Dashboard shows count of open incidents.\par
+- [Must-have] Dashboard shows count of incidents in the last 30 days.\par
+- [Must-have] Dashboard shows count of inspections in the last 30 days.\par
+- [Must-have] Dashboard shows count of failed inspections in the last 30 days.\par
+\i Dashboard visuals\i0\par
+- [Must-have] Dashboard shows a bar chart of incidents by type.\par
+- [Must-have] Dashboard shows a line chart of incidents by severity over time (e.g. last 12 months).\par
+\i Dashboard tables\i0\par
+- [Must-have] Dashboard shows a table of recent incidents (5–10 items).\par
+- [Must-have] Dashboard shows a table of recent inspections (5–10 items).\par
+\i Reports / Export\i0\par
+- [Must-have] Users can export filtered incidents list to CSV or Excel.\par
+- [Must-have] Users can export filtered inspections list to CSV or Excel.\par
+- [Must-have] Users can export actions list to CSV or Excel.\par
+\par
+\par
+\b UX, Responsiveness & Integrations\b0\par
+\i UX & Responsiveness\i0\par
+- [Must-have] App has a clean, consistent layout with header and main content areas.\par
+- [Must-have] Navigation clearly separates Dashboard, Incidents, Inspections, Actions, Admin.\par
+- [Must-have] Tables have clear headings, are sortable where appropriate, and show helpful empty states.\par
+- [Must-have] Forms provide validation messages and reasonable defaults.\par
+- [Must-have] UI works well on desktop and tablet screen sizes.\par
+\i Notifications & Integrations\i0\par
+- [Must-have] System sends email notifications when a new incident is created.\par
+- [Must-have] System sends email notifications when an action item is assigned.\par
+- [Must-have] Notification recipients are configurable per organisation or application.\par
+- [Must-have] At least one chat integration exists (e.g. Teams or Slack webhook) for new incidents.\par
+\i Docs & Help\i0\par
+- [Must-have] App provides a basic Help or Support link.\par
+- [Must-have] There is simple documentation or FAQ for key workflows.\par
+- [Must-have] There is a clear way for users to contact support (e.g. email address).\par
+\par
+\par
+\b Must-Not-Haves (anti-checklist)\b0\par
+\i Must-Not-Haves\i0\par
+- [Must-not-have] No hard-coded dummy data is visible in production.\par
+- [Must-not-have] Non-admin users must not see or click admin-only features (no broken buttons).\par
+- [Must-not-have] No 500 errors occur for normal user actions (create incident, run inspection, etc.).\par
+- [Must-not-have] No confusing generic labels (like 'Record 1') are used instead of clear EHS language.\par
+- [Must-not-have] Users are not locked in: data can be exported and is not trapped in the system.\par
+}

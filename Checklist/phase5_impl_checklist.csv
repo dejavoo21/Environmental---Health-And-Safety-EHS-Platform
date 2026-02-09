@@ -1,0 +1,13 @@
+Area,Subarea,Task,Details,Status
+Backend,Notifications,Create notification preferences schema,"Add tables for per-user/role notification preferences (channels, frequency, event types).",
+Backend,Notifications,Implement email/Teams/Slack notifier services,"Build services to send notifications via configured channels when key events occur (new incident, overdue action, etc.).",
+Backend,Notifications,Add notification trigger hooks,"Wire notifications into incident, inspection, and action lifecycle events as defined in TEST_STRATEGY_PHASE5.",
+Backend,Integrations,Implement external API endpoints or webhooks,"Expose APIs/webhooks for external systems to consume EHS events or sync data, following API_SPEC_PHASE5.",
+Backend,SSO,Implement SSO authentication flow (if in scope),Add OIDC/SAML-based login flow and map external identities to local users per design.,
+Backend,Tests,Add backend tests for notifications and integrations,"Verify notification triggers, channel handling, and external API/webhook behaviour.",
+Backend,Handover,Update HANDOVER_TO_CLAUDE.md for Phase 5 backend work,Summarise Phase 5 backend integrations and notification work.,
+Frontend,Notifications,Add UI for viewing notifications,Implement notification centre or toasts to display recent alerts to users.,
+Frontend,Notifications,Add UI for managing notification preferences,Create forms that allow users/admins to tune which notifications they receive on which channels.,
+Frontend,Integrations,Add UI for integration configuration (if required),"Provide screens for admins to manage integration settings (API keys, webhook URLs, SSO config) where in scope.",
+Frontend,Tests,Add UI tests for notifications/integrations configuration,"Test notification display, preferences management, and any integration UI flows.",
+Frontend,Handover,Update HANDOVER_TO_CLAUDE.md for Phase 5 frontend work,Summarise integrations and notifications UI progress with mapping details.,

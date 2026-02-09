@@ -1,0 +1,77 @@
+ID,Phase,Section,Sub-section,Checklist Item,Type
+C1,P1,Core Incident & Inspection Flows,Incidents " MUST HAVE,"Users can log in and create an incident with title, type, site, severity, date/time, description.",Must-have
+C2,P1,Core Incident & Inspection Flows,Incidents " MUST HAVE,Users can see all incidents in a list with basic filters.,Must-have
+C3,P1,Core Incident & Inspection Flows,Incidents " MUST HAVE,Users can open any incident and see full details.,Must-have
+C4,P1,Core Incident & Inspection Flows,Incidents " MUST HAVE,"Incident statuses include: open, under_investigation, closed.",Must-have
+C5,P1,Core Incident & Inspection Flows,Incidents " MUST HAVE,Incident status can be updated (e.g. from open to under_investigation to closed).,Must-have
+C6,P1,Core Incident & Inspection Flows,Incidents " MUST HAVE,"Incident types are configurable by an admin (e.g. Injury, Near Miss, Property Damage).",Must-have
+C7,P1,Core Incident & Inspection Flows,Incidents " MUST HAVE,Incidents are always linked to a site (or deliberately marked as having no site with a clear rule).,Must-have
+C8,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,Admins can create inspection templates with name and description.,Must-have
+C9,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,Inspection templates contain ordered checklist items with label and optional category.,Must-have
+C10,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,"Users can start a new inspection by choosing site, template, and date/time.",Must-have
+C11,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,Inspection checklist is auto-generated from the selected template.,Must-have
+C12,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,"For each checklist item, users can record result (ok, not_ok, n/a) and an optional comment.",Must-have
+C13,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,"System automatically sets overall_result to fail if any item is not_ok, otherwise pass.",Must-have
+C14,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,"Inspections list shows template, site, performed-by, date, and overall result.",Must-have
+C15,P1,Core Incident & Inspection Flows,Inspections " MUST HAVE,Users can click an inspection row to view full details and all responses.,Must-have
+C16,P1,Sites & Admin Basics,Sites & Admin Basics,Admin can create new sites (locations).,Must-have
+C17,P1,Sites & Admin Basics,Sites & Admin Basics,Admin can edit existing sites (name and code).,Must-have
+C18,P1,Sites & Admin Basics,Sites & Admin Basics,Sites are used consistently in incidents and inspections.,Must-have
+C19,P1,Sites & Admin Basics,Sites & Admin Basics,Incident types are seeded on install but can be extended by admin without breaking the system.,Must-have
+C20,P2,CAPA / Action Items,Actions from incidents & inspections,"From an incident detail view, users can create one or more action items linked to that incident.",Must-have
+C21,P2,CAPA / Action Items,Actions from incidents & inspections,"From an inspection detail view, users can create action items from failed/not_ok checklist items.",Must-have
+C22,P2,CAPA / Action Items,Action Items " behaviour,"Action items have title, description, source (incident or inspection), assigned_to, due_date, status.",Must-have
+C23,P2,CAPA / Action Items,Action Items " behaviour,"Action item statuses include: open, in_progress, done, overdue.",Must-have
+C24,P2,CAPA / Action Items,Action Items " behaviour,System automatically marks action items as overdue when due_date is past and status is not done.,Must-have
+C25,P2,CAPA / Action Items,Action Items " behaviour,Users have a 'My Actions' view listing action items assigned to them.,Must-have
+C26,P2,CAPA / Action Items,Action Items " behaviour,Admins/managers have an 'All Actions' view listing all action items.,Must-have
+C27,P2,CAPA / Action Items,Action Items " behaviour,"Action lists can be filtered by status, site, due date.",Must-have
+C28,P2,Attachments / Evidence,Attachments / Evidence,"Users can upload files to incidents (e.g. photos, documents).",Must-have
+C29,P2,Attachments / Evidence,Attachments / Evidence,Users can upload files to inspections (evidence of findings).,Must-have
+C30,P2,Attachments / Evidence,Attachments / Evidence,"Optionally, users can attach files to action items.",Must-have
+C31,P2,Attachments / Evidence,Attachments / Evidence,"Each attachment stores linked entity type and ID, file name, file type, file size, uploaded_by, uploaded_at.",Must-have
+C32,P2,Attachments / Evidence,Attachments / Evidence,Incident and inspection detail views show a list of attachments with download links.,Must-have
+C33,P2,Attachments / Evidence,Attachments / Evidence,System enforces max file size and allowed file types.,Must-have
+C34,P1,"Security, RBAC & Audit",Auth & RBAC,Passwords are hashed securely (e.g. bcrypt); no plain-text storage.,Must-have
+C35,P1,"Security, RBAC & Audit",Auth & RBAC,All sensitive APIs require JWT-based authentication.,Must-have
+C36,P1,"Security, RBAC & Audit",Auth & RBAC,"User roles include admin, manager, worker.",Must-have
+C37,P1,"Security, RBAC & Audit",Auth & RBAC,Admin-only routes like site and template management are protected by role checks.,Must-have
+C38,P1,"Security, RBAC & Audit",Auth & RBAC,"Workers can create incidents, view their own incidents, view their own actions, and see inspections read-only.",Must-have
+C39,P1,"Security, RBAC & Audit",Auth & RBAC,"Managers can view and manage incidents, inspections, and actions for their organisation.",Must-have
+C40,P2,"Security, RBAC & Audit",Audit Logging,System records audit logs when incidents are created.,Must-have
+C41,P2,"Security, RBAC & Audit",Audit Logging,System records audit logs when incident status or severity changes.,Must-have
+C42,P2,"Security, RBAC & Audit",Audit Logging,System records audit logs when inspections are created.,Must-have
+C43,P2,"Security, RBAC & Audit",Audit Logging,System records audit logs when action items are created or their status changes.,Must-have
+C44,P2,"Security, RBAC & Audit",Audit Logging,Incident detail view includes an Activity Log showing who did what and when.,Must-have
+C45,P2,"Security, RBAC & Audit",Audit Logging,Inspection detail view includes an Activity Log showing who did what and when.,Must-have
+C46,P2,"Security, RBAC & Audit",Audit Logging,Audit log records are immutable and cannot be edited.,Must-have
+C47,P1,"Dashboard, Analytics & Reporting",Dashboard KPIs,Dashboard shows total incident count.,Must-have
+C48,P1,"Dashboard, Analytics & Reporting",Dashboard KPIs,Dashboard shows count of open incidents.,Must-have
+C49,P1,"Dashboard, Analytics & Reporting",Dashboard KPIs,Dashboard shows count of incidents in the last 30 days.,Must-have
+C50,P1,"Dashboard, Analytics & Reporting",Dashboard KPIs,Dashboard shows count of inspections in the last 30 days.,Must-have
+C51,P1,"Dashboard, Analytics & Reporting",Dashboard KPIs,Dashboard shows count of failed inspections in the last 30 days.,Must-have
+C52,P1,"Dashboard, Analytics & Reporting",Dashboard visuals,Dashboard shows a bar chart of incidents by type.,Must-have
+C53,P1,"Dashboard, Analytics & Reporting",Dashboard visuals,Dashboard shows a line chart of incidents by severity over time (e.g. last 12 months).,Must-have
+C54,P1,"Dashboard, Analytics & Reporting",Dashboard tables,Dashboard shows a table of recent incidents (5"10 items).,Must-have
+C55,P1,"Dashboard, Analytics & Reporting",Dashboard tables,Dashboard shows a table of recent inspections (5"10 items).,Must-have
+C56,P3,"Dashboard, Analytics & Reporting",Reports / Export,Users can export filtered incidents list to CSV or Excel.,Must-have
+C57,P3,"Dashboard, Analytics & Reporting",Reports / Export,Users can export filtered inspections list to CSV or Excel.,Must-have
+C58,P3,"Dashboard, Analytics & Reporting",Reports / Export,Users can export actions list to CSV or Excel.,Must-have
+C59,P1,"UX, Responsiveness & Integrations",UX & Responsiveness,"App has a clean, consistent layout with header and main content areas.",Must-have
+C60,P1,"UX, Responsiveness & Integrations",UX & Responsiveness,"Navigation clearly separates Dashboard, Incidents, Inspections, Actions, Admin.",Must-have
+C61,P1,"UX, Responsiveness & Integrations",UX & Responsiveness,"Tables have clear headings, are sortable where appropriate, and show helpful empty states.",Must-have
+C62,P1,"UX, Responsiveness & Integrations",UX & Responsiveness,Forms provide validation messages and reasonable defaults.,Must-have
+C63,P1,"UX, Responsiveness & Integrations",UX & Responsiveness,UI works well on desktop and tablet screen sizes.,Must-have
+C64,P5,"UX, Responsiveness & Integrations",Notifications & Integrations,System sends email notifications when a new incident is created.,Must-have
+C65,P5,"UX, Responsiveness & Integrations",Notifications & Integrations,System sends email notifications when an action item is assigned.,Must-have
+C66,P5,"UX, Responsiveness & Integrations",Notifications & Integrations,Notification recipients are configurable per organisation or application.,Must-have
+C67,P5,"UX, Responsiveness & Integrations",Notifications & Integrations,At least one chat integration exists (e.g. Teams or Slack webhook) for new incidents.,Must-have
+C68,P2,"UX, Responsiveness & Integrations",Docs & Help,App provides a basic Help or Support link.,Must-have
+C69,P2,"UX, Responsiveness & Integrations",Docs & Help,There is simple documentation or FAQ for key workflows.,Must-have
+C70,P2,"UX, Responsiveness & Integrations",Docs & Help,There is a clear way for users to contact support (e.g. email address).,Must-have
+C71,All,Must-Not-Haves (anti-checklist),Must-Not-Haves,No hard-coded dummy data is visible in production.,Must-not-have
+C72,All,Must-Not-Haves (anti-checklist),Must-Not-Haves,Non-admin users must not see or click admin-only features (no broken buttons).,Must-not-have
+C73,All,Must-Not-Haves (anti-checklist),Must-Not-Haves,"No 500 errors occur for normal user actions (create incident, run inspection, etc.).",Must-not-have
+C74,All,Must-Not-Haves (anti-checklist),Must-Not-Haves,No confusing generic labels (like 'Record 1') are used instead of clear EHS language.,Must-not-have
+C75,All,Must-Not-Haves (anti-checklist),Must-Not-Haves,Users are not locked in: data can be exported and is not trapped in the system.,Must-not-have
+

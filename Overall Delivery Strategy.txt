@@ -1,0 +1,447 @@
+Gotcha — let’s treat it like a real product program and lay out **Phase 1 → Phase 5** as a delivery plan, so whoever’s building (Claude or a dev team) knows *exactly* what “done” means at each step.
+
+I’ll assume phases are done **in order**, and each phase is “potentially shippable” on its own.
+
+---
+
+## 0. Overall Delivery Strategy
+
+* Build **Phase 1** as a solid, clean foundation (no hacks).
+* Each next phase:
+
+  * Adds *new* entities/APIs/UX,
+  * Tightens NFRs (security, RBAC, etc.),
+  * **Never rewrites** core flows (incidents, inspections, sites).
+
+Think: *vertical slices*, not half-finished features everywhere.
+
+---
+
+## Phase 1 – Core Operational MVP (Foundation)
+
+### Scope (must be DONE before Phase 2)
+
+**Backend**
+
+Entities:
+
+* User
+* Site
+* IncidentType
+* Incident
+* InspectionTemplate
+* InspectionTemplateItem
+* Inspection
+* InspectionResponse
+
+APIs:
+
+* Auth: `/api/auth/register`, `/api/auth/login`, `/api/auth/me`
+* Sites: `/api/sites` (GET, POST, PUT)
+* IncidentTypes: `/api/incident-types` (GET)
+* Incidents: `/api/incidents`, `/api/incidents/:id` (GET list/detail, POST create)
+* Inspection Templates:
+
+  * `/api/inspection-templates` (GET list, POST create)
+  * `/api/inspection-templates/:id` (GET detail, PUT update)
+  * `/api/inspection-templates/:id/items` (POST)
+  * `/api/inspection-templates/:id/items/:itemId` (PUT, DELETE)
+* Inspections:
+
+  * `/api/inspections` (GET list, POST create)
+  * `/api/inspections/:id` (GET detail)
+* Dashboard:
+
+  * `/api/dashboard/summary` (full spec we defined: KPIs + by_type + severity_trend + recent lists)
+
+Core logic:
+
+* Password hashing (bcrypt)
+* JWT auth middleware (`requireAuth`)
+* Inspection `overall_result` = fail if ANY `not_ok`, else pass
+
+**Frontend**
+
+Screens/components:
+
+* Login
+* Main layout (header with user + logout)
+* Dashboard (KPI tiles, two charts, recent tables)
+* Incidents:
+
+  * List
+  * New incident form
+  * Detail
+* Inspections:
+
+  * List
+  * New inspection form (template-driven checklist)
+  * Detail
+* Admin:
+
+  * Sites (list + create/edit)
+  * Inspection Templates (list + create/edit + items management)
+
+**NFRs**
+
+* All protected routes require JWT.
+* Env-based config (.env for DB, JWT secret, API URL).
+* Basic loading & error states in UI.
+* Simple indexes on key columns (incidents.occurred_at, site_id, etc.).
+
+**Acceptance checklist:**
+
+* You can: log in → create sites → create templates → run inspections → log incidents → see everything on dashboard.
+* No 500 errors, no obvious “TODO” gaps.
+
+---
+
+## Phase 2 – Operational Excellence (CAPA, Attachments, RBAC, Search, Audit)
+
+### New Scope
+
+**Backend – New Entities**
+
+1. **ActionItem**
+
+   * Links to incident or inspection.
+2. **Attachment**
+
+   * Links to incident, inspection or action.
+3. **AuditLog**
+
+   * Logs key changes for traceability.
+
+**Backend – New APIs**
+
+* `ActionItem` (`/api/actions`):
+
+  * `GET /api/actions` (filters: assignedTo=me, status, siteId)
+  * `GET /api/actions/:id`
+  * `POST /api/actions` (create new action linked to incident/inspection)
+  * `PUT /api/actions/:id` (update status, due date, etc.)
+
+* `Attachment` (`/api/attachments`):
+
+  * `POST /api/attachments` (multipart upload)
+  * `GET /api/attachments?linkedType=incident&linkedId=...`
+  * `DELETE /api/attachments/:id` (optional for now)
+
+* `AuditLog` (internal utility + read API):
+
+  * Write logs on:
+
+    * Incident create/update
+    * Inspection create
+    * Action create/status change
+  * `GET /api/audit?entityType=incident&entityId=...`
+
+**RBAC Enforcement**
+
+* Extend User to have `role` (`admin`, `manager`, `worker`) actually **used** in code.
+* Middleware:
+
+  * `requireRole(['admin'])` for:
+
+    * `/api/sites`
+    * `/api/inspection-templates`
+    * future org settings
+* Optional: `manager` can see all incidents/inspections; `worker` limited to their own incidents + their actions.
+
+**Search & Filtering**
+
+* Update `GET /api/incidents`:
+
+  * Filters: `siteId`, `severity`, `status`, `typeId`, `from`, `to`, free-text `q`.
+* Update `GET /api/inspections`:
+
+  * Filters: `siteId`, `templateId`, `result`, `from`, `to`.
+
+**Audit Log**
+
+* Every time key endpoints mutate:
+
+  * Insert an AuditLog record.
+* Keep it simple: store a JSON blob of before/after for now.
+
+**Frontend – New Screens & Features**
+
+* **Actions module**:
+
+  * “My Actions” view (list of ActionItems where assigned_to = current user).
+  * “All Actions” view (admin/manager).
+  * Action detail panel (title, description, status, due date, comments).
+  * Create Action from:
+
+    * Incident detail (“Add Action” button).
+    * Inspection detail (especially on failed/“not_ok” items).
+
+* **Attachments panels**:
+
+  * On incident detail: list attachments + upload control.
+  * On inspection detail: same.
+  * On action detail: optional.
+
+* **RBAC in UI**:
+
+  * Hide Admin sections (Sites, Templates) for non-admin roles.
+  * “My Actions” vs “All Actions” depending on role.
+
+* **Filters in lists**:
+
+  * Incidents & Inspections screens get filter controls (dropdowns, date range, search box).
+
+* **Audit trail UI**:
+
+  * Small “Activity log” tab/section at bottom of incident/inspection detail, showing AuditLog entries.
+
+**Acceptance:**
+
+* For any incident/inspection, you can:
+
+  * Add actions, assign them, track status.
+  * Attach files as evidence.
+  * See who did what in the log.
+* Workers see only what they’re supposed to; admins see everything.
+
+---
+
+## Phase 3 – Enterprise & Multi-Tenant
+
+### New Scope
+
+**Backend – Multi-Org**
+
+New entity: **Organisation**
+
+* `id`, `name`, `slug`, `created_at`
+
+Changes:
+
+* Add `organisation_id` to:
+
+  * Users
+  * Sites
+  * Incidents
+  * InspectionTemplates
+  * InspectionTemplateItems
+  * Inspections
+  * InspectionResponses
+  * ActionItems
+  * Attachments
+  * AuditLog
+* All queries now **filter by** `organisation_id = req.user.organisation_id`.
+
+Org settings:
+
+* **OrganisationSetting**
+
+  * `organisation_id`, `key`, `value` (JSON)
+* Use for:
+
+  * Branding colours, logo URL
+  * Default notification recipients, etc.
+
+**Backend – Org APIs**
+
+* `/api/org/settings`:
+
+  * `GET` – get settings for current org.
+  * `PUT` – update settings (admin only).
+* Optional `/api/org` for reading basic org info.
+
+**Reporting / Export endpoints**
+
+* `/api/reports/incidents`:
+
+  * CSV/Excel export based on filters.
+* `/api/reports/inspections`
+* `/api/reports/actions` (if needed).
+
+**Frontend – New Admin UI**
+
+* “Organisation Settings” page (admin only):
+
+  * Upload logo.
+  * Choose primary colour (saved as setting).
+  * Enter default notification email(s) (used in Phase 5).
+* “Exports” UI:
+
+  * Basic forms to request CSV exports (e.g. date range + button → downloads file).
+
+**Acceptance:**
+
+* Two orgs in the same DB can’t see each other’s data.
+* Admin can tweak basic branding + preferences for their org.
+* You can export incident/inspection data for use in Excel/Power BI.
+
+---
+
+## Phase 4 – Analytics & Intelligence
+
+### New Scope
+
+**Advanced Analytics Endpoints**
+
+* `/api/analytics/incidents-by-site`
+
+  * Returns counts & rates per site.
+* `/api/analytics/incidents-by-type`
+
+  * Distribution across types, with percentages.
+* `/api/analytics/inspection-fail-rates`
+
+  * For each template → how often inspections fail.
+* Extended trend endpoints:
+
+  * Multi-year trends, moving averages, etc.
+
+**Risk Register**
+
+New entity: **RiskEntry**
+
+* `id`, `organisation_id`
+* `title`, `description`
+* `site_id` (optional)
+* `likelihood` (1–5)
+* `impact` (1–5)
+* `risk_score` (e.g. `likelihood * impact`)
+* `status` (`open`, `mitigated`, `accepted`)
+* `owner_id` → User
+* `linked_incident_id` (optional)
+* `linked_action_item_id` (optional)
+* `created_at`, `updated_at`
+
+APIs:
+
+* `/api/risks` (GET list with filters, POST create)
+* `/api/risks/:id` (GET, PUT)
+
+**Frontend – Analytics UI**
+
+* New “Analytics” section with:
+
+  * Charts:
+
+    * Incidents by site (bar chart).
+    * Incidents by type.
+    * Fail rates per template.
+  * Filters by date range, site.
+* New “Risk Register” screens:
+
+  * List of risks (with colour-coded risk_score).
+  * Create/edit risk form.
+  * Risk matrix view:
+
+    * 5x5 grid with counts per likelihood/impact cell.
+
+**Simple Intelligence/Insights**
+
+* Generate “Top insights” for last X days on the Analytics page:
+
+  * “Top 3 sites by incident rate”
+  * “Templates with highest fail rate”
+  * “Most frequent incident type”
+* These are just SQL aggregations presented as human-readable text.
+
+**Acceptance:**
+
+* You can go to Analytics and actually *answer questions*:
+
+  * Where are most incidents?
+  * What types are most common?
+  * Which inspections fail most?
+* Risk register is live with basic matrix.
+
+---
+
+## Phase 5 – Ecosystem, Notifications & Integrations
+
+### New Scope
+
+**Notifications**
+
+Entity: **NotificationConfig**
+
+* `id`, `organisation_id`
+* `type` (`incident_created`, `action_assigned`, `action_overdue`, `inspection_failed`, etc.)
+* `channel` (`email`, `teams`, `slack`)
+* `target` (email address, webhook URL, etc.)
+* `enabled` (boolean)
+
+Backend:
+
+* `/api/notifications/config`:
+
+  * GET current org’s configs.
+  * PUT update.
+* Internal worker/service:
+
+  * On certain events (incident created, action assigned), check configs → send notifications.
+
+Channels:
+
+* Email via SMTP or provider.
+* Chat via simple webhook payload.
+
+**SSO / Identity**
+
+* Add optional SSO login route using OIDC:
+
+  * `/api/auth/sso/redirect`
+  * `/api/auth/sso/callback`
+* Map IdP groups to roles (`admin`, `manager`, `worker`).
+
+**External API / Webhooks**
+
+* API keys:
+
+  * `ApiKey` table: `id`, `organisation_id`, `name`, `key_hash`, `scopes`, `created_at`.
+  * Middleware to authenticate external calls via `x-api-key`.
+* External endpoints:
+
+  * `POST /api/external/incidents` – create incidents from external systems.
+  * `GET /api/external/incidents` – read incidents with filters.
+* Webhooks:
+
+  * `WebhookSubscription`: `organisation_id`, `event_type`, `target_url`, `enabled`.
+  * On event (incident created, action status changed), send POST to target URL.
+
+**Frontend – Final polish**
+
+* “Notification Settings” page (admin only):
+
+  * Choose which events send emails/Teams/Slack.
+  * Configure recipients / webhook URLs.
+* “Integrations” page:
+
+  * Manage API keys.
+  * Manage webhooks.
+  * Docs link / inline docs.
+
+**Acceptance:**
+
+* Org admin can:
+
+  * Configure notifications.
+  * Receive emails/Teams messages on key events.
+  * Register an API key and use it to integrate with external tools.
+* System supports SSO for enterprises that need it.
+
+---
+
+## Using this with Claude / Devs
+
+You now have a **full life-cycle design**:
+
+* **Phase 1:** build now, get it working end-to-end.
+* **Phase 2–5:** clear feature sets, entities, APIs, and UI changes.
+
+When you talk to Claude, you can say:
+
+* “Implement **Phase 1** exactly as described here.”
+* Once that’s stable: “Now implement Phase 2 on top of the existing codebase, following the Phase 2 section of the design.”
+
+No guessing, no scope creep — and by Phase 5 you’ve got something that can genuinely stand next to commercial tools.
+
+If you want, I can compress **each phase** into a one-page checklist (backend, frontend, NFR) that you can tick off as you go.

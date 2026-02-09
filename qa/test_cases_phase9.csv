@@ -1,0 +1,228 @@
+ID,Category,Title,Description,Preconditions,Steps,Expected Result,Priority,Status,Capability
+TC-P9-001,Risk Register,View risk register as Manager,Verify Manager can view the full risk register list,Logged in as Manager role,"1. Navigate to Risk Register page
+2. Observe the risk list",Risk list displays with all columns (Ref, Title, Category, Inherent Score, Residual Score, Status, Owner, Next Review),P1,Not Started,C-240
+TC-P9-002,Risk Register,Filter by status,Verify risks can be filtered by status,Risk register page loaded with risks in various statuses,"1. Click Status filter dropdown
+2. Select 'Open'
+3. Observe results",Only risks with status 'Open' are displayed,P1,Not Started,C-240
+TC-P9-003,Risk Register,Filter by risk level,Verify risks can be filtered by residual risk level,Risk register page loaded with risks at various levels,"1. Click Level filter dropdown
+2. Select 'High'
+3. Observe results",Only risks with residual level 'High' are displayed,P1,Not Started,C-240
+TC-P9-004,Risk Register,Filter by category,Verify risks can be filtered by category,Risk register page loaded; categories exist,"1. Click Category filter dropdown
+2. Select 'Physical Hazards'
+3. Observe results",Only risks in 'Physical Hazards' category are displayed,P1,Not Started,C-240
+TC-P9-005,Risk Register,Filter by site,Verify risks can be filtered by site,Risk register page loaded; multi-site risks exist,"1. Click Site filter dropdown
+2. Select 'Main Warehouse'
+3. Observe results",Only risks associated with 'Main Warehouse' are displayed,P2,Not Started,C-240
+TC-P9-006,Risk Register,Search by title,Verify full-text search works for risk titles,Risk register page loaded; risks with various titles exist,"1. Enter 'slip' in search box
+2. Press Enter
+3. Observe results",Only risks with 'slip' in title or description are displayed,P1,Not Started,C-240
+TC-P9-007,Risk Register,Sort by residual score,Verify risks can be sorted by residual score,Risk register page loaded with risks,"1. Click Residual column header
+2. Observe sorting order
+3. Click again for reverse",Risks sorted by residual score ascending/descending,P2,Not Started,C-240
+TC-P9-008,Risk Register,Paginate results,Verify pagination works correctly,More than 20 risks exist in the system,"1. View first page (20 risks)
+2. Click page 2
+3. Observe results",Second page of 20 risks displayed; pagination controls work,P1,Not Started,C-240
+TC-P9-009,Risk Register,Navigate to detail page,Verify clicking a risk row navigates to detail,"Risk register page loaded; at least one risk exists","1. Click on a risk row
+2. Observe navigation",Risk detail page opens for the selected risk,P1,Not Started,C-240
+TC-P9-010,Risk Register,Worker sees only site risks,Verify Worker role sees only risks for their assigned site,Logged in as Worker assigned to Site A; risks exist for Site A and Site B,"1. Navigate to Risk Register
+2. Observe list",Only risks associated with Worker's site (Site A) are visible,P2,Not Started,C-240
+TC-P9-011,Risk Creation,Create risk with required fields,Verify risk can be created with minimum required fields,Logged in as Manager,"1. Click 'Add Risk'
+2. Enter Title: 'Test Risk'
+3. Select Category: 'Physical'
+4. Set Inherent Likelihood: 3
+5. Set Inherent Impact: 4
+6. Select Owner: any user
+7. Select Site: any site
+8. Click Save",Risk created with reference RISK-YYYY-NNNN; redirected to detail page,P1,Not Started,C-241
+TC-P9-012,Risk Creation,Create risk with all fields,Verify risk can be created with all optional fields populated,Logged in as Manager,"1. Click 'Add Risk'
+2. Complete all form steps including description, hazard, causes, consequences, inherent scores, residual scores, rationales, review frequency
+3. Click Save",Risk created with all fields populated correctly,P1,Not Started,C-241
+TC-P9-013,Risk Creation,Validation: missing title,Verify validation error when title is missing,Logged in as Manager; on risk creation form,"1. Leave Title empty
+2. Complete other required fields
+3. Click Save",Validation error displayed: 'Title is required',P1,Not Started,C-241
+TC-P9-014,Risk Creation,Validation: missing category,Verify validation error when category not selected,Logged in as Manager; on risk creation form,"1. Enter Title
+2. Do not select Category
+3. Complete other required fields
+4. Click Save",Validation error displayed: 'Category is required',P1,Not Started,C-241
+TC-P9-015,Risk Creation,Validation: invalid likelihood value,Verify validation for likelihood outside 1-5 range,Logged in as Manager; on risk creation form,Attempt to submit with likelihood value outside 1-5 range via API,Validation error returned: 'Likelihood must be between 1 and 5',P2,Not Started,C-241
+TC-P9-016,Risk Creation,Extreme risk notification,Verify notification sent when extreme risk is created,Logged in as Manager; notification service active,"1. Create risk with Inherent L=5, I=5 (Score 25)
+2. Save as Open status",Notification sent to all Admin users about new extreme risk,P2,Not Started,C-241
+TC-P9-017,Risk Creation,Worker cannot create risk,Verify Worker role cannot create risks,Logged in as Worker,"1. Navigate to Risk Register
+2. Look for 'Add Risk' button",Add Risk button is not visible; access denied if navigating directly to /risks/new,P2,Not Started,C-241
+TC-P9-018,Risk Detail,View risk detail page,Verify all tabs displayed on risk detail page,Risk exists in system; logged in as Manager,"1. Navigate to risk detail page
+2. Observe tabs",Tabs displayed: Details, Controls, Links, Reviews, History,P1,Not Started,C-242
+TC-P9-019,Risk Detail,View inherent and residual scores,Verify score display is correct and colour-coded,Risk exists with Inherent 16 (High) and Residual 8 (Medium),"1. View risk detail page
+2. Observe score cards",Inherent shows 16 with orange HIGH badge; Residual shows 8 with yellow MEDIUM badge,P1,Not Started,C-242
+TC-P9-020,Risk Detail,Edit risk,Verify risk can be edited and changes saved,Risk exists; logged in as Manager who owns the risk,"1. Click Edit button
+2. Change Title to 'Updated Title'
+3. Click Save",Title updated; success message displayed,P1,Not Started,C-242
+TC-P9-021,Risk Detail,Change risk status,Verify status can be changed with valid transition,Risk exists in Open status; logged in as Manager,"1. Click Actions dropdown
+2. Select 'Change Status'
+3. Select 'Treating'
+4. Click Confirm",Status changed to Treating; audit log entry created,P1,Not Started,C-243
+TC-P9-022,Risk Detail,Invalid status transition,Verify invalid status transition is rejected,Risk exists in Closed status; logged in as Admin,"1. Attempt to change status from Closed to Treating via API",Error returned: 'Invalid status transition from closed to treating',P2,Not Started,C-243
+TC-P9-023,Risk Detail,Delete risk (soft delete),Verify Admin can delete a risk (soft delete),Risk exists; logged in as Admin,"1. Click Actions dropdown
+2. Select 'Delete'
+3. Confirm deletion",Risk status changed to Closed; risk no longer appears in default list,P2,Not Started,C-242
+TC-P9-024,Controls,Add control to risk,Verify control can be added to a risk,Risk exists; on Controls tab; logged in as Manager,"1. Click 'Add Control'
+2. Enter description: 'Safety barrier installed'
+3. Select Type: Preventive
+4. Select Hierarchy: Engineering
+5. Set Effectiveness: Effective
+6. Select Owner
+7. Click Save",Control added to list with all details displayed,P1,Not Started,C-247
+TC-P9-025,Controls,Edit control,Verify existing control can be edited,Risk has controls; logged in as Manager,"1. Click Edit on existing control
+2. Change Effectiveness to 'Partially Effective'
+3. Click Save",Control updated with new effectiveness; displayed correctly,P1,Not Started,C-247
+TC-P9-026,Controls,Delete control,Verify control can be deleted,Risk has controls; logged in as Manager,"1. Click Delete on existing control
+2. Confirm deletion",Control removed from list,P2,Not Started,C-247
+TC-P9-027,Controls,Link control to action,Verify control can be linked to an action,Risk has control; action exists in system,"1. Click 'Link Entity' on control
+2. Select Type: Action
+3. Search and select an action
+4. Click Create Link",Control shows linked action with reference and title,P1,Not Started,C-248
+TC-P9-028,Controls,Link control to training,Verify control can be linked to training course,Risk has control; training course exists in system,"1. Click 'Link Entity' on control
+2. Select Type: Training Course
+3. Search and select a course
+4. Click Create Link",Control shows linked training course with reference,P2,Not Started,C-248
+TC-P9-029,Controls,Link control to permit,Verify control can be linked to permit,Risk has control; permit exists in system,"1. Click 'Link Entity' on control
+2. Select Type: Permit
+3. Search and select a permit
+4. Click Create Link",Control shows linked permit with reference,P2,Not Started,C-248
+TC-P9-030,Controls,Remove control link,Verify control link can be removed,Risk has control with linked entity,"1. Click 'Remove' on linked entity
+2. Confirm removal",Link removed; control no longer shows the entity,P2,Not Started,C-248
+TC-P9-031,Links,Link risk to incident,Verify risk can be linked to an incident,Risk exists; incidents exist in system,"1. Go to Links tab
+2. Click 'Link Entity'
+3. Select Type: Incident
+4. Search and select incident
+5. Enter link reason
+6. Click Create Link",Incident appears in Links tab under 'Incidents' section with status,P1,Not Started,C-249
+TC-P9-032,Links,Link risk to action,Verify risk can be linked to an action,Risk exists; actions exist in system,"1. Go to Links tab
+2. Click 'Link Entity'
+3. Select Type: Action
+4. Search and select action
+5. Enter link reason
+6. Click Create Link",Action appears in Links tab under 'Actions' section,P1,Not Started,C-249
+TC-P9-033,Links,Link risk to inspection,Verify risk can be linked to an inspection,Risk exists; inspections exist in system,"1. Go to Links tab
+2. Click 'Link Entity'
+3. Select Type: Inspection
+4. Search and select inspection
+5. Click Create Link",Inspection appears in Links tab under 'Inspections' section,P2,Not Started,C-249
+TC-P9-034,Links,Link risk to training course,Verify risk can be linked to training course,Risk exists; training courses exist in system,"1. Go to Links tab
+2. Click 'Link Entity'
+3. Select Type: Training
+4. Search and select course
+5. Click Create Link",Training course appears in Links tab,P2,Not Started,C-249
+TC-P9-035,Links,Link risk to chemical,Verify risk can be linked to a chemical,Risk exists; chemicals exist in system (Phase 7),"1. Go to Links tab
+2. Click 'Link Entity'
+3. Select Type: Chemical
+4. Search and select chemical
+5. Click Create Link",Chemical appears in Links tab with SDS info,P2,Not Started,C-249
+TC-P9-036,Links,Link risk to permit,Verify risk can be linked to a permit,Risk exists; permits exist in system (Phase 7),"1. Go to Links tab
+2. Click 'Link Entity'
+3. Select Type: Permit
+4. Search and select permit
+5. Click Create Link",Permit appears in Links tab with status,P2,Not Started,C-249
+TC-P9-037,Links,Prevent duplicate link,Verify duplicate link is prevented,Risk already linked to specific incident,"1. Attempt to link same incident again
+2. Observe result",Error displayed: 'This entity is already linked to this risk',P2,Not Started,C-249
+TC-P9-038,Links,Unlink entity,Verify linked entity can be unlinked,Risk has linked entities,"1. Go to Links tab
+2. Click 'Unlink' on linked entity
+3. Confirm removal",Link removed; entity no longer displayed,P1,Not Started,C-249
+TC-P9-039,Links,View links grouped by type,Verify links are displayed grouped by entity type,Risk has multiple links of different types,"1. Go to Links tab
+2. Observe grouping",Links grouped under headings: Incidents, Actions, Inspections, Training, Chemicals, Permits,P1,Not Started,C-249
+TC-P9-040,Reviews,Record review - no change,Verify review can be recorded with no score change,Risk exists with next review due; logged in as Manager,"1. Click 'Record Review'
+2. Verify controls (all effective)
+3. Keep same residual scores
+4. Select Outcome: 'No Change'
+5. Enter notes
+6. Submit",Review saved; scores unchanged; next review date calculated,P1,Not Started,C-250
+TC-P9-041,Reviews,Record review - improved,Verify review can record score improvement,Risk exists with residual score 12; logged in as Manager,"1. Click 'Record Review'
+2. Reduce residual likelihood to 2
+3. Select Outcome: 'Improved'
+4. Enter notes
+5. Submit",Review saved; residual score reduced; trend shows improvement,P1,Not Started,C-250
+TC-P9-042,Reviews,Record review - deteriorated,Verify review can record score deterioration,Risk exists with residual score 8; logged in as Manager,"1. Click 'Record Review'
+2. Increase residual likelihood to 4
+3. Select Outcome: 'Deteriorated'
+4. Enter notes
+5. Submit",Review saved; residual score increased; escalation may trigger,P1,Not Started,C-250
+TC-P9-043,Reviews,Recommend close via review,Verify review can recommend risk closure,Risk exists; logged in as Manager,"1. Click 'Record Review'
+2. Select Outcome: 'Recommend Close'
+3. Enter justification
+4. Submit",Review saved; notification sent to Admin for closure approval,P2,Not Started,C-250
+TC-P9-044,Reviews,View review history,Verify all reviews displayed chronologically,Risk has multiple reviews recorded,"1. Go to Reviews tab
+2. Observe list",All reviews displayed with date, reviewer, outcome, score changes, notes,P1,Not Started,C-251
+TC-P9-045,Reviews,Next review date calculation,Verify next review date calculated correctly,Risk with quarterly review frequency reviewed today,"1. Record review
+2. Observe next review date",Next review date is 90 days from today,P1,Not Started,C-250
+TC-P9-046,Heatmap,View heatmap,Verify 5×5 heatmap displays correctly,Risks exist at various L×I coordinates; logged in as Manager,"1. Navigate to Risk Heatmap page
+2. Observe matrix",5×5 matrix displayed with risk counts in cells; colour-coded by level,P1,Not Started,C-252
+TC-P9-047,Heatmap,Drill-down on cell click,Verify clicking cell shows filtered risk list,Heatmap displayed with risks in L=3 I=4 cell,"1. Click on cell (3,4)
+2. Observe drill-down panel",Panel shows list of risks with L=3 and I=4; can click to navigate,P1,Not Started,C-252
+TC-P9-048,Heatmap,Toggle inherent/residual,Verify heatmap recalculates when toggling score type,Heatmap displayed on residual (default),"1. Toggle to 'Inherent'
+2. Observe matrix changes",Heatmap recalculates using inherent scores; counts may change,P1,Not Started,C-252
+TC-P9-049,Heatmap,Filter heatmap by category,Verify heatmap can be filtered by category,Heatmap displayed; risks in multiple categories,"1. Select category filter: 'Chemical'
+2. Observe matrix",Heatmap shows only Chemical category risks; counts reduced,P2,Not Started,C-252
+TC-P9-050,Heatmap,Empty cell display,Verify cells with no risks display correctly,Some L×I combinations have no risks,"1. View heatmap
+2. Observe empty cells",Empty cells show no count; styled as grey/neutral,P2,Not Started,C-252
+TC-P9-051,Export,Export to Excel,Verify risk register exports to Excel file,Risks exist in system; logged in as Manager,"1. Click Export button
+2. Select Format: Excel
+3. Click Export",Excel file downloads; contains risk data with columns,P1,Not Started,C-256
+TC-P9-052,Export,Export to PDF,Verify risk register exports to PDF file,Risks exist in system; logged in as Manager,"1. Click Export button
+2. Select Format: PDF
+3. Click Export",PDF file downloads; formatted with cover page and risk details,P1,Not Started,C-256
+TC-P9-053,Export,Export with filters applied,Verify export respects applied filters,Risks filtered by category 'Physical',"1. Apply category filter
+2. Click Export
+3. Select Excel
+4. Export",Downloaded file contains only Physical category risks,P2,Not Started,C-256
+TC-P9-054,Export,Export includes controls,Verify export includes controls when option selected,Risks with controls exist,"1. Click Export
+2. Check 'Include Controls'
+3. Export to Excel",Excel file has Controls sheet with control data,P2,Not Started,C-256
+TC-P9-055,Export,Large export performance,Verify large export completes in reasonable time,500+ risks in system,"1. Export all risks to Excel
+2. Measure time",Export completes within 30 seconds,P2,Not Started,C-256
+TC-P9-056,Permissions,Worker view limited to site,Verify Worker sees only their site's risks,Worker assigned to Site A; risks in Sites A and B,"1. Log in as Worker
+2. View Risk Register",Only risks for Site A visible; cannot access Site B risks,P1,Not Started,C-240
+TC-P9-057,Permissions,Manager can create risk,Verify Manager role can create risks,Logged in as Manager,"1. Navigate to Risk Register
+2. Click Add Risk
+3. Complete form
+4. Save",Risk created successfully,P1,Not Started,C-241
+TC-P9-058,Permissions,Worker cannot create risk,Verify Worker role cannot create risks,Logged in as Worker,"1. Navigate to Risk Register
+2. Look for Add Risk button",Add Risk button not visible; direct URL returns 403,P1,Not Started,C-241
+TC-P9-059,Permissions,Manager can edit own risk,Verify Manager can edit risks they own,Risk owned by logged-in Manager,"1. Navigate to own risk
+2. Click Edit
+3. Make changes
+4. Save",Changes saved successfully,P1,Not Started,C-242
+TC-P9-060,Permissions,Manager cannot edit other's risk,Verify Manager cannot edit risks owned by others,Risk owned by different Manager,"1. Navigate to other's risk
+2. Attempt to edit",Edit button disabled or hidden; API returns 403,P2,Not Started,C-242
+TC-P9-061,Permissions,Admin can edit any risk,Verify Admin can edit any risk,Risk owned by Manager; logged in as Admin,"1. Navigate to risk
+2. Click Edit
+3. Make changes
+4. Save",Changes saved successfully,P1,Not Started,C-242
+TC-P9-062,Permissions,Admin can access risk settings,Verify Admin can access risk settings page,Logged in as Admin,"1. Navigate to Risk Settings
+2. View scoring matrix and tolerances",Settings page displays with editable options,P1,Not Started,C-260
+TC-P9-063,Permissions,Manager cannot access settings,Verify Manager cannot access risk settings,Logged in as Manager,"1. Navigate to Risk Settings (direct URL)
+2. Observe result",Access denied; redirected or 403 error,P2,Not Started,C-260
+TC-P9-064,Scoring,Score 1-4 is Low,Verify scores 1-4 calculate as Low level,Creating/editing risk with L×I = 1-4,"Set L=1, I=4 (score 4)",Level displays as Low with green badge,P1,Not Started,C-244
+TC-P9-065,Scoring,Score 5-9 is Medium,Verify scores 5-9 calculate as Medium level,Creating/editing risk with L×I = 5-9,"Set L=3, I=3 (score 9)",Level displays as Medium with yellow badge,P1,Not Started,C-244
+TC-P9-066,Scoring,Score 10-16 is High,Verify scores 10-16 calculate as High level,Creating/editing risk with L×I = 10-16,"Set L=4, I=4 (score 16)",Level displays as High with orange badge,P1,Not Started,C-244
+TC-P9-067,Scoring,Score 17-25 is Extreme,Verify scores 17-25 calculate as Extreme level,Creating/editing risk with L×I = 17-25,"Set L=5, I=5 (score 25)",Level displays as Extreme with red badge,P1,Not Started,C-244
+TC-P9-068,Scoring,Tolerance comparison,Verify tolerance status is displayed,Risk residual level compared to org tolerance,"View risk with residual level exceeding tolerance",Tolerance status shown: 'Exceeds Tolerance' warning,P2,Not Started,C-245
+TC-P9-069,Notifications,Review due reminder - 7 days,Verify reminder sent 7 days before review due,Risk with next_review_date in 7 days,"Background job runs at 08:00",Email and in-app notification sent to risk owner,P2,Not Started,C-254
+TC-P9-070,Notifications,Review overdue notification,Verify notification when review is overdue,Risk with next_review_date in past,"Background job runs at 08:00",Email and in-app notification sent to owner and their manager,P2,Not Started,C-254
+TC-P9-071,Notifications,Extreme risk creation alert,Verify alert when extreme risk created,Notification service active,"Create risk with score >= 17",Immediate notification sent to all Admins,P2,Not Started,C-254
+TC-P9-072,Notifications,Tolerance breach escalation,Verify escalation when tolerance exceeded,Risk residual level updated to exceed tolerance,"Update risk residual to exceed org tolerance",Notification sent to owner, manager, and admins,P2,Not Started,C-255
+TC-P9-073,Categories,List risk categories,Verify all categories displayed,Categories seeded in system,"1. Navigate to Risk Settings > Categories
+2. View list",All active categories displayed with name, colour, risk count,P2,Not Started,C-257
+TC-P9-074,Categories,Create new category,Verify Admin can create category,Logged in as Admin; on categories page,"1. Click Add Category
+2. Enter name, description, colour
+3. Save",Category created and available in risk form dropdown,P2,Not Started,C-257
+TC-P9-075,Categories,Edit category,Verify Admin can edit category,Logged in as Admin; category exists,"1. Click Edit on category
+2. Change name
+3. Save",Category updated; reflected in existing risks,P2,Not Started,C-257
+TC-P9-076,Categories,Deactivate category,Verify Admin can deactivate category with risks,Category has associated risks,"1. Click Deactivate on category
+2. Confirm",Category marked inactive; not available for new risks; existing risks unchanged,P2,Not Started,C-257
+TC-P9-077,Analytics,Top risks widget,Verify top risks displayed correctly,Risks exist with various scores,"1. View Risk Analytics
+2. Observe Top 5 Risks",Five highest residual score risks displayed with details,P2,Not Started,C-253
+TC-P9-078,Analytics,Risk trends chart,Verify risk score trends over time,Historical review data exists,View risk trends chart on analytics page,Line chart shows average residual score trend over time,P3,Not Started,C-253
+TC-P9-079,Analytics,Review compliance rate,Verify review compliance displayed,Reviews due and some overdue,View review compliance widget,Percentage of on-time reviews displayed (e.g. 85%),P2,Not Started,C-253
+TC-P9-080,Multi-site,Risk assigned to multiple sites,Verify risk can span multiple sites,Risk form open; multiple sites available,"1. Create risk
+2. Select multiple sites
+3. Save",Risk appears in register for all selected sites,P2,Not Started,C-258

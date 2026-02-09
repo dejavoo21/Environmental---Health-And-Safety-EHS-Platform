@@ -1,0 +1,252 @@
+test_case_id,phase,feature,test_case_name,description,preconditions,test_steps,expected_result,priority,test_type,status
+TC-P6-001,6,Access Request,Submit valid access request,User submits a valid access request with all required fields,"1. Organisation with self-registration enabled exists
+2. User is not already registered","1. Navigate to /request-access
+2. Enter full name
+3. Enter email address
+4. Enter valid organisation code
+5. Select requested role
+6. Accept terms
+7. Click Submit Request","1. Success message displayed
+2. Reference number shown
+3. Confirmation email sent
+4. Request appears in admin queue",High,E2E,Not Started
+TC-P6-002,6,Access Request,Reject invalid organisation code,System rejects access request with invalid org code,User is on request access page,"1. Enter all required fields
+2. Enter invalid organisation code 'INVALID-CODE'
+3. Click Submit Request","1. Error message: 'Organisation code not found'
+2. Request not submitted",High,E2E,Not Started
+TC-P6-003,6,Access Request,Block disabled self-registration,System blocks request when organisation has disabled self-registration,"1. Organisation exists
+2. self_registration_allowed = false","1. Navigate to /request-access
+2. Enter valid org code for disabled org
+3. Click Submit Request","1. Error message: 'Self-registration is not available for this organisation'
+2. Request not submitted",Medium,E2E,Not Started
+TC-P6-004,6,Access Request,Prevent duplicate requests,System prevents duplicate pending requests,"1. User already has pending request for same org
+2. Request status = pending","1. Navigate to /request-access
+2. Enter same email and org code
+3. Click Submit Request","1. Error message: 'A pending request already exists for this email'
+2. Duplicate not created",High,E2E,Not Started
+TC-P6-005,6,Access Request,Admin views pending requests,Admin can view list of pending access requests,"1. Admin user logged in
+2. Pending access requests exist","1. Navigate to /admin/access-requests
+2. View pending tab","1. List of pending requests displayed
+2. Name, email, role, date shown
+3. Approve and Reject buttons visible",High,E2E,Not Started
+TC-P6-006,6,Access Request,Admin approves request,Admin approves access request and user is created,"1. Admin logged in
+2. Pending request exists","1. Navigate to /admin/access-requests
+2. Click Approve on pending request
+3. Select role
+4. Optionally assign sites
+5. Click Approve & Create User","1. Request status changes to approved
+2. User account created
+3. Welcome email sent with temp password
+4. Request no longer in pending list",Critical,E2E,Not Started
+TC-P6-007,6,Access Request,Admin rejects request,Admin rejects access request with optional notification,"1. Admin logged in
+2. Pending request exists","1. Navigate to /admin/access-requests
+2. Click Reject on pending request
+3. Enter internal reason
+4. Check 'Send rejection email'
+5. Click Reject Request","1. Request status changes to rejected
+2. Rejection email sent (if checked)
+3. Request no longer in pending list",High,E2E,Not Started
+TC-P6-008,6,Access Request,Rate limit access requests,System rate limits access request submissions,User has submitted 3 requests in 24 hours,"1. Submit 4th access request within 24 hours","1. Error 429: Too many requests
+2. Message indicates rate limit",High,Integration,Not Started
+TC-P6-009,6,Password Reset,Request password reset,User can request password reset email,User account exists with valid email,"1. Navigate to /forgot-password
+2. Enter registered email
+3. Click Send Reset Link","1. Success message shown
+2. Same message for valid/invalid emails
+3. Reset email sent (if user exists)",Critical,E2E,Not Started
+TC-P6-010,6,Password Reset,Reset password with valid token,User can reset password using valid token link,"1. Password reset requested
+2. Token is valid (not expired, not used)","1. Click link in reset email
+2. Enter new password
+3. Enter confirm password
+4. Click Reset Password","1. Password changed successfully
+2. Success message shown
+3. Redirected to login
+4. Old password no longer works",Critical,E2E,Not Started
+TC-P6-011,6,Password Reset,Reject expired token,System rejects expired password reset token,Token is older than 30 minutes,"1. Click link in old reset email
+2. Attempt to reset password","1. 'Link expired' message shown
+2. 'Request new link' button displayed",High,E2E,Not Started
+TC-P6-012,6,Password Reset,Reject used token,System rejects already-used password reset token,Token has already been used to reset password,"1. Use same reset link again
+2. Attempt to reset password","1. 'Link already used' message shown
+2. Password not changed",High,E2E,Not Started
+TC-P6-013,6,Password Reset,Password strength validation,System enforces password complexity requirements,User on reset password page,"1. Enter password 'weak'
+2. Observe strength meter","1. Strength meter shows 'Weak'
+2. Requirements checklist shows failures
+3. Submit button disabled",Medium,E2E,Not Started
+TC-P6-014,6,Password Reset,Block password reuse,System blocks setting password to one of last 5,User has password history,"1. Request password reset
+2. Enter a password used previously
+3. Click Reset Password","1. Error: 'Password was recently used'
+2. Password not changed",High,E2E,Not Started
+TC-P6-015,6,Password Reset,Rate limit forgot password,System rate limits forgot password requests,User has made 3 requests in 1 hour,"1. Make 4th forgot password request","1. Error 429: Too many requests
+2. Must wait before retrying",High,Integration,Not Started
+TC-P6-016,6,Password Reset,No email enumeration,Same response for valid and invalid emails,N/A,"1. Request reset for valid email
+2. Request reset for invalid email
+3. Compare responses","1. Both responses identical
+2. No indication if email exists",Critical,Security,Not Started
+TC-P6-017,6,2FA,Enable 2FA successfully,User can enable two-factor authentication,"1. User logged in
+2. 2FA not enabled","1. Navigate to Security Centre
+2. Click Enable Two-Factor Authentication
+3. Scan QR code with authenticator app
+4. Enter TOTP code
+5. Confirm backup codes saved
+6. Click Complete Setup","1. 2FA enabled for account
+2. Backup codes displayed
+3. Status shows 'Enabled'",Critical,E2E,Not Started
+TC-P6-018,6,2FA,Manual key entry,User can enter secret manually instead of QR,"1. User logged in
+2. User cannot scan QR code","1. Start 2FA setup
+2. Click 'Can't scan? Enter code manually'
+3. Copy manual key to authenticator app
+4. Enter TOTP code
+5. Complete setup","1. 2FA enabled successfully
+2. Manual key worked correctly",Medium,E2E,Not Started
+TC-P6-019,6,2FA,Login with TOTP,User with 2FA enabled must enter TOTP to login,"1. User has 2FA enabled
+2. User not logged in","1. Navigate to login page
+2. Enter email and password
+3. Click Login
+4. Enter TOTP code from authenticator
+5. Click Verify","1. 2FA prompt appears after password
+2. Valid TOTP grants access
+3. Dashboard displayed",Critical,E2E,Not Started
+TC-P6-020,6,2FA,Reject invalid TOTP,System rejects invalid TOTP codes,User at 2FA verification prompt,"1. Enter incorrect 6-digit code
+2. Click Verify","1. Error: 'Invalid code'
+2. User remains at 2FA prompt
+3. Retry allowed",High,E2E,Not Started
+TC-P6-021,6,2FA,Login with backup code,User can login using backup code if authenticator unavailable,"1. User has 2FA enabled
+2. Backup codes available","1. Login with email/password
+2. Click 'Use backup code instead'
+3. Enter unused backup code
+4. Click Verify","1. Access granted
+2. Backup code marked as used
+3. Dashboard displayed",Critical,E2E,Not Started
+TC-P6-022,6,2FA,Reject used backup code,System rejects already-used backup codes,"1. User has 2FA enabled
+2. Backup code already used","1. Attempt login with used backup code","1. Error: 'Invalid or already used backup code'
+2. Access denied",High,E2E,Not Started
+TC-P6-023,6,2FA,Regenerate backup codes,User can regenerate new backup codes,"1. User has 2FA enabled
+2. Some backup codes used","1. Navigate to Security Centre
+2. Click Regenerate Backup Codes
+3. Enter password to confirm
+4. Save new codes","1. Old backup codes invalidated
+2. 10 new codes generated
+3. Success message shown",Medium,E2E,Not Started
+TC-P6-024,6,2FA,Disable 2FA,User can disable two-factor authentication,"1. User has 2FA enabled
+2. User logged in","1. Navigate to Security Centre
+2. Click Disable 2FA
+3. Enter password to confirm
+4. Click Confirm Disable","1. 2FA disabled
+2. Status shows 'Not Enabled'
+3. TOTP no longer required at login",High,E2E,Not Started
+TC-P6-025,6,2FA,Rate limit 2FA verification,System rate limits 2FA code attempts,User has failed 5 TOTP attempts,"1. Make 6th incorrect TOTP attempt","1. Error 429: Too many attempts
+2. Account temporarily locked
+3. Must wait to retry",High,Integration,Not Started
+TC-P6-026,6,2FA,TOTP code replay prevention,System rejects same TOTP code used twice in same window,Valid TOTP code just used,"1. Login and enter valid TOTP
+2. Logout
+3. Login again
+4. Enter same TOTP code","1. Second use rejected
+2. Error: 'Code already used'",Critical,Security,Not Started
+TC-P6-027,6,Security Centre,View account status,User can view account status in Security Centre,User logged in,"1. Navigate to Security Centre
+2. View Account Status section","1. Status shows Active/Inactive
+2. Member since date shown",Low,E2E,Not Started
+TC-P6-028,6,Security Centre,View 2FA status,User can view 2FA status in Security Centre,User logged in,"1. Navigate to Security Centre
+2. View Two-Factor Authentication section","1. Shows Enabled or Not Enabled
+2. If enabled, shows date and backup codes remaining
+3. Appropriate action buttons shown",Medium,E2E,Not Started
+TC-P6-029,6,Security Centre,View login history,User can view recent login attempts,User logged in with login history,"1. Navigate to Security Centre
+2. View Recent Login Activity section","1. Recent logins displayed
+2. IP address shown (masked)
+3. Browser/device shown
+4. Success/failure indicated
+5. Location shown (if available)",Medium,E2E,Not Started
+TC-P6-030,6,Security Centre,Change password,User can change password from Security Centre,"1. User logged in
+2. Knows current password","1. Navigate to Security Centre
+2. Click Change Password
+3. Enter current password
+4. Enter new password
+5. Confirm new password
+6. Click Change Password","1. Password changed successfully
+2. Success message shown
+3. Logged out of other sessions (optional)",Medium,E2E,Not Started
+TC-P6-031,6,Security Audit,View security audit log,Admin can view security audit log,"1. Admin user logged in
+2. Security events exist","1. Navigate to /admin/security-audit
+2. View event list","1. Events displayed with timestamp
+2. Event type shown
+3. User shown
+4. Details available",High,E2E,Not Started
+TC-P6-032,6,Security Audit,Filter audit log,Admin can filter audit log by event type,"1. Admin logged in
+2. Various event types exist","1. Navigate to security audit log
+2. Select 'LOGIN_FAILURE' from event type filter","1. Only login failure events shown
+2. Filter applied correctly",Medium,E2E,Not Started
+TC-P6-033,6,Security Audit,Export audit log,Admin can export audit log to CSV,"1. Admin logged in
+2. Events exist in audit log","1. Navigate to security audit log
+2. Apply filters (optional)
+3. Click Export CSV","1. CSV file downloads
+2. Contains filtered events
+3. All columns included",Medium,E2E,Not Started
+TC-P6-034,6,Security Audit,Audit log captures login events,System logs all login attempts,N/A,"1. Attempt login with correct credentials
+2. Attempt login with wrong password
+3. Check audit log","1. LOGIN_SUCCESS event logged
+2. LOGIN_FAILURE event logged
+3. Both include IP and user-agent",High,Integration,Not Started
+TC-P6-035,6,Security Audit,Audit log captures 2FA events,System logs all 2FA activities,N/A,"1. Enable 2FA
+2. Login with 2FA
+3. Disable 2FA
+4. Check audit log","1. 2FA_ENABLED event logged
+2. 2FA_VERIFIED event logged
+3. 2FA_DISABLED event logged",High,Integration,Not Started
+TC-P6-036,6,Security Audit,Audit log captures password events,System logs password changes,N/A,"1. Request password reset
+2. Complete password reset
+3. Check audit log","1. PASSWORD_RESET_REQUESTED event
+2. PASSWORD_CHANGED event
+3. Both include method (self-service)",High,Integration,Not Started
+TC-P6-037,6,Theme,Switch to dark theme,User can switch to dark theme,User logged in with light theme,"1. Click theme toggle in header
+2. Select Dark mode","1. UI changes to dark colour scheme
+2. All components render correctly
+3. Preference saved",Low,E2E,Not Started
+TC-P6-038,6,Theme,Switch to light theme,User can switch to light theme,User logged in with dark theme,"1. Click theme toggle in header
+2. Select Light mode","1. UI changes to light colour scheme
+2. All components render correctly
+3. Preference saved",Low,E2E,Not Started
+TC-P6-039,6,Theme,System theme follows OS,System theme follows operating system preference,User has System theme selected,"1. Set OS to dark mode
+2. Refresh page
+3. Set OS to light mode
+4. Refresh page","1. Theme matches OS dark mode
+2. Theme matches OS light mode",Low,E2E,Not Started
+TC-P6-040,6,Theme,Theme persists across sessions,Theme preference persists after logout/login,User has selected dark theme,"1. Logout
+2. Login again","1. Dark theme still active
+2. Preference was saved correctly",Low,E2E,Not Started
+TC-P6-041,6,Theme,Theme applies to all pages,Selected theme applies consistently across application,User has selected dark theme,"1. Navigate to Dashboard
+2. Navigate to Incidents
+3. Navigate to Admin pages
+4. Navigate to Security Centre","1. Dark theme on all pages
+2. No flash of light theme
+3. Consistent appearance",Low,E2E,Not Started
+TC-P6-042,6,Account Lockout,Lockout after failed attempts,Account locked after 5 failed login attempts,User has failed 4 login attempts,"1. Attempt login with wrong password (5th attempt)","1. Account locked
+2. Error: 'Account temporarily locked'
+3. Lockout duration shown (15 min)",Critical,E2E,Not Started
+TC-P6-043,6,Account Lockout,Lockout notification email,User receives email when account locked,Account just got locked,"1. Account becomes locked
+2. Check email","1. Lockout notification email received
+2. Contains time of lockout
+3. Contains IP address
+4. Contains instructions",Medium,Integration,Not Started
+TC-P6-044,6,Account Lockout,Automatic unlock after duration,Account automatically unlocks after lockout period,Account has been locked for 15+ minutes,"1. Wait for lockout period to expire
+2. Attempt login with correct password","1. Login successful
+2. Account no longer locked",High,E2E,Not Started
+TC-P6-045,6,Account Lockout,Admin can unlock account,Admin can manually unlock a locked account,"1. Admin logged in
+2. User account is locked","1. Navigate to user management
+2. Find locked user
+3. Click Unlock Account","1. Account unlocked immediately
+2. User can login again",Medium,E2E,Not Started
+TC-P6-046,6,Security,Password reset token not exposed,Password reset token not exposed in URL referrer,Valid reset token in URL,"1. Click password reset link
+2. Navigate to external site
+3. Check referrer header","1. Token not sent in referrer
+2. Token only in initial URL",Critical,Security,Not Started
+TC-P6-047,6,Security,TOTP secrets encrypted at rest,TOTP secrets are encrypted in database,2FA enabled for user,"1. Query user_2fa table directly
+2. Examine totp_secret_encrypted column","1. Value is encrypted (not base32)
+2. Cannot decode without key",Critical,Security,Not Started
+TC-P6-048,6,Security,Backup codes hashed,Backup codes are stored as hashes,Backup codes generated,"1. Query user_backup_codes table
+2. Examine code_hash column","1. Values are bcrypt hashes
+2. Original codes not recoverable",Critical,Security,Not Started
+TC-P6-049,6,Security,Session invalidation on password change,All sessions invalidated when password changes,User has multiple active sessions,"1. Change password
+2. Check other sessions","1. Other sessions logged out
+2. Must re-authenticate",High,Security,Not Started
+TC-P6-050,6,Security,2FA bypass prevention,Cannot access protected routes with pending 2FA,User authenticated but 2FA not verified,"1. Login with password
+2. Don't complete 2FA
+3. Try to access /dashboard directly","1. Redirected to 2FA prompt
+2. Cannot bypass 2FA step",Critical,Security,Not Started

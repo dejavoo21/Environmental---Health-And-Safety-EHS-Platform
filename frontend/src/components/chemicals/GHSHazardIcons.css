@@ -1,0 +1,136 @@
+.ghs-hazard-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.ghs-hazard-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  border: 2px solid;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.ghs-pictogram {
+  font-size: 1rem;
+}
+
+.ghs-size-small .ghs-pictogram {
+  font-size: 0.875rem;
+}
+
+.ghs-size-large .ghs-pictogram {
+  font-size: 1.5rem;
+}
+
+.ghs-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.ghs-empty {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+/* GHS Hazard Panel */
+.ghs-hazard-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.ghs-hazard-panel h4 {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ghs-hazard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ghs-hazard-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: var(--color-background);
+  border-left: 4px solid;
+  border-radius: 4px;
+}
+
+.ghs-pictogram-large {
+  font-size: 1.5rem;
+}
+
+.ghs-hazard-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.ghs-hazard-name {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.ghs-hazard-category {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* GHS Classification Selector */
+.ghs-classification-selector {
+  margin-top: 0.5rem;
+}
+
+.ghs-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.5rem;
+}
+
+.ghs-selector-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: var(--color-surface);
+}
+
+.ghs-selector-item:hover {
+  background: var(--color-background);
+}
+
+.ghs-selector-item.selected {
+  background: var(--color-background);
+  border-width: 2px;
+}
+
+.ghs-selector-item input[type="checkbox"] {
+  margin: 0;
+}
+
+.ghs-selector-pictogram {
+  font-size: 1.25rem;
+}
+
+.ghs-selector-label {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}

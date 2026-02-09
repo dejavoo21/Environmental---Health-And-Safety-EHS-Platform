@@ -1,0 +1,69 @@
+TC_ID,Story_ID,Phase,Type,Journeys,Checklist_IDs,Description,Preconditions,Steps,Expected_Result,Status
+TC-AUTH-01,US-AUTH-01,P1,UI,P1-J1,"C1,C20",Successful login with valid credentials,User account exists with known email/password. Backend and frontend running.,"1. Navigate to login page.
+2. Enter valid email and password.
+3. Click 'Login'.",User is redirected to the dashboard. A valid token is stored. Dashboard API calls succeed.,
+TC-AUTH-02,US-AUTH-01,P1,UI,P1-J1,"C1,C20",Login fails with invalid password,User account exists.,"1. Navigate to login page.
+2. Enter valid email and incorrect password.
+3. Click 'Login'.",User remains on login page. Clear error message displayed. No token is stored.,
+TC-AUTH-03,US-AUTH-01,P1,API,P1-J1,"C20,C21",Protected route rejects unauthenticated access,No auth token present in client.,1. Call a protected API (e.g. GET /api/incidents) without Authorization header.,API returns 401/403 and does not return incident data.,
+TC-AUTH-04,US-AUTH-02,P1,API,"P1-J1,P1-J2,P1-J4","C20,C21",/auth/me returns correct role,User logged in and has a known role in DB.,1. Call GET /api/auth/me with valid Authorization header.,"Response includes user id, email, name, and correct role.",
+TC-AUTH-05,US-AUTH-02,P1,UI,"P1-J1,P1-J4,P1-J5",C22,Worker cannot see admin-only navigation,User logged in as worker.,1. Observe main navigation menu.,"Admin-only items (Sites, Templates/Admin) are not visible.",
+TC-AUTH-06,US-AUTH-02,P1,API,P1-J4,C22,Worker blocked from admin-only endpoints,User logged in as worker.,"1. Call POST /api/sites as worker user.
+2. Observe response.",API returns 403 or equivalent error. No new site is created.,
+TC-SITE-01,US-SITE-01,P1,UI,P1-J4,"C16,C17",Admin creates a new site,User logged in as admin.,"1. Navigate to Admin -> Sites.
+2. Click 'Add Site'.
+3. Enter Name='Warehouse 1', Code='WH1'.
+4. Click 'Save'.",New site appears in site list and is available in incident/inspection site dropdowns.,
+TC-SITE-02,US-SITE-01,P1,UI,P1-J4,"C16,C17",Admin edits existing site,User logged in as admin. At least one site exists.,"1. Navigate to Admin -> Sites.
+2. Select an existing site.
+3. Edit name/code.
+4. Click 'Save'.",Updated site data is shown in list and forms use the new values.,
+TC-SITE-03,US-SITE-01,P1,API,P1-J4,"C18,C19",Duplicate site code rejected,User logged in as admin. A site with Code='WH1' exists.,1. Call POST /api/sites with Code='WH1'.,API returns validation error. No duplicate site is created.,
+TC-REF-01,US-REF-01,P1,API,P1-J2,"C6,C7",GET /incident-types returns seeded types,Database initialised with default incident types.,1. Call GET /api/incident-types as any logged-in user.,"Response list includes Injury, Near Miss, Property Damage (or configured defaults).",
+TC-REF-02,US-REF-01,P1,UI,P1-J2,"C6,C7",New incident form shows incident types dropdown,User logged in. Incident types exist.,"1. Navigate to Incidents -> New Incident.
+2. Open Incident Type dropdown.",Dropdown shows available incident types from API.,
+TC-INC-01,US-INC-01,P1,UI,P1-J2,"C1,C2,C3",Create incident - happy path,Worker logged in. At least one site and incident type exist.,"1. Navigate to Incidents -> New Incident.
+2. Fill all required fields with valid data.
+3. Click 'Save'.","Incident is created with status 'open', appears in incident list, and is linked to correct site/type.",
+TC-INC-02,US-INC-01,P1,UI,P1-J2,"C1,C2",Validation on missing required field,Worker logged in.,"1. Navigate to Incidents -> New Incident.
+2. Leave Title empty.
+3. Fill other fields.
+4. Click 'Save'.",Form shows a clear validation message. Incident is not created.,
+TC-INC-03,US-INC-01,P1,API,P1-J2,"C1,C3",POST /incidents persists correct data,Worker auth token available. Site and incident type IDs known.,"1. Call POST /api/incidents with valid JSON body.
+2. Query DB or call GET /api/incidents to verify record.","Incident stored with correct title, description, type, site, severity, occurred_at, status='open', reported_by set to user.",
+TC-INC-04,US-INC-02,P1,UI,"P1-J2,P1-J3","C3,C4,C24",Incident list shows correct columns,At least one incident exists.,1. Navigate to Incidents page.,"Table shows Date, Title, Type, Site, Severity, Status columns with correct data for each row.",
+TC-INC-05,US-INC-02,P1,UI,"P1-J2,P1-J3","C3,C4",Filter incidents by status,Incidents with multiple statuses exist.,"1. On Incidents page, set filter Status='open'.",Only incidents with status 'open' are displayed.,
+TC-INC-06,US-INC-02,P1,UI,"P1-J2,P1-J3","C3,C4",Filter incidents by site,Incidents exist for at least two sites.,"1. On Incidents page, set filter Site='Head Office'.",Only incidents for 'Head Office' are displayed.,
+TC-INC-07,US-INC-03,P1,UI,P1-J3,"C4,C25",Manager changes incident status,Manager logged in. Incident exists with status 'open'.,"1. Open Incidents list.
+2. Click incident to open detail.
+3. Change status to 'under_investigation' or 'closed'.
+4. Save.",Incident status updates successfully and list/dashboard reflect new status.,
+TC-INC-08,US-INC-03,P1,API,P1-J3,C25,Worker cannot change status (blocked),Worker logged in. Incident exists.,1. Worker attempts PUT/PATCH on incident status endpoint.,API returns 403 or similar. Status remains unchanged in DB.,
+TC-INSP-01,US-INSP-01,P1,UI,P1-J5,"C8,C9",Create template with name & description,Admin logged in.,"1. Navigate to Admin -> Inspection Templates.
+2. Click 'New Template'.
+3. Enter name and description.
+4. Save.",Template appears in templates list.,
+TC-INSP-02,US-INSP-01,P1,UI,P1-J5,"C10,C11",Add/edit/delete checklist items,Admin logged in. Template exists.,"1. Open template detail.
+2. Add several items with labels and categories.
+3. Edit one item.
+4. Delete one item.
+5. Save.",Template shows updated list of items with changes persisted.,
+TC-INSP-03,US-INSP-01,P1,API,P1-J5,"C8,C9,C10,C11",Template and items stored correctly,Admin logged in. Template created via UI or API.,"1. Call GET /api/inspection-templates and /:id.
+2. Inspect returned JSON.",Template includes correct name/description and items list with labels and categories.,
+TC-INSP-04,US-INSP-02,P1,UI,P1-J6,"C12,C13",Inspection form shows template checklist,Manager logged in. At least one site and template with items exist.,"1. Navigate to Inspections -> New Inspection.
+2. Select a site and a template.",Inspection form displays all items from the selected template.,
+TC-INSP-05,US-INSP-02,P1,UI,P1-J6,C14,Record results with ok/not_ok/n/a,Manager logged in. Inspection form showing checklist.,"1. For each item, select result from dropdown (ok/not_ok/n/a).
+2. Optionally add comments.
+3. Submit.",Inspection is created; responses are saved with correct result and comment per item.,
+TC-INSP-06,US-INSP-02,P1,UNIT,P1-J6,C15,overall_result logic (pass/fail),Unit test context or isolated service function available.,"1. Call logic with all items = ok -> expect 'pass'.
+2. Call with at least one item = not_ok -> expect 'fail'.",Logic returns 'pass' when no not_ok items; 'fail' when any not_ok item present.,
+TC-INSP-07,US-INSP-03,P1,UI,P1-J6,"C26,C27",Inspection list shows correct columns,At least one inspection exists.,1. Navigate to Inspections page.,"Table shows Template, Site, Performed By, Date, Overall Result with correct values.",
+TC-INSP-08,US-INSP-03,P1,UI,P1-J6,"C26,C27",Inspection detail shows header + items,Inspection exists.,"1. On Inspections list, click an inspection.
+2. View detail.",Detail view shows header info and full list of item responses with results and comments.,
+TC-DASH-01,US-DASH-01,P1,API,P1-J7,"C28,C29,C30,C31,C32",/dashboard/summary returns all metrics,Incidents and inspections exist over at least 30 days.,1. Call GET /api/dashboard/summary.,"Response JSON includes incident totals, open count, last_30_days counts, inspections last_30_days, failed inspections, by_type, severity_trend, and recent lists.",
+TC-DASH-02,US-DASH-01,P1,UI,"P1-J1,P1-J7","C28,C29,C30,C31,C32",Dashboard shows KPI cards correctly,User logged in. Dashboard API working.,1. Navigate to Dashboard page.,KPI cards show numbers matching /dashboard/summary response.,
+TC-DASH-03,US-DASH-01,P1,UI,P1-J7,"C28,C29,C30,C31,C32",Charts render incidents by type and severity trend,Dashboard data available for multiple incident types and months.,"1. Navigate to Dashboard.
+2. Observe bar chart (by type) and line chart (severity trend).",Charts display data consistent with /dashboard/summary by_type and severity_trend.,
+TC-DASH-04,US-DASH-01,P1,UI,P1-J7,"C28,C29,C30,C31,C32",Recent incidents/inspections tables are clickable,Recent incidents and inspections exist.,"1. Navigate to Dashboard.
+2. In Recent Incidents table, click a row.
+3. In Recent Inspections table, click a row.",Clicking a row opens the corresponding incident/inspection detail view.,

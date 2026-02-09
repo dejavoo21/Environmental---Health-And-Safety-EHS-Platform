@@ -1,0 +1,393 @@
+/**
+ * RiskHeatmapPage Styles - Phase 9
+ */
+
+.risk-heatmap-page {
+  padding: 0;
+}
+
+/* ==================== HEADER ==================== */
+
+.risk-heatmap-page__header {
+  margin-bottom: 24px;
+}
+
+.risk-heatmap-page__title-row h1 {
+  margin: 8px 0 0 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.back-btn {
+  margin-bottom: 8px;
+}
+
+/* ==================== FILTERS ==================== */
+
+.heatmap-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+}
+
+.heatmap-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+  min-width: 160px;
+}
+
+.heatmap-filter select {
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+}
+
+.heatmap-filter select:focus {
+  outline: none;
+  border-color: #1976D2;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+
+.heatmap-content {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.heatmap-section {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+/* ==================== SIDE PANEL ==================== */
+
+.heatmap-side-panel {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.heatmap-side-panel h3 {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.panel-hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.panel-empty {
+  color: #999;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* ==================== CELL DETAILS ==================== */
+
+.cell-details__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.cell-details__header h3 {
+  margin: 0;
+}
+
+.cell-details__loading,
+.cell-details__empty {
+  text-align: center;
+  color: #666;
+  padding: 24px 0;
+}
+
+.cell-risks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cell-risk-item {
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cell-risk-item:hover {
+  background: #f5f5f5;
+  border-color: #1976D2;
+}
+
+.cell-risk-item:last-child {
+  margin-bottom: 0;
+}
+
+.cell-risk-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cell-risk-ref {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #1976D2;
+}
+
+.cell-risk-item__title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.cell-risk-item__meta {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* ==================== TOP RISKS LIST ==================== */
+
+.top-risks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.top-risk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.top-risk-item:hover {
+  background: #f8f9fa;
+  margin: 0 -20px;
+  padding: 12px 20px;
+}
+
+.top-risk-item:last-child {
+  border-bottom: none;
+}
+
+.top-risk-rank {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.top-risk-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.top-risk-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.top-risk-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.top-risk-category {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+/* ==================== CATEGORY DISTRIBUTION ==================== */
+
+.category-distribution {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+}
+
+.category-distribution h3 {
+  margin: 0 0 20px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.category-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.category-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-bar__label {
+  width: 150px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.category-bar__bar-container {
+  flex: 1;
+  height: 24px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  display: flex;
+  overflow: hidden;
+}
+
+.category-bar__bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.category-bar__bar--extreme {
+  background: #F44336;
+}
+
+.category-bar__bar--high {
+  background: #FF9800;
+}
+
+.category-bar__bar--medium {
+  background: #FFEB3B;
+}
+
+.category-bar__bar--low {
+  background: #4CAF50;
+}
+
+.category-bar__count {
+  width: 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  text-align: right;
+}
+
+/* ==================== BUTTONS ==================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: #1976D2;
+  padding: 8px 12px;
+}
+
+.btn--ghost:hover {
+  background: rgba(25, 118, 210, 0.1);
+}
+
+.btn--small {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 1024px) {
+  .heatmap-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .heatmap-side-panel {
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .heatmap-filters {
+    flex-direction: column;
+  }
+  
+  .heatmap-filter {
+    width: 100%;
+  }
+  
+  .category-bar__label {
+    width: 100px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-bar {
+    flex-wrap: wrap;
+  }
+  
+  .category-bar__label {
+    width: 100%;
+  }
+  
+  .category-bar__bar-container {
+    flex: 1;
+  }
+}

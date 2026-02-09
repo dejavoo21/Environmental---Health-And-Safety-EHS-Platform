@@ -1,0 +1,1738 @@
+The repo already has this structure:
+
+/docs with: README, USER_JOURNEYS.md, USER_STORIES.md, TEST_STRATEGY_ALL_PHASES.md
+
+/qa with: ehs_minimum_competitive_checklist_phased.csv, test_cases_all_phases.csv
+
+HANDOVER_TO_CLAUDE.md at root
+
+Please inspect these files first, then follow your instructions for Phase A + B (design and test planning only, no code yet).
+
+=========================================================================================================================================================================================
+
+Codex, Claude is unavailable. Please continue as the Implementing Engineer for Phase 1, following the existing specs and the test_cases_all_phases.csv. Start with the backend APIs for incidents and inspections
+
+
+How you actually do the handover in practice
+
+When Claude runs out and you move to Codex:
+
+You say to Codex (after Codex prompt is already set up):
+
+Codex, Claude is unavailable. Please continue as the Implementing Engineer for Phase 1.
+Use the existing specs and test_cases_all_phases.csv.
+When I later say Claude is back, follow your handover procedure and update HANDOVER_TO_CLAUDE.md.
+
+When Claude comes back and you want to switch back:
+
+You say to Codex:
+
+Codex, Claude is now available again. Please stop implementing and hand over to Claude.
+Update HANDOVER_TO_CLAUDE.md and summarise what you’ve done and what’s left.
+
+After Codex confirms handover is done, you say to Claude:
+
+Claude, Codex has updated HANDOVER_TO_CLAUDE.md.
+Please resume work from that handover file and continue implementing Phase X as per the existing design and test strategy.
+
+
+==========================================================================================================================
+2️⃣ Give Claude his prompt + start command
+
+Open Claude.
+
+Paste the full Claude master prompt I wrote for you.
+
+Then send this as the next message:
+
+Please begin with Step 0 (workspace discovery) and Phase A + Phase B only.
+
+Inspect the workspace for any existing docs (checklist, user journeys, user stories, test strategy, test cases, etc.) and summarise what you find.
+
+Then produce all the documentation and test planning for Phase 1 as described in your instructions:
+
+Overview & Scope
+
+Functional + Non-functional Requirements (Phase 1)
+
+System Architecture
+
+Data Model / ERD
+
+API Specification
+
+Frontend/UX design
+
+Implementation Plan (Phase 1)
+
+Test Strategy with shift-left, ATDD, TDD and mapping to the test case catalogue
+
+Do NOT generate any code yet.
+When you’re done, ask me explicitly:
+“Is this design and test strategy approved so I can start implementing Phase 1?”
+
+Claude’s first job: only design + test docs, no code.
+
+=====================================================================================================
+You’ve completed Step 0, Phase A, and Phase B in your internal todo list.
+
+Next step: please materialise ALL of your Phase B outputs as real files in the repo, under the agreed structure.
+
+Create or update at least:
+
+- docs/ARCHITECTURE.md
+- docs/DATA_MODEL.md
+- docs/API_SPEC_PHASE1.md
+- docs/FRONTEND_UX_PHASE1.md   (or similar name)
+- docs/IMPLEMENTATION_PLAN_PHASE1.md
+- docs/TEST_STRATEGY_PHASE1.md
+
+Also, if needed:
+- Update docs/USER_STORIES.md with any new or refined user stories and acceptance criteria
+- Update docs/USER_JOURNEYS.md if your journeys changed
+- Make sure /qa/test_cases_all_phases.csv is aligned with your test strategy and references the correct TC-IDs
+
+Important:
+- Do NOT start writing backend or frontend code yet.
+- Just create/update these documentation files in the workspace and then summarise:
+  - Which files you created or updated
+  - A very short bullet summary of what’s in each file
+  - Any gaps you think still exist before implementation.
+
+When you are done, explicitly tell me:
+“Phase B documentation has been written to files and is ready for Codex to review.”
+=====================================================================================================
+Codex has given a Go for Phase 1 implementation.
+
+Please move to Phase D and start implementing Phase 1 only, following your approved design and test strategy.
+
+Start with:
+- Backend foundations and Phase 1 database schema/migrations
+- Auth + Sites + Incident Types + Incidents APIs
+- Then basic frontend: Login → Dashboard → Incidents list/create
+
+For each implementation chunk:
+- Say which US-IDs, C-IDs, and TC-IDs you are covering.
+- Keep tests aligned with test_cases_all_phases.csv.
+
+Do not implement Phase 2+ features yet.
+
+=====================================================================================================
+I want to create Word documents with realistic diagrams (not just plain text).
+
+For Phase 1 of the EHS Portal, please:
+
+1. Create these documentation files in the workspace:
+   - docs/BRD_EHS_PORTAL_PHASE1.md
+   - docs/DATA_MODEL_PHASE1.md
+   - docs/ARCHITECTURE_PHASE1.md
+   - docs/WORKFLOWS_PHASE1.md
+
+2. In each file:
+   - Write clear, structured text (headings, bullets).
+   - Include at least one Mermaid diagram block per document:
+     - ERD in DATA_MODEL (erDiagram)
+     - System architecture in ARCHITECTURE (flowchart or graph)
+     - Main user workflows in WORKFLOWS (flowchart)
+   - Make sure each diagram is valid Mermaid syntax and labeled.
+
+3. At the top of each file, add a short note:
+   - Explain that I can copy each Mermaid block into a Mermaid editor or draw.io, export as PNG/SVG, and then insert into Word as a “real” diagram.
+
+Do NOT write any application code. Only create/update these documentation files with content and diagram definitions.
+===================================================================================================================================================
+2️⃣ After Codex says Go – ask Claude to create the Python script
+
+Once Codex is happy with the design and diagrams, ask Claude to build the Word-helper script:
+
+Claude, Codex has reviewed the Phase 1 design and given a Go for implementation.
+
+Before we start coding the app itself, please create a small helper script to generate Word-ready documentation.
+
+1) Create a folder: scripts/
+
+2) Inside it, create:
+   - scripts/generate_phase1_docs.py
+
+3) In generate_phase1_docs.py:
+   - Use python-docx (or a similar library) to:
+     - Create a DOCX file, e.g. EHS_Phase1_Design.docx
+     - Add sections and headings for:
+       - BRD summary
+       - Architecture overview
+       - Data model (ERD)
+       - Key workflows
+     - For each Mermaid diagram in:
+       - docs/ARCHITECTURE_PHASE1.md
+       - docs/DATA_MODEL_PHASE1.md
+       - docs/WORKFLOWS_PHASE1.md
+       add a placeholder paragraph like:
+       “Insert diagram: <name> exported from Mermaid here.”
+
+   - You do NOT need to render Mermaid diagrams or insert images automatically.
+   - Just structure the document and clearly mark where I should manually paste the exported PNG/SVG diagrams.
+
+4) Also create a small README section in docs/BRD_EHS_PORTAL_PHASE1.md or a new file scripts/README_DOCS.md that explains:
+   - How to run the script.
+   - How to export Mermaid diagrams to PNG/SVG.
+   - Where to paste them into the generated Word file.
+
+Do NOT start implementing backend/frontend app code yet. This task is only about the documentation export helper.
+
+
+That keeps roles clean:
+
+Codex → verifies the design / diagrams.
+
+Claude → writes the Python tooling once design is stable.
+
+If you want, after Codex’s review I can help you check his feedback and translate it into a very tight “fix list” for Claude before he starts real coding.
+==========================================================================================================================================================
+Claude, I’ve had Codex review your Phase 1 documentation and the verdict is currently No-Go.
+
+Please now focus ONLY on fixing the documentation and mappings, not writing any app code.
+
+Use Codex’s feedback and do the following:
+
+1) Fix checklist ID mappings
+   - Update USER_STORIES.md, TEST_STRATEGY_PHASE1.md, and qa/test_cases_all_phases.csv so that:
+     - Phase 1 auth stories/tests map to C34–C39 (not C20–C22).
+     - Phase 1 dashboard stories/tests map to C47–C55 (not C28–C32).
+   - Re-check that each P1 C-ID used is correct for the feature.
+
+2) Incident types configurability (C6, C19)
+   - Design and document simple admin management of incident types for Phase 1 (recommended), OR explicitly justify deferring it and adjust checklist mapping accordingly.
+   - If you implement it in design:
+     - Add/adjust API endpoints in API_SPEC_PHASE1.md for admin CRUD on incident types.
+     - Add/adjust UX in FRONTEND_UX_PHASE1.md for an admin Incident Types screen.
+     - Update BRD_EHS_PORTAL_PHASE1.md and DATA_MODEL_PHASE1.md as needed.
+     - Add/update relevant user stories, acceptance criteria, and test cases (with correct C-IDs).
+
+3) Standardise role naming
+   - Choose a single term (e.g. “Administrator” or “Admin”) and make it consistent across:
+     - BRD_EHS_PORTAL_PHASE1.md
+     - DATA_MODEL_PHASE1.md
+     - API_SPEC_PHASE1.md
+     - FRONTEND_UX_PHASE1.md
+     - USER_STORIES.md
+
+4) Inspection response enum
+   - Choose one value set for the “not applicable” response (e.g. `n_a`).
+   - Align:
+     - DATA_MODEL_PHASE1.md (DB enum definition)
+     - API_SPEC_PHASE1.md (request/response examples)
+     - TEST_STRATEGY_PHASE1.md and qa/test_cases_all_phases.csv where relevant.
+
+5) Registration scope
+   - Decide for Phase 1:
+     - Either properly support `/api/auth/register` with BRD coverage, user stories, and workflows, OR
+     - Remove `/api/auth/register` from Phase 1 entirely and state that admins create users manually.
+   - Update API_SPEC_PHASE1.md, IMPLEMENTATION_PLAN_PHASE1.md, USER_STORIES.md, and BRD_EHS_PORTAL_PHASE1.md accordingly.
+
+6) Multi-tenancy statements
+   - Align ARCHITECTURE*.md and DATA_MODEL*.md:
+     - Either remove `organisation_id` claims from Phase 1 docs and mark multi-tenancy as a later phase, OR
+     - Add `organisation_id` to all relevant Phase 1 entities in DATA_MODEL_PHASE1.md and reflect it in API specs.
+   - Make sure there’s no contradiction between architecture text and data model.
+
+7) C60 / Actions nav ambiguity
+   - Decide how Phase 1 addresses C60:
+     - e.g. nav prepared for Actions but item hidden/disabled in P1.
+   - Update FRONTEND_UX_PHASE1.md and any checklist mapping/notes in TEST_STRATEGY_PHASE1.md to reflect the chosen approach.
+
+8) Diagrams alignment
+   - Update Mermaid diagrams so they match the final design:
+     - ARCHITECTURE_PHASE1.md: correct HTTP methods and paths (PATCH vs PUT, etc.).
+     - WORKFLOWS_PHASE1.md: either add severity filter to API/UX or remove it from workflows.
+     - DATA_MODEL_PHASE1.md: ensure ERD reflects the final enum values and any organisation_id decision.
+
+9) Clean encoding issues
+   - Remove strange characters (like ƒ?) from BRD_EHS_PORTAL_PHASE1.md, ARCHITECTURE_PHASE1.md, FRONTEND_UX_PHASE1.md, and any affected CSVs.
+   - Ensure docs use normal ASCII/UTF-8 characters so copy/paste is safe.
+
+10) Re-check traceability for Phase 1
+   - For each P1 checklist item (C34–C39, C47–C55, and others Codex listed as P1), ensure:
+     - There is at least one linked user story (US-ID).
+     - There is at least one linked test case (TC-ID) in test_cases_all_phases.csv.
+   - Update TEST_STRATEGY_PHASE1.md with a clear mapping section C-ID → US-ID → TC-ID.
+
+When you are done, please:
+- List exactly which files you changed.
+- Briefly summarise the key fixes per file.
+- Confirm that the auth and dashboard mappings now use the correct P1 checklist IDs and that incident type configurability (C6/C19) is clearly handled.
+
+Do NOT start writing backend/frontend code or Python scripts yet; this step is purely documentation and traceability fixes so Codex can re-review.
+========================================================================================================================================================
+2️⃣ When Claude comes back later
+
+When Claude’s limit resets and you want to hand back:
+
+To Codex:
+
+Codex, Claude is available again. 
+
+Please:
+1) Stop implementing new features.
+2) Update HANDOVER_TO_CLAUDE.md with a fresh handover section:
+   - What you have implemented so far (US-IDs, C-IDs, TC-IDs)
+   - Which files you changed
+   - What’s left to finish Phase 1 (backend + frontend)
+   - Any known bugs or open questions
+3) Give me a short summary in the chat when the handover doc is updated.
+
+
+Then to Claude:
+
+Claude, Codex continued implementation while you were rate-limited.
+
+Please:
+1) Read ONLY the latest section of HANDOVER_TO_CLAUDE.md to understand the current state.
+2) Based on that, open only the specific backend/frontend files Codex listed as changed.
+3) Then resume Phase 1 implementation from there, following the approved docs and Codex’s handover.
+
+
+That way:
+
+You don’t waste tokens re-reading all docs.
+
+Codex safely carries Phase 1 forward while Claude is locked.
+
+Claude can pick up smoothly later from HANDOVER_TO_CLAUDE.md.
+
+If you want, I can also write a tiny checklist for what Codex should complete on backend before touching frontend, so you can quickly see progress at a glance.
+
+=================================================================================================================================
+For Phase 2, use docs/PHASE2_IMPL_CHECKLIST.md as the official implementation checklist.
+
+As you work:
+- Mark tasks as done in that file.
+- In your updates, reference which checklist items you completed and which US-IDs, C-IDs, and TC-IDs they map to.
+
+=====================================================================================================
+Claude, after you read the latest section of HANDOVER_TO_CLAUDE.md and inspect the frontend files Codex touched:
+
+1) Do a quick quality review of the Phase 1 frontend:
+   - Check that each page and component matches FRONTEND_UX_PHASE1.md and API_SPEC_PHASE1.md.
+   - Make sure error/empty/loading states exist for the main pages (login, dashboard, incidents, inspections, admin screens).
+   - Confirm tests in the frontend project still pass.
+
+2) Fix only clear bugs or inconsistencies you find:
+   - Small UI bugs (wrong labels, fields not bound, missing validation).
+   - Clear mismatches with the API spec (wrong paths, wrong payload shape).
+   - Obvious code smells that risk stability (e.g. missing error handling around API calls).
+
+3) Do NOT redesign the overall structure or start Phase 2 features yet.
+   - Treat Codex’s implementation as the baseline and improve it rather than rewriting it.
+
+4) When you are done:
+   - Update PHASE1_IMPL_CHECKLIST.md if any remaining frontend items are now complete.
+   - Add a new section to HANDOVER_TO_CLAUDE.md summarising:
+     - What you changed (files + a few bullets).
+     - Which US-IDs, C-IDs, and TC-IDs were affected.
+     - A short list of any remaining Phase 1 polish items you recommend (if any).
+
+After that, stop and ask me:
+“Do you want me to (a) finish Phase 1 polish, (b) create the Phase 1 Word-doc generator script, or (c) start Phase 2 design docs?”
+
+===========================================================================================================================================
+Claude, Phase 1 is now fully designed, implemented, and tested:
+
+- Backend and frontend are built and green.
+- Phase 1 docs are stable (BRD, Architecture, Data Model, Workflows, API spec, UX spec, Implementation Plan, Test Strategy).
+- A Word design pack exists via scripts/generate_phase1_docs.py and EHS_Phase1_Design.docx.
+- UAT checklist for Phase 1 is in docs/UAT_PHASE1_CHECKLIST.md.
+
+I now want you to move into **Phase 2 – DESIGN ONLY**, no coding.
+
+### Your role
+
+Act as **Senior Architect + Lead Business Analyst + Test Architect** for Phase 2.  
+Think first, then write. You should:
+
+- Re-use the same structure and discipline as Phase 1.
+- Keep Phase 1 stable (do not move or water down any P1 scope).
+- Align everything with the existing phased checklist and traceability (C-IDs → US-IDs → TC-IDs).
+
+### Inputs you MUST use (do NOT re-invent Phase 1)
+
+Please use these existing files as references:
+
+- docs/BRD_EHS_PORTAL_PHASE1.md
+- docs/ARCHITECTURE.md
+- docs/ARCHITECTURE_PHASE1.md
+- docs/DATA_MODEL.md
+- docs/DATA_MODEL_PHASE1.md
+- docs/WORKFLOWS_PHASE1.md
+- docs/API_SPEC_PHASE1.md
+- docs/FRONTEND_UX_PHASE1.md
+- docs/IMPLEMENTATION_PLAN_PHASE1.md
+- docs/TEST_STRATEGY_PHASE1.md or TEST_STRATEGY_ALL_PHASES.md
+- qa/test_cases_all_phases.csv
+- qa/test_cases_phase1.csv
+- qa/ehs_minimum_competitive_checklist_phased.csv
+- docs/PHASE1_IMPL_CHECKLIST.md
+- docs/PHASE2_IMPL_CHECKLIST.md  (already created as structure for Phase 2 implementation)
+
+Use Phase 1 as the **template** for structure and naming, and Phase 2 entries in ehs_minimum_competitive_checklist_phased.csv as the scope guardrails.
+
+### Phase 2 – Business scope (what to design)
+
+Phase 2 should focus on these features:
+
+1) **Actions / CAPA**
+   - Actions linked to incidents and inspections.
+   - Assignee, due dates, status, and basic tracking.
+   - Support for linking evidence/attachments to actions.
+
+2) **Attachments / Evidence**
+   - Ability to attach files (documents, images) to incidents, inspections, and actions.
+   - Simple metadata for attachments (filename, type, size, uploadedBy, uploadedAt).
+   - Phase 2 can assume a simple storage strategy (e.g. local or S3-like) but keep the design generic.
+
+3) **RBAC Hardening**
+   - Make the role model more explicit for Phase 2, especially for Actions and Admin functions.
+   - Clarify exactly what Worker, Manager, and Admin can and cannot do in Phase 2.
+
+4) **Audit Logging**
+   - Introduce an audit log concept for key events (login, incident status changes, inspection completion, action status changes).
+   - Only design Phase 2 minimum viable audit logging; full compliance/forensic logging can wait for later.
+
+5) **In-app Help**
+   - Very light in-app help experience: links/panels connected to static content (not an AI assistant yet).
+
+Phase 2 is **NOT** about multi-tenancy, big analytics, or external integrations — those stay in later phases.
+
+### Deliverables you should create (Phase 2 docs)
+
+Following the Phase 1 pattern, please create and/or update these, but only for Phase 2 scope:
+
+1) New Phase 2 docs (do NOT overwrite Phase 1 files):
+   - docs/BRD_EHS_PORTAL_PHASE2.md
+   - docs/DATA_MODEL_PHASE2.md
+   - docs/ARCHITECTURE_PHASE2.md
+   - docs/WORKFLOWS_PHASE2.md
+   - docs/API_SPEC_PHASE2.md
+   - docs/FRONTEND_UX_PHASE2.md
+   - docs/IMPLEMENTATION_PLAN_PHASE2.md
+   - docs/TEST_STRATEGY_PHASE2.md
+   - qa/test_cases_phase2.csv
+   - Update docs/PHASE2_IMPL_CHECKLIST.md if needed to align with what you design.
+
+2) Carefully update only the shared cross-phase docs where necessary:
+   - docs/ARCHITECTURE.md  (add Phase 2 components/notes without breaking Phase 1)
+   - docs/DATA_MODEL.md    (add Phase 2 entities/relationships, e.g. actions, attachments, audit_log)
+   - docs/TEST_STRATEGY_ALL_PHASES.md (add Phase 2 strategy section)
+   - qa/test_cases_all_phases.csv     (append Phase 2 test cases with TC-IDs)
+   - qa/ehs_minimum_competitive_checklist_phased.csv if Phase 2 coverage needs better mapping, but do NOT change Phase 1 mappings.
+
+### Constraints and style
+
+- Keep Phase 2 changes **incremental**: build on Phase 1, don’t redesign.
+- Maintain consistent IDs and naming: US-IDs, C-IDs, TC-IDs must be cleanly mapped.
+- Keep the level of detail similar to Phase 1 docs (not less).
+- Clearly label anything that is Phase 3+ as “future/placeholder”, not Phase 2.
+
+### Output for this session
+
+In this session, I want you to:
+
+1) Briefly restate your understanding of Phase 2 scope in 5–10 bullet points.
+2) Then start with the **BRD for Phase 2** (BRD_EHS_PORTAL_PHASE2.md):
+   - Business goals and non-goals for Phase 2.
+   - Detailed requirements for Actions, Attachments, RBAC hardening, Audit logging, and Help.
+   - Explicit statements of what remains out-of-scope.
+3) After you finish the BRD, stop and summarise:
+   - What you created/changed (file list).
+   - Which C-IDs (checklist items) Phase 2 BRD now covers.
+   - Any open questions or assumptions you think we should confirm later.
+
+Do NOT start coding or implementation; stay strictly in design/documentation mode for Phase 2.
+===================================================================================================================================
+Yes, please proceed with the next Phase 2 design document and start with the **data model**.
+
+Your task now is to create:
+
+- docs/DATA_MODEL_PHASE2.md
+- Carefully update docs/DATA_MODEL.md to include Phase 2 entities/changes WITHOUT breaking Phase 1.
+
+### Scope for DATA_MODEL_PHASE2.md
+
+Follow the same style and level of detail as DATA_MODEL_PHASE1.md, but focus only on the new/changed Phase 2 parts:
+
+1) New entities and relationships
+   - ACTIONS / CAPA:
+     - Action linked to incidents and inspections.
+     - Fields such as: id, sourceType (incident/inspection), sourceId, title, description, status, priority (if needed), assignee, dueDate, completedAt, createdAt, updatedAt.
+     - Status lifecycle for actions (e.g. open, in_progress, completed, cancelled).
+   - ATTACHMENTS:
+     - Attachments linked to incidents, inspections, and actions.
+     - Fields such as: id, entityType, entityId, fileName, fileType, fileSize, storageKey/path, uploadedBy, uploadedAt.
+   - AUDIT_LOG:
+     - Records key events like login, incident status change, inspection completion, action status change.
+     - Fields such as: id, occurredAt, userId, entityType, entityId, actionType, metadata (JSON), maybe ipAddress/userAgent if you think appropriate for Phase 2.
+
+2) Changes to existing entities
+   - Any Phase 2 attributes that need to be added to existing tables (e.g. additional fields on INCIDENTS or INSPECTIONS to support actions/attachments).
+   - Be explicit about which fields are “Phase 2” and do not retroactively move Phase 1 fields into Phase 2.
+
+3) Constraints, enums, and indexing
+   - Define enums for any new statuses/fields (e.g. action_status, entity_type).
+   - Identify important foreign keys and cascade rules.
+   - Suggest any useful indexes for Phase 2 queries (e.g. on action status, dueDate, entityType/entityId, createdAt).
+
+4) ERD and diagram(s)
+   - Add at least one Mermaid ERD showing the new Phase 2 entities and their relations to Phase 1 entities (USERS, SITES, INCIDENTS, INSPECTIONS, INSPECTION_TEMPLATES, etc.).
+   - Keep a clear visual distinction between “Phase 1 entities” and “Phase 2 entities” (e.g. labels or colours in comments).
+
+5) Traceability
+   - For each new entity/field, indicate which Phase 2 checklist items (C-IDs) it supports (e.g. Cxx → ACTIONS, ATTACHMENTS, AUDIT_LOG).
+   - Make sure naming is consistent with the Phase 2 BRD you just wrote.
+
+### Updates to DATA_MODEL.md
+
+- Add a **Phase 2 section** that:
+  - Summarises new entities (Actions, Attachments, AuditLog).
+  - Mentions any changes to existing entities.
+  - Includes or references the Phase 2 ERD(s).
+- Do NOT remove or rewrite the Phase 1 sections; treat Phase 2 as an additive layer.
+- Make sure the global model remains readable: someone should be able to see how Phase 1 and Phase 2 fit together.
+
+### Output for this step
+
+When you are done:
+
+1) Provide the full content of DATA_MODEL_PHASE2.md.
+2) Summarise exactly what you changed in DATA_MODEL.md.
+3) List the new/updated entities and their key fields.
+4) List which Phase 2 C-IDs the data model now supports.
+5) Note any open questions or assumptions about the data model that we should confirm before moving on to ARCHITECTURE_PHASE2.md.
+
+Do not start API or UX work yet; stay focused on the data model for this step.
+==========================================================================================================================================
+Yes, please proceed with ARCHITECTURE_PHASE2.md next.
+
+### Your focus for this step
+
+Act as **Solution Architect for Phase 2**. Design only, no coding.
+
+Use these as your primary inputs:
+
+- docs/BRD_EHS_PORTAL_PHASE2.md
+- docs/DATA_MODEL_PHASE2.md
+- docs/DATA_MODEL.md (Phase 1 + 2 combined view)
+- docs/ARCHITECTURE_PHASE1.md
+- docs/ARCHITECTURE.md
+- qa/ehs_minimum_competitive_checklist_phased.csv (Phase 2 C-IDs: C20–C33, C40–C46)
+
+### 1) Create docs/ARCHITECTURE_PHASE2.md
+
+Follow the style/structure of ARCHITECTURE_PHASE1.md but focus ONLY on the new Phase 2 capabilities:
+
+**New/extended components to cover:**
+
+1) **Actions / CAPA**
+   - “Action service” or equivalent backend layer.
+   - How actions relate to incidents, inspections, users, and notifications (even if notifications are later phase).
+   - How “My Actions” vs “All Actions” views are supported by the architecture.
+
+2) **Attachments / Evidence**
+   - “Attachment service” and how it integrates with file storage.
+   - Storage layer abstraction (e.g. local filesystem vs S3-like) – design for both, implement local first.
+   - How attachments connect to incidents, inspections, and actions without breaking Phase 1.
+
+3) **RBAC Hardening**
+   - Any new middleware/guard components needed to enforce stricter permissions for actions and attachments.
+   - Where in the request flow RBAC is applied for Phase 2.
+
+4) **Audit Logging**
+   - “Audit log service” and how/where it is called from existing flows (incident creation/update, inspection completion, action lifecycle, attachment add/remove).
+   - How audit_log writes are kept immutable and how they relate to the main request/response path (in-band vs side-effect).
+
+5) **In-app Help**
+   - Very light “Help content” component or service.
+   - Where help content is stored (static files, DB table, config) and how the frontend retrieves it.
+
+**Diagrams (Mermaid) to include at minimum:**
+
+- Updated **system context** or component diagram showing Phase 2 services (Actions, Attachments, AuditLog, Help) alongside existing Phase 1 components.
+- A **backend component diagram** that shows how the new services fit into the existing Express → Services → DB pattern.
+- 2–3 key **sequence diagrams**, for example:
+  - Create action from incident → write to actions + audit_log.
+  - Upload attachment to incident/inspection/action → file storage + attachment record + audit_log.
+  - Auto-marking actions as overdue (if you introduce any scheduler concept, even conceptually).
+
+Make it clear which parts are **Phase 1** vs **Phase 2** (e.g. headings or notes).
+
+### 2) Update docs/ARCHITECTURE.md
+
+Carefully extend the global architecture doc:
+
+- Add a **Phase 2 section** that:
+  - Summarises the new components/services (ActionService, AttachmentService, AuditLogService, FileStorageAdapter, HelpContent).
+  - Explains, at a high level, how Phase 2 builds on Phase 1 without redesign.
+- If you update any shared diagrams, do it in a way that:
+  - Keeps Phase 1 still valid.
+  - Clearly annotates or notes which elements are introduced in Phase 2.
+- Do NOT move Phase 1 features into Phase 2 or change Phase 1 behaviour.
+
+### 3) Traceability & C-IDs
+
+For the architecture doc, explicitly link the new components to the Phase 2 checklist items where relevant, for example:
+
+- C20–C27 → Actions / CAPA architecture
+- C28–C33 → Attachments/file storage architecture
+- C40–C46 → Audit logging architecture
+
+You don’t need to list every C-ID in the diagrams, but add a short “Mapping to Checklist” subsection in ARCHITECTURE_PHASE2.md.
+
+### Output for this step
+
+When you are done:
+
+1) Provide the full content of docs/ARCHITECTURE_PHASE2.md.
+2) Summarise exactly what you changed in docs/ARCHITECTURE.md.
+3) List the new/extended components you introduced (backend services, middleware, storage layer, etc.).
+4) List which Phase 2 C-IDs are now covered from an architectural perspective.
+5) Note any open architectural questions you think we should clarify before moving to:
+   - WORKFLOWS_PHASE2.md
+   - API_SPEC_PHASE2.md
+   - FRONTEND_UX_PHASE2.md
+
+Do NOT start API or UX work yet; this step is strictly about the architecture.
+
+
+===========================================================================================================================================
+3️⃣ Give Codex his prompt + start command
+
+Open Codex.
+
+Paste the full Codex master prompt (with the fallback + handover sections).
+
+Then send:
+
+Codex, Claude is going to produce the initial design and test strategy for the EHS Portal.
+
+I will paste his documentation to you in chunks.
+When I do, please review it according to your instructions and tell me:
+
+What is good
+
+What is missing or risky (especially for Phase 1 / P1 checklist items)
+
+Whether test coverage and traceability (C-IDs → US-IDs → TC-IDs) is good enough
+
+Your Go / No-Go decision for starting Phase 1 implementation
+
+Concrete changes you want Claude to make before coding (if any).
+
+======================******************************++++++++++++++++++++++++++++++++++++++++++++++++++++
+USE THIS INSTEAD OF THE ONE ABOVE
+
+Codex, please review all current design and test documentation that Claude has created in the workspace.
+
+Do NOT wait for me to paste the content. Instead, open and review the relevant files yourself, especially in:
+
+- /docs  (e.g. USER_JOURNEYS.md, USER_STORIES.md, TEST_STRATEGY_*.md, ARCHITECTURE.md, API_SPEC_PHASE1.md, DATA_MODEL.md, TEST_CASES_CATALOGUE.md)
+- /qa    (e.g. ehs_minimum_competitive_checklist_phased.csv, test_cases_all_phases.csv)
+- HANDOVER_TO_CLAUDE.md  (if present)
+- Any other design / spec / test docs created by Claude for this project.
+
+After reviewing ALL of Claude’s documentation, please give me a structured assessment covering:
+
+- What is good / strong in the design and documentation
+- What is missing, unclear, or risky (especially for Phase 1 / P1 checklist items)
+- Whether test coverage and traceability (C-IDs → US-IDs → TC-IDs) are good enough for Phase 1
+- Your **Go / No-Go** decision for starting Phase 1 implementation
+- Concrete, specific changes or additions you want Claude to make before coding (if any)
+
+Focus on the docs that actually exist in the workspace; don’t invent new files unless you are suggesting them as improvements.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++_____________________________+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Codex, please review all current design and test documentation that Claude has created in the workspace.
+
+Do NOT wait for me to paste the content. Instead, open and review the relevant files yourself, especially in:
+
+- /docs  (USER_JOURNEYS.md, USER_STORIES.md, TEST_STRATEGY_*.md, ARCHITECTURE.md, API_SPEC_PHASE1.md, DATA_MODEL.md, IMPLEMENTATION_PLAN_PHASE1.md, FRONTEND_UX_PHASE1.md)
+- /qa    (ehs_minimum_competitive_checklist_phased.csv, test_cases_all_phases.csv)
+- HANDOVER_TO_CLAUDE.md  (if present)
+- Any other design/spec/test docs Claude has created for Phase 1.
+
+After reviewing EVERYTHING, give me a structured assessment:
+
+- What is good / strong in the design and documentation
+- What is missing, unclear, or risky (especially for Phase 1 / P1 checklist items)
+- Whether test coverage and traceability (C-IDs → US-IDs → TC-IDs) are good enough for Phase 1
+- Your Go / No-Go decision for starting Phase 1 implementation
+- Concrete, specific changes or additions you want Claude to make before coding.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+=======================================================================================================
+Later, if you need Codex to code because Claude’s tokens are gone, you’ll use the fallback line:
+
+“Codex, Claude is unavailable. Please continue as the Implementing Engineer…”
+
+And when Claude comes back:
+
+“Codex, Claude is now available again. Please stop implementing and hand over to Claude. Update HANDOVER_TO_CLAUDE.md.”
+
+Then to Claude:
+
+“Claude, Codex has updated HANDOVER_TO_CLAUDE.md. Please resume from that handover file and continue.”
+
+
+=====================================================================================================================================================
+1️⃣ Step 1 – Tell Codex to review the docs
+
+Send this to Codex now:
+
+Codex, Claude has hit his usage limit for now, but he has already created the core Phase 1 documentation files in /docs:
+
+- ARCHITECTURE.md
+- DATA_MODEL.md
+- API_SPEC_PHASE1.md
+- FRONTEND_UX_PHASE1.md
+- IMPLEMENTATION_PLAN_PHASE1.md
+- TEST_STRATEGY_PHASE1.md
+
+He may not have summarised them in the chat, but the files should be present in the workspace.
+
+Step 1:
+Please review all relevant docs, especially:
+
+- /docs/*.md listed above
+- /docs/USER_STORIES.md and /docs/USER_JOURNEYS.md (if present)
+- /qa/ehs_minimum_competitive_checklist_phased.csv
+- /qa/test_cases_all_phases.csv
+
+After reviewing EVERYTHING, give me a structured assessment:
+
+- Strengths in the design and test strategy
+- Gaps / unclear or risky areas for Phase 1 (P1), especially against the checklist
+- Whether test coverage and traceability (C-IDs → US-IDs → TC-IDs) are good enough for Phase 1
+- Your **Go / No-Go** recommendation for starting Phase 1 implementation
+- Concrete, specific changes or additions you want made to the docs before coding starts.
+
+For now, do NOT write application code. You may suggest documentation changes, or update the docs directly if something simple is clearly missing.
+
+
+Let Codex do that first.
+
+Once Codex finishes, you’ll know if the design is stable enough.
+
+2️⃣ Step 2 – Ask Codex to add diagrams + script (after review)
+
+If Codex says the design is mostly OK (or after he fixes it), then send this second instruction:
+
+Codex, based on the current approved Phase 1 design, please now add diagram definitions and a basic document-generation script.
+
+1) Diagrams in docs:
+
+Update or extend these files:
+
+- docs/ARCHITECTURE.md
+- docs/DATA_MODEL.md
+- docs/WORKFLOWS_PHASE1.md  (create if it does not exist yet)
+
+For each file:
+
+- Keep the existing text.
+- Add at least one **Mermaid** diagram block:
+
+  - In DATA_MODEL.md:
+    - An ERD using Mermaid `erDiagram` that matches the current Phase 1 data model (User, Site, IncidentType, Incident, InspectionTemplate, Inspection, InspectionResponse, etc.).
+
+  - In ARCHITECTURE.md:
+    - A high-level system diagram (frontend, backend, database) using `flowchart` or `graph`.
+
+  - In WORKFLOWS_PHASE1.md:
+    - 1–3 key workflows as `flowchart` diagrams, such as:
+      - Worker reporting an incident
+      - Manager reviewing and updating an incident
+      - Manager performing an inspection
+
+- Above each diagram block, add a short note explaining that I can:
+  - Copy the Mermaid block into a Mermaid-compatible editor (or draw.io),
+  - Export it as PNG/SVG,
+  - Then paste it into a Word document as a proper visual.
+
+2) Optional script for Word export:
+
+If appropriate, create a folder `scripts/` and add:
+
+- `scripts/generate_docs_template_notes.md` (brief instructions)
+- Optionally, a starter `scripts/generate_docs.py` script that:
+  - Uses `python-docx` (or similar) to build a .docx file structure with headings and placeholder text for where the exported images should be inserted.
+  - You do NOT need to render Mermaid diagrams or insert real images; just set placeholders and comments where the PNG/SVGs will go.
+
+Do not change the API design or data model here; the diagrams and script must reflect the existing approved design.
+
+
+That way:
+
+Codex first checks that the design makes sense.
+
+Then Codex adds diagrams + script that match the reviewed design.
+
+When Claude is back, he can:
+
+Focus on implementing Phase 1 based on those docs.
+
+Use the same ERD/architecture/workflow diagrams if he needs visual reference.
+
+=+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, Claude has now created additional Phase 1 documentation files:
+
+- docs/BRD_EHS_PORTAL_PHASE1.md
+- docs/DATA_MODEL_PHASE1.md
+- docs/ARCHITECTURE_PHASE1.md
+- docs/WORKFLOWS_PHASE1.md
+
+Along with the earlier Phase 1 docs:
+
+- docs/ARCHITECTURE.md
+- docs/DATA_MODEL.md
+- docs/API_SPEC_PHASE1.md
+- docs/FRONTEND_UX_PHASE1.md
+- docs/IMPLEMENTATION_PLAN_PHASE1.md
+- docs/TEST_STRATEGY_PHASE1.md
+- docs/USER_STORIES.md
+- docs/USER_JOURNEYS.md  (if present)
+
+And QA artefacts:
+
+- qa/ehs_minimum_competitive_checklist_phased.csv
+- qa/test_cases_all_phases.csv
+
+Please now:
+
+1) Open and review ALL of these documents.
+
+2) Check, specifically for **Phase 1**:
+   - Are the BRD, data model, architecture, and workflows consistent with each other and with:
+     - API_SPEC_PHASE1.md
+     - USER_STORIES.md
+     - TEST_STRATEGY_PHASE1.md
+     - test_cases_all_phases.csv
+   - Are Phase 1 checklist items (P1 in the checklist CSV) clearly covered by requirements and/or test cases?
+   - Are the Mermaid diagrams in the *_PHASE1.md files accurate representations of the design?
+
+3) Give me a structured assessment:
+   - Strengths in the design and documentation
+   - Gaps, unclear points, or risks for Phase 1 (with references to files, sections, C-IDs, US-IDs, TC-IDs)
+   - Whether test coverage and traceability (C-IDs → US-IDs → TC-IDs) are good enough for Phase 1
+   - Your **Go / No-Go** recommendation for starting Phase 1 implementation
+   - Concrete changes you want made to the docs before coding starts.
+
+For now, do NOT write application code. You may adjust the documentation or diagrams if something is clearly wrong.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, Claude has now updated the Phase 1 documentation based on your No-Go feedback (checklist mappings, incident types, role naming, enums, registration scope, multi-tenancy, nav, diagrams, encoding).
+
+Please re-review the same docs and QA artefacts and tell me:
+
+- Are the previous issues resolved?
+- Are traceability and P1 checklist coverage now acceptable?
+- Is your recommendation now Go or still No-Go for Phase 1 implementation?
+
+If anything is still blocking, list the remaining gaps with references.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Codex, please go ahead and fix the documentation, diagrams, and mappings directly as you suggested.
+
+Your goal is to take Phase 1 to a clean, consistent **Go** state without changing the overall scope, just removing contradictions.
+
+Please:
+
+1) Incident Types configurability
+   - Implement and document proper Phase 1 admin configurability for incident types to satisfy C6 and C19:
+     - Add admin CRUD endpoints to API_SPEC_PHASE1.md.
+     - Add an admin Incident Types management screen to FRONTEND_UX_PHASE1.md.
+     - Update IMPLEMENTATION_PLAN_PHASE1.md to include work for these endpoints and screens.
+     - Update USER_STORIES.md and TEST_STRATEGY_PHASE1.md with the corresponding story, acceptance criteria, and test cases (linked to correct C-IDs).
+
+2) Role naming
+   - Standardise on one role label (e.g. “Administrator” or “Admin”) and make it consistent across:
+     - BRD_EHS_PORTAL_PHASE1.md
+     - DATA_MODEL_PHASE1.md
+     - API_SPEC_PHASE1.md
+     - FRONTEND_UX_PHASE1.md
+     - IMPLEMENTATION_PLAN_PHASE1.md
+     - USER_STORIES.md
+     - TEST_STRATEGY_PHASE1.md
+   - Update test_cases_all_phases.csv if role names appear there.
+
+3) Inspection response enum
+   - Choose a single value for “not applicable” (please pick `n_a` for clarity).
+   - Align all references in:
+     - DATA_MODEL_PHASE1.md (DB enum)
+     - API_SPEC_PHASE1.md (requests/responses)
+     - TEST_STRATEGY_PHASE1.md
+     - test_cases_all_phases.csv (if relevant).
+
+4) Registration scope
+   - For Phase 1, remove self-registration:
+     - Ensure `/api/auth/register` does NOT appear in ARCHITECTURE.md, ARCHITECTURE_PHASE1.md, API_SPEC_PHASE1.md, IMPLEMENTATION_PLAN_PHASE1.md, or any story/strategy/checklist mapping.
+     - BRD_EHS_PORTAL_PHASE1.md should clearly state that user accounts are created by an administrator only in Phase 1.
+
+5) Diagrams & workflows
+   - Update Mermaid diagrams so they exactly match the final API and filters:
+     - ARCHITECTURE_PHASE1.md: if API spec uses PUT /api/incidents/:id, make the diagram show the same; do not show PATCH if we’re not using it.
+     - WORKFLOWS_PHASE1.md: either add severity filter support to API_SPEC_PHASE1.md and FRONTEND_UX_PHASE1.md, or remove the severity filter from the workflows. Make the diagrams consistent with the spec.
+
+6) Traceability mappings
+   - Fix any remaining P1 stories/tests that still reference P2 checklist IDs (C24, C25, C26, C27, etc.).
+   - For Phase 1:
+     - Ensure each relevant C-ID is correctly mapped to:
+       - One or more user stories in USER_STORIES.md.
+       - One or more test cases in TEST_STRATEGY_PHASE1.md and test_cases_all_phases.csv.
+   - Pay special attention to auth, dashboard, incidents, inspections, and incident types.
+
+7) Multi-tenancy
+   - For Phase 1, please remove or soften claims about organisation_id in ARCHITECTURE.md and ARCHITECTURE_PHASE1.md unless you also add organisation_id into DATA_MODEL_PHASE1.md and the API.
+   - I’m fine with multi-tenancy being called out as a later-phase concern. For P1, the docs must not contradict the actual Phase 1 data model.
+
+8) C60 navigation requirement
+   - Decide a consistent approach for Phase 1:
+     - Preferred: include an “Actions” nav item that is disabled / “coming soon” and document that C60 is only partially satisfied in Phase 1 and fully in Phase 2.
+   - Reflect this in FRONTEND_UX_PHASE1.md and in any checklist mapping or notes in TEST_STRATEGY_PHASE1.md.
+
+9) Encoding cleanup
+   - Remove the strange encoding characters (such as ƒ?) from:
+     - BRD_EHS_PORTAL_PHASE1.md
+     - ARCHITECTURE_PHASE1.md
+     - FRONTEND_UX_PHASE1.md
+     - Any other affected docs and CSVs.
+   - Ensure the files use clean UTF-8 text that will not corrupt when copied.
+
+10) Final traceability check
+   - After all edits, re-verify that for Phase 1:
+     - Each P1 checklist item has at least one mapped user story and one mapped test case (C-ID → US-ID → TC-ID).
+     - TEST_STRATEGY_PHASE1.md explicitly shows this mapping.
+
+When you are done, please:
+- List which files you modified.
+- Summarise the major fixes.
+- Tell me whether, in your view, Phase 1 is now a **Go** for implementation.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Codex, Claude has hit his usage limit and is currently unavailable.
+
+Please switch into your **Fallback Implementing Engineer** role for **Phase 1**, using the existing approved Phase 1 docs as the single source of truth:
+
+- docs/BRD_EHS_PORTAL_PHASE1.md
+- docs/ARCHITECTURE_PHASE1.md and docs/ARCHITECTURE.md
+- docs/DATA_MODEL_PHASE1.md
+- docs/API_SPEC_PHASE1.md
+- docs/FRONTEND_UX_PHASE1.md
+- docs/IMPLEMENTATION_PLAN_PHASE1.md
+- docs/TEST_STRATEGY_PHASE1.md
+- docs/USER_STORIES.md
+- docs/USER_JOURNEYS.md
+- qa/test_cases_all_phases.csv
+- qa/test_cases_phase1.csv
+- qa/ehs_minimum_competitive_checklist_phased.csv
+
+Do NOT redesign the system. Your job now is to **implement** the approved Phase 1 design.
+
+Start with the backend implementation, following IMPLEMENTATION_PLAN_PHASE1.md:
+
+1) Backend foundation
+   - Set up the Node + Express backend structure.
+   - Configure env + PostgreSQL connection.
+   - Add basic error handling and logging middleware.
+
+2) Database schema & migrations for Phase 1 entities
+   - Users (with "admin" role naming as standardised)
+   - Sites
+   - IncidentTypes (with admin-configurable behaviour per C6/C19)
+   - Incidents
+   - InspectionTemplates + InspectionTemplateItems
+   - Inspections + InspectionResponses
+   - Ensure enums and constraints match DATA_MODEL_PHASE1.md (including `n_a` enum value).
+
+3) Implement Phase 1 API endpoints exactly as in API_SPEC_PHASE1.md:
+   - Auth: POST /api/auth/login, GET /api/auth/me
+   - Sites: CRUD as specified
+   - IncidentTypes: admin CRUD to satisfy C6/C19
+   - Incidents: create, list (with approved filters), detail, status update, etc.
+   - Inspection Templates: template + item management
+   - Inspections: create, list, detail
+   - Dashboard: /api/dashboard/summary with all required metrics
+
+4) Add backend tests tied to TC-IDs in qa/test_cases_phase1.csv.
+
+For this first implementation phase, focus on **backend only**. Don’t start frontend yet.
+
+VERY IMPORTANT:
+- Keep `HANDOVER_TO_CLAUDE.md` in sync:
+  - After you complete each major chunk (e.g. auth + users, incidents, inspections), update HANDOVER_TO_CLAUDE.md with:
+    - What you implemented (US-IDs, C-IDs, TC-IDs)
+    - Files changed
+    - What’s left
+    - Any assumptions or open issues
+
+In your reply, please:
+- Confirm you are now in Fallback Implementing Engineer mode.
+- Describe the backend folder structure you’ll create.
+- Outline the order you’ll implement the APIs and migrations.
+- Then start implementing the backend according to that plan.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, thanks for the Handover #2 and backend foundation.
+
+Please continue Phase 1 backend implementation as you proposed, with a focus on:
+
+1) Test coverage
+   - Add and run tests for:
+     - TC-AUTH-01, TC-AUTH-04
+     - TC-INC-01..TC-INC-08
+     - TC-INSP-01..TC-INSP-08
+     - TC-DASH-01..TC-DASH-04
+   - Make sure each test references the relevant TC-ID in comments so we keep traceability.
+
+2) Validation and enum checks
+   - Tighten validation for:
+     - Incident create/update (required fields, invalid enums, bad dates).
+     - Inspection create (ensure responses only use ok/not_ok/n_a).
+   - Ensure response result enums and error codes match API_SPEC_PHASE1.md.
+
+3) Contract alignment
+   - If tests reveal any mismatch between:
+     - API_SPEC_PHASE1.md
+     - DATA_MODEL_PHASE1.md
+     - Implemented behaviour
+   - Then:
+     - Do NOT silently change the contract.
+     - Instead, either:
+       - Align code to the spec, OR
+       - If the spec is clearly wrong, note the discrepancy in HANDOVER_TO_CLAUDE.md under “Known Issues / Assumptions”.
+
+4) Name field assumption
+   - Keep your current approach for now (returning both name and firstName/lastName).
+   - Document this clearly in HANDOVER_TO_CLAUDE.md as a small technical debt item so Claude can decide later whether to:
+     - Standardise everything on name, OR
+     - Fully adopt firstName/lastName in the data model.
+   - Don’t spend time redesigning this now; just make sure tests pass and the behaviour is consistent.
+
+5) Checklist link
+   - Use docs/PHASE1_IMPL_CHECKLIST.md:
+     - Mark backend tasks you’ve completed.
+     - In HANDOVER_TO_CLAUDE.md, say which checklist items you consider done.
+
+When you’ve:
+- Implemented the remaining tests,
+- Run migrations + seed + tests,
+- And have all core Phase 1 backend tests passing (or explicitly marked as blocked),
+
+please:
+- Update HANDOVER_TO_CLAUDE.md with Handover #3,
+- Summarise backend status (US-IDs, C-IDs, TC-IDs covered),
+- Tell me clearly: “Phase 1 backend is ready for frontend integration.”
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, thanks for getting the Phase 1 backend to green (23/23 tests passing) and updating Handover #4.
+
+Please now start **Phase 1 frontend implementation**, using these as the source of truth:
+
+- docs/PHASE1_IMPL_CHECKLIST.md  (Frontend section)
+- docs/FRONTEND_UX_PHASE1.md
+- docs/API_SPEC_PHASE1.md
+- docs/USER_STORIES.md
+- docs/USER_JOURNEYS.md
+- qa/test_cases_phase1.csv   (for key frontend flows)
+
+Implementation order:
+
+1) Frontend foundation
+   - Set up the React + Vite project if not already.
+   - Implement the main layout (sidebar + topbar + content area) with role-aware navigation,
+     including the disabled “Actions” item for C60 as defined in the UX.
+
+2) Auth flow
+   - Login page UI and validation.
+   - Wire login to POST /api/auth/login.
+   - Implement session handling with GET /api/auth/me and redirect logic.
+
+3) Dashboard
+   - Build the dashboard page layout (KPI cards, charts, recent lists) per FRONTEND_UX_PHASE1.md.
+   - Wire it to GET /api/dashboard/summary (loading/empty/error states).
+
+4) Incidents
+   - Incidents list page (table + filters as actually supported by the API).
+   - New incident form page (fields + validation).
+   - Incident detail page with status update actions wired to the correct incident endpoint.
+
+5) Inspections
+   - Inspections list page.
+   - Create inspection from template flow (choose site + template, render checklist items with ok/not_ok/n_a).
+   - Inspection detail view.
+
+6) Admin pages
+   - Sites admin page (list/create/edit) wired to sites endpoints.
+   - Incident Types admin page (list/add/edit/deactivate) wired to incident types admin endpoints (C6/C19).
+   - Inspection Templates admin page (manage templates + items) wired to template endpoints.
+
+7) UX polish and basic tests
+   - Add loading/empty/error states for key screens.
+   - Add basic frontend tests or smoke checks for critical flows (login, incident create, inspection create), mapped to relevant TC-IDs.
+
+As you implement:
+
+- Keep updating docs/PHASE1_IMPL_CHECKLIST.md to tick off completed **frontend** tasks.
+- Update HANDOVER_TO_CLAUDE.md with a new handover section describing:
+  - Which frontend tasks you completed,
+  - Which US-IDs, C-IDs, and TC-IDs you covered,
+  - Files changed,
+  - What is still missing or blocked.
+
+Do not start Phase 2 features yet; focus only on Phase 1 frontend integration with the already-implemented backend.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Codex, Claude has hit his usage limit again.
+
+Phase 1 backend and frontend are implemented and tested, and the Phase 1 documentation set is stable.
+
+Please now act as Implementing Engineer and create a simple Word-document generator for Phase 1 design, using the existing docs as source.
+
+Use these files as inputs and DO NOT change their content or scope:
+
+- docs/BRD_EHS_PORTAL_PHASE1.md
+- docs/ARCHITECTURE_PHASE1.md
+- docs/DATA_MODEL_PHASE1.md
+- docs/WORKFLOWS_PHASE1.md
+- docs/API_SPEC_PHASE1.md
+- docs/TEST_STRATEGY_PHASE1.md  (for a short “testing” section)
+
+Your tasks:
+
+1) Create a Python script:
+   - Path: scripts/generate_phase1_docs.py
+
+   Behaviour:
+   - Uses python-docx (or similar library) to generate a file named:
+       EHS_Phase1_Design.docx
+   - Creates sections/headings something like:
+       1. Introduction & Scope
+       2. Business Requirements (Phase 1)
+       3. Architecture Overview
+       4. Data Model (ERD)
+       5. Key Workflows
+       6. API Summary
+       7. Test Strategy (Phase 1)
+   - For each section:
+       - Insert a heading.
+       - Insert some brief placeholder text that references the corresponding source file
+         (e.g. “See docs/BRD_EHS_PORTAL_PHASE1.md for full details.”).
+       - You do NOT need to parse or copy the whole markdown – links/notes are fine.
+
+   - For each Mermaid diagram defined in *_PHASE1.md files (architecture, data model, workflows):
+       - Insert a clear placeholder paragraph such as:
+           “Insert exported diagram <diagram name> (PNG/SVG from Mermaid) here.”
+       - It is NOT required to render Mermaid diagrams automatically; just mark where they go.
+
+   - The script should be safe to run from the project root or /scripts folder and create/overwrite EHS_Phase1_Design.docx.
+
+2) Create a short README for this script:
+   - Path: scripts/README_DOCS.md
+   - Explain:
+       - How to install python-docx (and any other dependencies).
+       - How to run the script (exact command).
+       - How I can:
+           1) Copy Mermaid blocks from *_PHASE1.md files into a Mermaid-compatible tool,
+           2) Export them as PNG/SVG,
+           3) Open EHS_Phase1_Design.docx in Word,
+           4) Replace each “Insert exported diagram…” placeholder with the actual image.
+
+Constraints:
+
+- Do NOT modify the Phase 1 design documents (except if you absolutely must add a tiny note like “See scripts/README_DOCS.md for Word export”, but avoid changing content).
+- Do NOT start Phase 2 features or redesign anything.
+- Focus only on the documentation export helper.
+
+When you’re done:
+- Summarise what you implemented.
+- List the files created/changed.
+- Mention any assumptions or TODOs (e.g. “user must install python-docx manually”).
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, Claude has hit his usage limit again and I need you to continue the Phase 2 design work.
+
+Current status:
+- Phase 1 is fully designed, implemented, and tested (backend + frontend).
+- Phase 1 docs are stable.
+- Phase 2 BRD is complete.
+- Phase 2 data model is complete:
+  - docs/BRD_EHS_PORTAL_PHASE2.md
+  - docs/DATA_MODEL_PHASE2.md created
+  - docs/DATA_MODEL.md updated with Phase 2 entities (actions, attachments, audit_log, enums, C-ID mapping)
+
+Before you do anything else:
+1) Read ONLY:
+   - The latest section of HANDOVER_TO_CLAUDE.md (to understand current status).
+   - docs/BRD_EHS_PORTAL_PHASE2.md
+   - docs/DATA_MODEL_PHASE2.md
+   - The Phase 2 sections of docs/DATA_MODEL.md
+2) Treat those as the source of truth for Phase 2 scope and data model.
+
+Your role now:
+Act as **Solution Architect for Phase 2** (design only, no coding).
+
+### Task for this step
+
+Create and update the Phase 2 architecture docs:
+
+1) Create: docs/ARCHITECTURE_PHASE2.md
+2) Update: docs/ARCHITECTURE.md (global architecture) in a careful, additive way.
+
+#### 1) docs/ARCHITECTURE_PHASE2.md
+
+Follow the style and depth of ARCHITECTURE_PHASE1.md, but focus ONLY on the new Phase 2 capabilities:
+
+New/extended components to cover:
+
+- **Actions / CAPA**
+  - ActionService or equivalent backend layer.
+  - How actions relate to incidents, inspections, users, and (future) notifications.
+  - How “My Actions” vs “All Actions” views are supported.
+
+- **Attachments / Evidence**
+  - AttachmentService.
+  - File storage abstraction (e.g. FileStorageAdapter) that can support local filesystem now and S3-like storage later.
+  - How attachments link to incidents, inspections, and actions without changing Phase 1 tables.
+
+- **RBAC Hardening**
+  - Any additional middleware/guards needed for actions and attachments.
+  - Where in the request flow RBAC is applied for these new features (e.g. action updates only by assignee/manager/admin).
+
+- **Audit Logging**
+  - AuditLogService and how it is triggered from existing flows:
+    - Incident creation/updates
+    - Inspection completion
+    - Action creation/updates
+    - Attachment add/remove
+  - How audit writes stay immutable (e.g. append-only inserts, triggers preventing update/delete).
+
+- **In-app Help**
+  - Simple HelpContentService or static content module.
+  - Where help content lives (static files vs DB table) and how the frontend retrieves it.
+
+Diagrams (use Mermaid, like Phase 1):
+
+At minimum include:
+
+- A **Phase 2 component diagram** that shows the new services (Actions, Attachments, AuditLog, Help) alongside existing Phase 1 components (React frontend, Express API, Postgres).
+- A **backend component diagram** showing how ActionService, AttachmentService, AuditLogService plug into controllers/routes and the data layer.
+- 2–3 **sequence diagrams**, for example:
+  - Create Action from Incident → write to actions + audit_log.
+  - Upload Attachment to Incident/Inspection/Action → file storage + attachments + audit_log.
+  - (If you introduce any scheduler) nightly check for overdue actions → update status + audit entries.
+
+Make it clear in headings/notes which parts are “Phase 1 (existing)” and which are “Phase 2 (new)”.
+
+#### 2) Update docs/ARCHITECTURE.md
+
+Extend the global architecture doc, but do NOT break Phase 1:
+
+- Add a dedicated **Phase 2 overview section** that:
+  - Summarises the new components/services:
+    - ActionService
+    - AttachmentService + FileStorageAdapter
+    - AuditLogService
+    - HelpContentService
+  - Explains how these sit on top of the existing 3-tier architecture from Phase 1.
+- If you modify any existing diagrams, do so in a way that:
+  - Keeps them valid for Phase 1.
+  - Clearly labels the new Phase 2 elements (e.g. legends or comments).
+- Phase 1 behaviour must remain unchanged; Phase 2 is additive.
+
+#### 3) Traceability to Phase 2 checklist (C-IDs)
+
+In ARCHITECTURE_PHASE2.md, add a short section that maps architecture components to the relevant Phase 2 C-IDs, for example:
+
+- C20–C27 → Actions / CAPA + “My Actions” / “All Actions”
+- C28–C33 → Attachments + file storage
+- C40–C46 → Audit logging
+
+You don’t need per-line mapping, but it should be clear which architectural pieces satisfy which checklist clusters.
+
+### Output for this step
+
+When you are done:
+
+1) Provide the full content of docs/ARCHITECTURE_PHASE2.md.
+2) Summarise exactly what you changed in docs/ARCHITECTURE.md.
+3) List the new/extended components introduced for Phase 2 (services, middleware, storage abstraction, etc.).
+4) List which Phase 2 C-IDs are now covered from an architectural perspective.
+5) Note any open architectural questions or risks we should resolve before moving on to:
+   - WORKFLOWS_PHASE2.md
+   - API_SPEC_PHASE2.md
+   - FRONTEND_UX_PHASE2.md
+
+Do NOT start API or UX work yet; this step is strictly about the architecture.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Yes, please continue with the Phase 2 design and focus on WORKFLOWS_PHASE2.md next.
+
+Use as inputs:
+- BRD_EHS_PORTAL_PHASE2.md
+- DATA_MODEL_PHASE2.md
+- ARCHITECTURE_PHASE2.md
+- WORKFLOWS_PHASE1.md (as a pattern)
+- USER_JOURNEYS.md / Phase 1 journeys
+
+Your goals:
+1) Create docs/WORKFLOWS_PHASE2.md with:
+   - Detailed user journeys for:
+     - Creating and managing actions (from incident, from inspection, from “My Actions”).
+     - Uploading and managing attachments on incidents, inspections, and actions.
+     - Viewing and filtering “My Actions” vs “All Actions”.
+     - Viewing audit history for an incident, inspection, or action.
+     - Accessing in-app help.
+   - For each journey, include:
+     - A short text description (who, why, success criteria).
+     - One or more Mermaid diagrams (flowchart or sequenceDiagram) like Phase 1.
+     - References to US-IDs and relevant C-IDs.
+
+2) Keep scope strictly Phase 2:
+   - Do not introduce multi-tenancy, integrations, or advanced analytics.
+   - Show how Phase 2 journeys build on existing Phase 1 screens/flows.
+
+3) When you are done:
+   - Provide the full content of WORKFLOWS_PHASE2.md.
+   - Summarise any changes or additions needed in USER_JOURNEYS.md to keep things consistent.
+   - List the main journeys and which C-IDs they cover.
+
+Do not start API_SPEC_PHASE2.md or FRONTEND_UX_PHASE2.md yet; this step is workflows/user journeys only.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, thanks for creating WORKFLOWS_PHASE2.md and listing the gaps.
+
+Please now update USER_JOURNEYS.md so that Phase 2 journeys are fully aligned with:
+
+- BRD_EHS_PORTAL_PHASE2.md
+- DATA_MODEL_PHASE2.md
+- WORKFLOWS_PHASE2.md
+- The Phase 2 C-IDs (C20–C27, C28–C33, C40–C46, C68–C70)
+
+### Tasks
+
+1) Add/adjust explicit Phase 2 journeys:
+   - A journey for **creating and managing actions from an incident**.
+   - A journey for **creating and managing actions from an inspection**.
+   - A journey for **viewing and filtering "My Actions"** (assigned to current user).
+   - A journey for **viewing and filtering "All Actions"** (for managers/admins), including filters by status, site, due date.
+   - A journey for **adding and viewing attachments** on:
+       - incidents
+       - inspections
+       - actions
+   - A journey for **viewing activity / audit history** on:
+       - incident detail
+       - inspection detail
+       - action detail
+   - A journey for **using in-app help** on key screens.
+
+2) Remove or correct anything inconsistent with the Phase 2 data model:
+   - Remove “priority” from P2-J1 or any other journey unless the data model actually has a priority field (DATA_MODEL_PHASE2.md currently does not).
+   - Make sure actions support a single assignee (per DM-Q1 decision).
+   - Ensure attachments and audit log follow the polymorphic model (entity_type/entity_id, etc.).
+
+3) C-ID and US-ID mapping:
+   - For each Phase 2 journey, clearly list the US-IDs and C-IDs it supports.
+   - Fix any incorrect C-ID mappings that still reference the wrong ranges for actions/attachments/audit/help.
+   - Make sure:
+       - Actions / CAPA map into C20–C27.
+       - Attachments map into C28–C33.
+       - Audit log / activity history map into C40–C46.
+       - In-app help maps into C68–C70 (if that’s how they are defined in the checklist file).
+
+4) Keep Phase 1 intact:
+   - Do NOT change the wording or mappings for Phase 1 journeys.
+   - Clearly label new journeys as Phase 2 (e.g. P2-Jx) following the existing naming pattern.
+
+### Output
+
+When you’re done:
+
+1) Provide a summary of the changes you made to USER_JOURNEYS.md.
+2) List all Phase 2 journey IDs (P2-J1, P2-J2, etc.) with a one-line description each.
+3) List which C-ID clusters each journey supports (e.g. P2-J1 → C20–C23, C25).
+4) Note any remaining gaps or questions you think should be resolved before we move on to:
+   - API_SPEC_PHASE2.md
+   - FRONTEND_UX_PHASE2.md
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, thanks for updating WORKFLOWS_PHASE2.md and USER_JOURNEYS.md.
+
+Next, please update Phase 2 user stories so everything lines up before we design the API.
+
+### Scope
+
+Focus on:
+- USER_STORIES.md (Phase 2 section)
+- ehs_minimum_competitive_checklist_phased.csv (for correct C-ID mapping)
+- USER_JOURNEYS.md (Phase 2 journeys P2-J1..P2-J11)
+- BRD_EHS_PORTAL_PHASE2.md
+- DATA_MODEL_PHASE2.md
+
+### Tasks
+
+1) Fix and complete Phase 2 stories in USER_STORIES.md
+
+- Create or update a clear set of Phase 2 user stories covering:
+  - P2-J1: Manager creates and manages actions from an incident.
+  - P2-J2: Manager creates and manages actions from a failed inspection item.
+  - P2-J3: Worker manages assigned actions in My Actions.
+  - P2-J4: Manager/Admin views and filters All Actions.
+  - P2-J5: Add and view attachments on incidents.
+  - P2-J6: Add and view attachments on inspections.
+  - P2-J7: Add and view attachments on actions.
+  - P2-J8: View activity log on incident detail.
+  - P2-J9: View activity log on inspection detail.
+  - P2-J10: View activity log on action detail.
+  - P2-J11: Access in-app help.
+
+- For each story:
+  - Give it a Phase 2 US-ID (e.g. US-ACT-01, US-ACT-02, US-ATT-01, US-ATT-02, US-AUD-01, US-HELP-01, etc.).
+  - Write the story in standard “As a … I want … so that …” form.
+  - Add 3–5 acceptance criteria in Given/When/Then or bullet form.
+
+2) Add the missing Help story
+
+- Introduce a formal user story (e.g. **US-HELP-01**) so that P2-J11 has an actual US-ID.
+- Make sure it matches the in-app help scope from BRD_EHS_PORTAL_PHASE2.md and WORKFLOWS_PHASE2.md (simple static/contextual help, not an AI assistant).
+
+3) Fix C-ID mappings for Phase 2 stories
+
+- Correct any mappings so that:
+  - Actions / CAPA stories map to C20–C27.
+  - Attachment stories map to C28–C33.
+  - Audit history stories map to C40–C46.
+  - Help stories map to C68–C70 (if that’s how they appear in the checklist file).
+- Remove any old/incorrect Phase 2 C-ID references (especially those that used the wrong ranges).
+- For each Phase 2 story, list:
+  - Related P2-Jx journey ID(s).
+  - Covered C-IDs.
+
+4) Keep Phase 1 stories intact
+
+- Do NOT change existing Phase 1 stories or their mappings.
+- Clearly mark new/updated stories as Phase 2.
+
+### Output
+
+When you are done:
+
+1) Summarise the changes you made to USER_STORIES.md.
+2) Provide a table (or list) of all Phase 2 story IDs with:
+   - Short description,
+   - Related P2-Jx journey,
+   - Mapped C-IDs.
+3) Confirm that P2-J1..P2-J11 now all have at least one corresponding US-ID.
+4) Note anything you think we should keep in mind when we move on to:
+   - API_SPEC_PHASE2.md
+   - FRONTEND_UX_PHASE2.md
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, Phase 2 BRD, data model, architecture, workflows, user journeys, and user stories are now in place and aligned:
+
+- BRD_EHS_PORTAL_PHASE2.md
+- DATA_MODEL_PHASE2.md
+- DATA_MODEL.md (Phase 2 sections)
+- ARCHITECTURE_PHASE2.md (if present) / ARCHITECTURE.md Phase 2 overview
+- WORKFLOWS_PHASE2.md
+- USER_JOURNEYS.md (P2-J1..P2-J11)
+- USER_STORIES.md (US-ACT-01..04, US-ATT-01..03, US-AUD-01..03, US-HELP-01)
+- ehs_minimum_competitive_checklist_phased.csv (Phase 2 ranges C20–C27, C28–C33, C40–C46, C68–C70)
+
+I now want you to create the **remaining Phase 2 design artefacts in one pass**, similar in style and depth to Phase 1.
+
+### Important constraints
+
+- **Design only**, no coding.
+- Phase 1 must stay **unchanged and valid**; Phase 2 is additive.
+- Maintain clean traceability: C-IDs → US-IDs → P2-Jx → TC-IDs.
+- Follow the structure and format used in the Phase 1 documents.
+
+---
+
+## 1) Create docs/API_SPEC_PHASE2.md
+
+Define the REST API for Phase 2 features, following the pattern of API_SPEC_PHASE1.md:
+
+Scope:
+- Actions / CAPA (US-ACT-01..04, P2-J1..P2-J4, C20–C27).
+- Attachments (US-ATT-01..03, P2-J5..P2-J7, C28–C33).
+- Audit log / activity history (US-AUD-01..03, P2-J8..P2-J10, C40–C46).
+- In-app help (US-HELP-01, P2-J11, C68–C70).
+
+For each group define:
+
+- Endpoint paths, HTTP verbs, and purpose (e.g. `GET /api/actions`, `POST /api/actions`, `GET /api/incidents/:id/actions`, `GET /api/incidents/:id/audit-log`, etc.).
+- Request/response JSON schemas (fields, enums) consistent with DATA_MODEL_PHASE2.md.
+- RBAC matrix: which roles can call which endpoints (worker/manager/admin).
+- Validation and error behaviour (e.g. size/type checks for attachments, immutability for audit_log).
+- Any pagination/filter parameters (status, site, dueDate, entityType, etc.).
+
+Keep URLs and structure consistent with Phase 1 API design.
+
+---
+
+## 2) Create docs/FRONTEND_UX_PHASE2.md
+
+Define the UX for Phase 2 screens, following FRONTEND_UX_PHASE1.md style:
+
+Screens to cover at minimum:
+
+- **My Actions** view (P2-J3): list, filters, status badges, due date highlighting, navigation to action detail.
+- **All Actions** view (P2-J4): filters by status, site, due date; role-based access (manager/admin).
+- **Action Detail**: link to source incident/inspection, attachments, activity log, status changes.
+- **Attachments UI** on:
+  - Incident detail (P2-J5),
+  - Inspection detail (P2-J6),
+  - Action detail (P2-J7).
+- **Activity Log views** on incident, inspection, and action detail (P2-J8..P2-J10).
+- **In-app Help** entry points (P2-J11) – e.g. help icon/section with contextual content.
+
+For each screen describe:
+
+- Layout and key components (tables, forms, buttons, tabs).
+- Role visibility rules (what workers vs managers vs admins can see/do).
+- Loading/empty/error states.
+- UX behaviour for important interactions (e.g. marking action done, uploading file, viewing history).
+
+Reference the underlying P2-Jx journeys and US-IDs per screen.
+
+---
+
+## 3) Create docs/IMPLEMENTATION_PLAN_PHASE2.md
+
+Write a structured implementation plan similar to Phase 1:
+
+- Break down work into:
+  - Backend – Actions / Attachments / Audit / Help.
+  - Frontend – My Actions/All Actions/Detail, attachments panels, history views, help UI.
+  - Testing – unit, API, frontend tests, UAT.
+- For each major task:
+  - Map to US-IDs and C-IDs.
+  - Indicate dependencies (e.g. actions API before “My Actions” UI).
+  - Mark whether it is backend, frontend, or shared.
+
+Organise as phases or sprints if helpful (e.g. P2-Sprint1: Actions; P2-Sprint2: Attachments; P2-Sprint3: Audit + Help).
+
+---
+
+## 4) Create docs/TEST_STRATEGY_PHASE2.md
+
+Define the Phase 2 test strategy, aligned with the global strategy and ATDD/TDD approach:
+
+- Scope: what is in/out for Phase 2 testing (actions, attachments, audit, help).
+- Test levels:
+  - Unit tests (e.g. action overdue calculation, audit-log helpers).
+  - API/integration tests for each new endpoint.
+  - Frontend tests for key journeys (P2-J1..P2-J11).
+  - UAT/acceptance based on business scenarios.
+- Traceability:
+  - Explain how Phase 2 C-IDs ↔ US-IDs ↔ P2-Jx ↔ TC-IDs will be tracked.
+- Non-functional:
+  - Basic performance considerations (list size, file size).
+  - Security concerns (RBAC, disallowed file types).
+- Exit criteria for Phase 2.
+
+---
+
+## 5) Create qa/test_cases_phase2.csv
+
+Using the same column structure as test_cases_phase1.csv, add detailed test cases for Phase 2:
+
+- Include at least:
+  - Action creation from incident (success + validation).
+  - Action creation from inspection item.
+  - My Actions list (filters, overdue highlighting).
+  - All Actions list (filters by status, site, due date).
+  - Attachments on incident, inspection, action (happy path + invalid type/size).
+  - Viewing activity log on incident, inspection, action.
+  - In-app help access on key screens.
+
+Ensure each row has:
+
+- TC-ID (e.g. TC-ACT-01, TC-ATT-03, TC-AUD-02, TC-HELP-01),
+- Title,
+- Preconditions,
+- Steps,
+- Expected result,
+- US-ID,
+- P2-Jx,
+- C-IDs.
+
+---
+
+## 6) Update shared artefacts
+
+- **qa/test_cases_all_phases.csv**  
+  Append all Phase 2 test cases with correct columns and IDs.
+
+- **docs/TEST_STRATEGY_ALL_PHASES.md**  
+  Add a Phase 2 section summarising how Phase 2 tests fit into the overall strategy and referencing TEST_STRATEGY_PHASE2.md and test_cases_phase2.csv.
+
+- **docs/PHASE2_IMPL_CHECKLIST.md**  
+  Update/tick the design section items and add implementation/test items for the new API, frontend, and tests, mirroring the structure used in PHASE1_IMPL_CHECKLIST.md.
+
+---
+
+## Output for this big step
+
+When you are done, please:
+
+1) List all files created/updated:
+   - API_SPEC_PHASE2.md
+   - FRONTEND_UX_PHASE2.md
+   - IMPLEMENTATION_PLAN_PHASE2.md
+   - TEST_STRATEGY_PHASE2.md
+   - qa/test_cases_phase2.csv
+   - qa/test_cases_all_phases.csv
+   - docs/TEST_STRATEGY_ALL_PHASES.md
+   - docs/PHASE2_IMPL_CHECKLIST.md
+2) For each file, give a short summary of what it contains.
+3) Provide a short “Phase 2 design now complete” checklist:
+   - BRD, Data Model, Architecture, Workflows, Journeys, Stories, API spec, UX spec, Implementation plan, Test strategy, Test cases.
+4) Note any open questions or risks that should be addressed before actual Phase 2 implementation begins.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, yes please do the quick internal consistency pass you suggested for Phase 2.
+
+Scope:
+- docs/API_SPEC_PHASE2.md
+- docs/FRONTEND_UX_PHASE2.md
+- docs/BRD_EHS_PORTAL_PHASE2.md
+- docs/DATA_MODEL_PHASE2.md
+- docs/WORKFLOWS_PHASE2.md
+- docs/USER_JOURNEYS.md (Phase 2 journeys P2-J1..P2-J11)
+- docs/USER_STORIES.md (Phase 2 stories)
+- qa/test_cases_phase2.csv
+- qa/test_cases_all_phases.csv (Phase 2 rows)
+
+Your goals:
+1) Check **field names and enums**:
+   - Ensure field names (e.g. status, dueDate, entity_type, entity_id, action_status values, attachment entity types) are consistent across:
+     - Data model
+     - API requests/responses
+     - UX descriptions
+     - Test cases
+   - Fix obvious mismatches directly (e.g. `due_date` vs `dueDate`, `na` vs `n_a`) so everything lines up.
+
+2) Check **endpoint paths and filters**:
+   - Confirm that every endpoint used in FRONTEND_UX_PHASE2.md exists in API_SPEC_PHASE2.md with the same method and path.
+   - Confirm filters in UX/test cases (status, site, dueDate, entityType, etc.) match the query parameters defined in the API spec.
+   - Fix straightforward discrepancies in API spec / test cases / UX so they agree.
+
+3) Check **RBAC rules**:
+   - Ensure role permissions for Phase 2 (worker / manager / admin) are described consistently in:
+     - API spec
+     - UX spec
+     - User stories
+   - Fix any clear contradictions (e.g. worker allowed in one doc but denied in another).
+
+4) Check **traceability**:
+   - Spot-check that TC-IDs in test_cases_phase2.csv point to the correct US-IDs, P2-Jx, and C-IDs as described in the stories and journeys.
+   - Fix any obvious mismappings for Phase 2 rows.
+
+5) Do NOT change:
+   - Phase 1 behaviour, fields, or endpoints.
+   - The overall scope of Phase 2; only correct inconsistencies.
+
+When you’re done:
+1) List which files you changed and what kind of fixes you applied (fields, enums, paths, RBAC, traceability).
+2) Call out any remaining **open questions** you couldn’t resolve without a product decision (e.g. audit visibility for workers, site filter on actions when source is inspection).
+3) Confirm whether you consider Phase 2 design **implementation-ready** after this pass.
+
+If there are minor remaining ambiguities that don’t block implementation, mark them clearly as TODOs in the relevant docs.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Codex, Phase 2 design is now effectively complete and you’ve marked it implementation-ready except for two product decisions. Here are the decisions:
+
+1) Activity log visibility
+   - Workers may view activity logs only for entities they already have access to:
+     - Incidents: only incidents they reported.
+     - Inspections: only inspections they performed (if applicable).
+     - Actions: only actions assigned to them.
+   - Managers and admins may view activity logs for all incidents, inspections, and actions they can normally see.
+   - All defined eventType values are visible to authorised users; if we later need “admin-only” events, we can extend it in a future phase.
+
+2) Action site filter derivation
+   - siteId for actions is derived from the source entity:
+     - For sourceType = "incident": siteId = incident.site_id.
+     - For sourceType = "inspection": siteId = inspection.site_id.
+   - The API may expose a computed siteId field in action responses to make frontend filtering easier, but the DB remains polymorphic (no extra site column on actions for Phase 2).
+
+### Step 1 – Apply these decisions in the design docs
+
+Please first:
+
+- Update API_SPEC_PHASE2.md to:
+  - Remove the TODOs about worker activity log visibility and siteId derivation.
+  - Document the behaviour above explicitly for:
+    - Activity log endpoints on incidents, inspections, and actions.
+    - Action list filtering by siteId.
+
+- If needed, do small clarifications in:
+  - TEST_STRATEGY_PHASE2.md
+  - FRONTEND_UX_PHASE2.md
+  - test_cases_phase2.csv
+  to reflect:
+    - The visibility rules for activity logs,
+    - The siteId filter behaviour for actions.
+
+Keep changes minimal and consistent with what’s already written.
+
+After that, consider Phase 2 design fully final.
+
+### Step 2 – Start Phase 2 backend implementation (Fallback Implementing Engineer)
+
+Once the docs are updated, switch into the same Fallback Implementing Engineer mode you used for Phase 1, but for Phase 2 backend only.
+
+Your goals now:
+
+1) Plan the Phase 2 backend work
+   - In IMPLEMENTATION_PLAN_PHASE2.md, mark which backend tasks you will start with:
+     - New migrations for actions, attachments, audit_log.
+     - New services/controllers/routes for:
+       - Actions
+       - Attachments
+       - Audit log
+       - Help (if it has a backend component).
+     - New tests for the Phase 2 endpoints.
+
+2) Implement database migrations and seed updates
+   - Add migration(s) that create the Phase 2 tables and enums exactly as defined in:
+     - DATA_MODEL_PHASE2.md
+     - DATA_MODEL.md
+   - If needed, update seed scripts to:
+     - Add sample actions/attachments for testing.
+     - Add any roles/users required for Phase 2 tests.
+
+3) Implement Phase 2 API endpoints
+   - Implement the endpoints from API_SPEC_PHASE2.md for:
+     - Actions (including GET by id, list, filters, create, update where applicable).
+     - Attachments (upload metadata + listing; actual storage using the simple approach you designed).
+     - Audit log reads (history per incident/inspection/action).
+     - Help (if help data is served from the backend).
+   - Follow the existing Phase 1 patterns:
+     - Use services + controllers.
+     - Reuse middleware for auth and RBAC.
+     - Keep logging/error handling consistent.
+
+4) Implement backend tests for Phase 2
+   - Add Jest/Supertest tests for the new endpoints based on:
+     - TEST_STRATEGY_PHASE2.md
+     - qa/test_cases_phase2.csv
+   - Map tests to TC-IDs and US-IDs in comments as you did in Phase 1.
+
+5) Run migrations, seeds, and tests
+   - Ensure:
+     - npm run migrate
+     - npm run seed
+     - npm test
+     all pass for the backend once Phase 2 code is in place.
+
+### Reporting
+
+When you’re done with this first backend implementation pass:
+
+1) List all files you created/changed for Phase 2 backend.
+2) Summarise which endpoints are fully implemented and tested (by group: actions, attachments, audit, help).
+3) Confirm whether backend tests are passing, and if not, what’s still failing.
+4) Update PHASE2_IMPL_CHECKLIST.md and HANDOVER_TO_CLAUDE.md with a new handover section, similar to what you did in Phase 1.
+
+Do not touch the frontend yet in this step; focus only on Phase 2 backend implementation and tests.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+

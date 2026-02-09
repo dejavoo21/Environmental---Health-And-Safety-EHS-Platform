@@ -1,0 +1,89 @@
+.state-history-timeline {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.state-history-timeline h4 {
+  margin: 0 0 1rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.timeline {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-icon {
+  position: absolute;
+  left: -1.5rem;
+  top: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  background: var(--color-surface);
+  z-index: 1;
+}
+
+.timeline-content {
+  padding-left: 0.5rem;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.timeline-state {
+  font-weight: 500;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.timeline-time {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.timeline-user {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.125rem;
+}
+
+.timeline-notes {
+  font-size: 0.75rem;
+  color: var(--color-text);
+  font-style: italic;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-background);
+  border-radius: 4px;
+}

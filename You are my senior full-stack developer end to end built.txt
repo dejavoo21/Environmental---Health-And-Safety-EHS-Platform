@@ -1,0 +1,489 @@
+You are my senior full-stack developer.
+
+I want you to generate a complete, working EHS Portal web application, built end-to-end, using this specification. The result should be a running app where all Phase 1 flows work in practice (I can log in, create incidents, run inspections, see the dashboard, manage sites and templates).
+
+----------------------------------------------------
+1. TECH STACK
+----------------------------------------------------
+
+- Frontend:
+  - React (Vite or similar)
+  - JavaScript (no TypeScript needed for now)
+  - State via React hooks (useState, useEffect)
+  - API calls via fetch (or a small helper wrapper)
+
+- Backend:
+  - Node.js + Express
+  - JavaScript (ES modules)
+  - PostgreSQL for database
+  - Libraries:
+    - pg (Postgres client)
+    - bcryptjs (password hashing)
+    - jsonwebtoken (JWT)
+    - dotenv (config)
+    - cors (CORS support)
+
+- Auth:
+  - JWT (Authorization: Bearer <token>)
+  - Passwords hashed with bcrypt
+
+You must generate:
+- Backend folder with package.json, server.js, routes, db connection, etc.
+- Frontend folder with package.json, Vite config, src components, api helpers, etc.
+- SQL / migration file(s) to create the database schema.
+
+Everything must be consistent and runnable with:
+- `cd backend && npm install && npm run dev`
+- `cd frontend && npm install && npm run dev`
+
+----------------------------------------------------
+2. CORE BUSINESS SCOPE (PHASE 1)
+----------------------------------------------------
+
+Implement all of these modules and flows:
+
+A) Authentication & Users
+B) Sites (Locations)
+C) Incident Types (lookup)
+D) Incidents
+E) Inspection Templates
+F) Inspections
+G) Dashboard
+H) Basic Admin navigation
+
+No other phases (actions, attachments, notifications, multi-org) need to be implemented now, but please design the schema so those can be added later.
+
+----------------------------------------------------
+3. DATA MODEL (CONCEPTUAL)
+----------------------------------------------------
+
+Translate this into PostgreSQL tables with appropriate types and constraints.
+
+3.1 User
+- id: UUID, PK
+- email: text, unique, not null
+- password_hash: text, not null
+- first_name: text, not null
+- last_name: text, not null
+- role: text, enum-like for now: 'admin', 'manager', 'worker' (default 'worker')
+- created_at: timestamp, default now()
+
+3.2 Site
+- id: UUID, PK
+- name: text, not null
+- code: text, unique, nullable
+- created_at: timestamp, default now()
+
+3.3 IncidentType
+- id: serial, PK
+- name: text, unique, not null
+
+3.4 Incident
+- id: UUID, PK
+- title: text, not null
+- description: text, nullable
+- incident_type_id: int, not null, FK -> IncidentType
+- site_id: UUID, nullable, FK -> Site
+- reported_by_id: UUID, not null, FK -> User
+- occurred_at: timestamp, not null
+- status: text, not null, check in ('open', 'under_investigation', 'closed'), default 'open'
+- severity: text, nullable, check in ('low', 'medium', 'high', 'critical')
+- created_at: timestamp, default now()
+- updated_at: timestamp, default now()
+
+3.5 InspectionTemplate
+- id: UUID, PK
+- name: text, not null
+- description: text, nullable
+- created_at: timestamp, default now()
+
+3.6 InspectionTemplateItem
+- id: UUID, PK
+- template_id: UUID, not null, FK -> InspectionTemplate (on delete cascade)
+- label: text, not null
+- category: text, nullable
+
+3.7 Inspection
+- id: UUID, PK
+- template_id: UUID, not null, FK -> InspectionTemplate
+- site_id: UUID, not null, FK -> Site
+- performed_by: UUID, not null, FK -> User
+- performed_at: timestamp, not null
+- status: text, not null, check in ('completed', 'draft'), default 'completed'
+- overall_result: text, nullable, check in ('pass', 'fail')
+- created_at: timestamp, default now()
+
+3.8 InspectionResponse
+- id: UUID, PK
+- inspection_id: UUID, not null, FK -> Inspection (on delete cascade)
+- template_item_id: UUID, not null, FK -> InspectionTemplateItem
+- result: text, not null, check in ('ok', 'not_ok', 'n/a')
+- comment: text, nullable
+
+Also enable:
+- extension "pgcrypto" for gen_random_uuid() for UUID defaults.
+
+Seed initial data:
+- incident_types: Injury, Near Miss, Property Damage.
+- Optionally one or two demo sites.
+- I will create the first user through the API.
+
+----------------------------------------------------
+4. API REQUIREMENTS (BACKEND)
+----------------------------------------------------
+
+All protected routes must require a valid JWT and use an auth middleware.
+
+4.1 Auth
+
+Endpoints:
+- POST /api/auth/register
+  - Body: { email, first_name, last_name, password }
+  - Hash password with bcrypt.
+  - Create user with default role 'admin' if it is the first user, otherwise 'worker'.
+  - Return: { token, user }
+
+- POST /api/auth/login
+  - Body: { email, password }
+  - Verify credentials.
+  - Return: { token, user }
+
+- GET /api/auth/me
+  - Uses Authorization: Bearer <token>
+  - Returns the current user { id, email, first_name, last_name, role }
+
+Implement a reusable middleware:
+- requireAuth: verifies token, loads user, attaches as req.user.
+- (OPTIONAL for now) requireRole(['admin']) for admin endpoints.
+
+4.2 Sites
+
+- GET /api/sites
+  - Auth required.
+  - Returns array of sites.
+
+- POST /api/sites
+  - Auth required.
+  - For Phase 1 you may allow any logged-in user to create; later we will limit to admin.
+  - Body: { name, code }
+  - Returns created site.
+
+- PUT /api/sites/:id
+  - Auth required.
+  - Body: { name, code }
+  - Returns updated site.
+
+4.3 Incident Types
+
+- GET /api/incident-types
+  - Auth required.
+  - Returns array of types.
+
+4.4 Incidents
+
+- GET /api/incidents
+  - Auth required.
+  - Optional query params: status, siteId, limit, offset.
+  - Returns a list of incidents with summary fields:
+    - id, title, status, severity, occurred_at, site_name, incident_type
+
+- GET /api/incidents/:id
+  - Auth required.
+  - Returns full incident including:
+    - joined site name
+    - incident type name
+    - reported_by_name (first + last)
+
+- POST /api/incidents
+  - Auth required.
+  - Body:
+    {
+      "title": "...",
+      "description": "...",
+      "incident_type_id": 1,
+      "site_id": "uuid or null",
+      "occurred_at": "2025-01-01T10:00:00Z",
+      "severity": "medium"
+    }
+  - Required: title, incident_type_id, occurred_at.
+  - reported_by_id is taken from req.user.id.
+  - status defaults to 'open'.
+  - Return created incident row.
+
+4.5 Inspection Templates
+
+- GET /api/inspection-templates
+  - Auth required.
+  - Returns list of templates (id, name, description, created_at).
+
+- GET /api/inspection-templates/:id
+  - Auth required.
+  - Returns:
+    {
+      id, name, description, created_at,
+      items: [ { id, label, category } ]
+    }
+
+- POST /api/inspection-templates
+  - Auth required.
+  - Body: { name, description }
+  - Returns created template.
+
+- PUT /api/inspection-templates/:id
+  - Auth required.
+  - Body: { name, description }
+  - Returns updated template.
+
+- POST /api/inspection-templates/:id/items
+  - Auth required.
+  - Body: { label, category }
+  - Returns created item.
+
+- PUT /api/inspection-templates/:id/items/:itemId
+  - Auth required.
+  - Body: { label, category }
+  - Returns updated item.
+
+- DELETE /api/inspection-templates/:id/items/:itemId
+  - Auth required.
+  - Returns 204 on success.
+
+4.6 Inspections
+
+- GET /api/inspections
+  - Auth required.
+  - Optional query: siteId, limit, offset.
+  - Returns summary:
+    - id, template_name, site_name, performed_by_name, performed_at, overall_result
+
+- GET /api/inspections/:id
+  - Auth required.
+  - Returns:
+    {
+      id,
+      template_id,
+      template_name,
+      site_id,
+      site_name,
+      performed_by,
+      performed_by_name,
+      performed_at,
+      status,
+      overall_result,
+      responses: [
+        { id, label, category, result, comment }
+      ]
+    }
+
+- POST /api/inspections
+  - Auth required.
+  - Body:
+    {
+      "site_id": "uuid",
+      "template_id": "uuid",
+      "performed_at": "2025-01-01T09:00:00Z",
+      "responses": [
+        { "template_item_id": "uuid", "result": "ok" | "not_ok" | "n/a", "comment": "..." }
+      ]
+    }
+  - Required: site_id, template_id, performed_at, responses (non-empty).
+  - performed_by = req.user.id
+  - overall_result:
+    - 'fail' if ANY response.result == 'not_ok'
+    - 'pass' otherwise.
+  - Implement this insertion in a transaction (inspection + responses + overall_result update).
+
+4.7 Dashboard
+
+- GET /api/dashboard/summary
+  - Auth required.
+  - Returns:
+    {
+      "incidents": {
+        "total": number,
+        "open": number,
+        "last_30_days": number,
+        "by_severity": [
+          { "severity": "critical|high|medium|low|null", "count": number }
+        ]
+      },
+      "inspections": {
+        "last_30_days": number,
+        "failed_last_30_days": number
+      }
+    }
+
+----------------------------------------------------
+5. FRONTEND REQUIREMENTS (REACT)
+----------------------------------------------------
+
+Build a single-page application with the following main pieces. Use a simple layout (no heavy design system needed, but keep it clean and responsive).
+
+5.1 Auth Flow
+
+- LoginPage:
+  - Email and password fields.
+  - Calls POST /api/auth/login.
+  - On success, save token (localStorage is fine) and store user in state.
+- On app start:
+  - If token exists, call GET /api/auth/me.
+  - If that fails, clear token and show login.
+- Show current user’s name in the header.
+- Logout button clears token and user, returns to login.
+
+5.2 Layout
+
+- App.jsx:
+  - If not authenticated: show LoginPage.
+  - If authenticated:
+    - Show header: app name, "Logged in as First Last", logout button.
+    - Show sections in this order:
+      1) Dashboard
+      2) Incidents
+      3) Inspections
+      4) Admin: Sites
+      5) Admin: Inspection Templates
+
+Use simple CSS or inline styles; just keep it readable.
+
+5.3 API helper
+
+Create src/api.js that wraps fetch calls for:
+- login, fetchCurrentUser
+- fetchSites, createSite, updateSite
+- fetchIncidentTypes
+- fetchIncidents, fetchIncident, createIncident
+- fetchInspectionTemplates, fetchInspectionTemplate,
+  createInspectionTemplate, updateInspectionTemplate,
+  createTemplateItem, updateTemplateItem, deleteTemplateItem
+- fetchInspections, fetchInspection, createInspection
+- fetchDashboardSummary
+
+Automatically attach Authorization header when a token is available.
+
+5.4 Dashboard component
+
+- Dashboard.jsx:
+  - On mount, calls fetchDashboardSummary().
+  - Shows KPI cards:
+    - Total incidents
+    - Open incidents
+    - Incidents last 30 days
+    - Inspections last 30 days
+    - Failed inspections last 30 days
+  - Shows a small table "Incidents by severity" from summary.incidents.by_severity.
+
+5.5 Incidents UI
+
+- IncidentsList.jsx:
+  - Fetches incidents list on mount.
+  - Shows table (Title, Type, Site, Severity, Status, Occurred At).
+  - Row click => show IncidentDetail for that id.
+  - Button “+ New Incident” => show NewIncidentForm.
+
+- NewIncidentForm.jsx:
+  - Loads incident types and sites via APIs.
+  - Fields: title, incident type (select), site (select), severity (select), occurred_at (datetime-local), description (textarea).
+  - On submit: calls createIncident(), then returns to list view.
+
+- IncidentDetail.jsx:
+  - Fetches incident by id.
+  - Shows all fields, including joined names (site_name, type_name, reported_by_name).
+  - Back button.
+
+5.6 Inspections UI
+
+- InspectionsModule.jsx:
+  - Manages local “view” state: 'list', 'new', 'detail'.
+  - Renders InspectionsList, NewInspectionForm, InspectionDetail accordingly.
+
+- InspectionsList.jsx:
+  - Fetches inspections summary.
+  - Table: Template, Site, Performed By, Date, Result.
+  - Row click => InspectionDetail.
+
+- NewInspectionForm.jsx:
+  - On mount, loads Sites + InspectionTemplates via API.
+  - When a template is selected, loads template details including items.
+  - For each checklist item, allow result select (ok/not_ok/n/a) and comment input.
+  - On submit:
+    - Build payload with site_id, template_id, performed_at, responses.
+    - Calls createInspection(), then returns to list.
+
+- InspectionDetail.jsx:
+  - Fetches inspection by id with responses.
+  - Shows header info (template_name, site_name, performed_by_name, date, status, overall_result).
+  - Shows table of responses (item label, category, result, comment).
+  - Back button.
+
+5.7 Admin: Sites
+
+- SitesPage.jsx:
+  - Table of sites (Name, Code, Edit button).
+  - Form to create/edit a site.
+  - Create mode: empty fields.
+  - Edit mode: prefill with selected site.
+  - After save, reload sites list.
+
+5.8 Admin: Inspection Templates
+
+- TemplatesPage.jsx:
+  - Left side: templates list + template form.
+    - Table of templates with basic info.
+    - Form to create or edit template (name, description).
+  - Right side: checklist items for selected template.
+    - Table of items (label, category, edit/delete).
+    - Form to create/edit item (label, category).
+  - When a template is selected, load its items via GET /api/inspection-templates/:id.
+
+----------------------------------------------------
+6. NON-FUNCTIONAL EXPECTATIONS
+----------------------------------------------------
+
+- Use environment variables for DB URL and JWT secret.
+- Backend must handle errors gracefully and return JSON { error: '...' } for 4xx/5xx.
+- Frontend must show simple error messages and loading states where appropriate.
+- Keep code organised and readable (no giant files).
+
+----------------------------------------------------
+7. ACCEPTANCE CHECKLIST
+----------------------------------------------------
+
+When you’re done generating the code, I should be able to:
+
+1) Setup:
+   - Create Postgres database and run the provided SQL/migrations.
+   - Set up backend .env with DATABASE_URL and JWT_SECRET.
+   - Run backend and frontend dev servers without errors.
+
+2) Auth:
+   - Register a user via POST /api/auth/register (or manual DB insert).
+   - Log in via the UI.
+   - Refresh page and still be logged in via /api/auth/me.
+   - Log out and return to login.
+
+3) Sites:
+   - Visit Sites admin section.
+   - Create a new site.
+   - Edit that site.
+   - See the site appear in Incident and Inspection forms.
+
+4) Incidents:
+   - Create a new incident from the UI using dropdowns for type and site.
+   - See it in the incidents list.
+   - Open detail view and see all fields including the reporting user.
+
+5) Inspection Templates:
+   - Create a new template.
+   - Add/edit/delete checklist items for that template.
+
+6) Inspections:
+   - Start a new inspection using a site + template.
+   - Fill out checklist results and comments.
+   - Save inspection.
+   - See it in the inspections list and view details, including derived overall_result ('pass' or 'fail').
+
+7) Dashboard:
+   - See KPI cards and severity table update as I add incidents and inspections.
+
+Please now generate the entire project structure and code files to satisfy all of the above. Use clear comments and file organisation so I can understand and modify it later.

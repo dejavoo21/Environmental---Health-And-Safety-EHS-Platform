@@ -1,0 +1,11 @@
+TC-ID,Feature,Scenario,Expected Result,C-ID,US-ID
+TC-270-1,Safety Moments,Submit moment,Success,C-270,US-270-1
+TC-271-1,Safety Advisor,View panel,Panel loads,C-271,US-271-1
+TC-272-1,Weather,Fetch site weather,Weather shown,C-272,US-272-1
+TC-273-1,Legislation,View site compliance,Compliance status shown,C-273,US-273-1
+TC-274-1,PPE,Get recommendations,PPE list shown,C-274,US-274-1
+TC-275-1,Pre-task Safety,View guidance,Guidance shown,C-275,US-275-1
+
+TC-276-1,High-Risk Workflows,Attempt main action without acknowledgement,Main action is disabled in UI and blocked by API for high-risk workflows,C-276,US-276-1
+TC-276-2,High-Risk Workflows,Acknowledge Safety Advisor for high-risk workflow,Main action becomes enabled in UI and is allowed by API,C-276,US-276-2
+TC-276-3,High-Risk Workflows,Audit acknowledgement event,Event is logged with user, timestamp, entity, and high-risk flag,C-276,US-276-3

@@ -1,0 +1,17 @@
+.status-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.status-open { background: #4caf50; }
+.status-under-investigation { background: #ff9800; }
+.status-closed { background: #b23c3c; }
+.status-critical { background: #d97855; }
+.status-medium { background: #f0b35d; }
+.status-high { background: #d97855; }
+.status-pass { background: #4caf50; }
+.status-fail { background: #b23c3c; }
+.status-dot { border: 1px solid #222; }
