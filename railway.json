@@ -1,0 +1,17 @@
+{
+  "name": "EHS Platform Phase 11",
+  "description": "Environmental Health and Safety Platform with dark theme improvements",
+  "buildCommand": "cd frontend && npm install && npm run build && cd ../backend && npm install",
+  "startCommand": "npm run dev",
+  "environmentVariables": {
+    "NODE_ENV": "production",
+    "DATABASE_URL": "${{Postgres.DATABASE_URL}}",
+    "JWT_SECRET": "your-jwt-secret-key",
+    "VITE_API_URL": "https://ehs-platform.up.railway.app/api"
+  },
+  "plugins": [
+    {
+      "source": "railway/postgres"
+    }
+  ]
+}
