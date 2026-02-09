@@ -48,7 +48,7 @@ const PPERules = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await api.get('/admin/ppe-rules');
+        const res = await api.get('/safety-admin/ppe-rules');
         setRules(res.data);
       } catch (err) {
         setError('Failed to load PPE rules.');
@@ -75,13 +75,13 @@ const PPERules = () => {
     setSuccess('');
     try {
       if (editingRule) {
-        await api.put(`/admin/ppe-rules/${editingRule.id}`, data);
+        await api.put(`/safety-admin/ppe-rules/${editingRule.id}`, data);
         setSuccess('PPE rule updated successfully.');
       } else {
-        await api.post('/admin/ppe-rules', data);
+        await api.post('/safety-admin/ppe-rules', data);
         setSuccess('PPE rule created successfully.');
       }
-      const res = await api.get('/admin/ppe-rules');
+      const res = await api.get('/safety-admin/ppe-rules');
       setRules(res.data);
       setModalOpen(false);
       setEditingRule(null);
@@ -104,11 +104,11 @@ const PPERules = () => {
     setError('');
     setSuccess('');
     try {
-      await api.delete(`/admin/ppe-rules/${rule.id}`);
+      await api.delete(`/safety-admin/ppe-rules/${rule.id}`);
       setUndoRule(rule);
       setSuccess('PPE rule archived. Undo?');
       undoTimeout.current = setTimeout(() => setUndoRule(null), 8000);
-      const res = await api.get('/admin/ppe-rules');
+      const res = await api.get('/safety-admin/ppe-rules');
       setRules(res.data);
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to archive PPE rule.');
@@ -129,10 +129,10 @@ const PPERules = () => {
     setError('');
     setSuccess('');
     try {
-      await api.post('/admin/ppe-rules', undoRule);
+      await api.post('/safety-admin/ppe-rules', undoRule);
       setSuccess('Archive undone.');
       setUndoRule(null);
-      const res = await api.get('/admin/ppe-rules');
+      const res = await api.get('/safety-admin/ppe-rules');
       setRules(res.data);
     } catch (err) {
       setError('Failed to undo archive.');
@@ -180,10 +180,10 @@ const PPERules = () => {
     setError('');
     setSuccess('');
     try {
-      await Promise.all(selected.map(id => api.delete(`/admin/ppe-rules/${id}`)));
+      await Promise.all(selected.map(id => api.delete(`/safety-admin/ppe-rules/${id}`)));
       setSuccess('Selected PPE rules archived.');
       setSelected([]);
-      const res = await api.get('/admin/ppe-rules');
+      const res = await api.get('/safety-admin/ppe-rules');
       setRules(res.data);
     } catch (err) {
       setError('Bulk archive failed.');
@@ -224,9 +224,9 @@ const PPERules = () => {
         setError('');
         setSuccess('');
         try {
-          await Promise.all(results.data.map(row => api.post('/admin/ppe-rules', row)));
+          await Promise.all(results.data.map(row => api.post('/safety-admin/ppe-rules', row)));
           setSuccess('Imported PPE rules from CSV.');
-          const res = await api.get('/admin/ppe-rules');
+          const res = await api.get('/safety-admin/ppe-rules');
           setRules(res.data);
         } catch (err) {
           setError('Import failed. Please check your CSV format.');

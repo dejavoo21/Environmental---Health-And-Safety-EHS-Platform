@@ -48,7 +48,7 @@ const SafetyMoments = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await api.get('/admin/safety-moments');
+        const res = await api.get('/safety-admin/safety-moments');
         setMoments(res.data);
       } catch (err) {
         setError('Failed to load safety moments.');
@@ -75,13 +75,13 @@ const SafetyMoments = () => {
     setSuccess('');
     try {
       if (editingMoment) {
-        await api.put(`/admin/safety-moments/${editingMoment.id}`, data);
+        await api.put(`/safety-admin/safety-moments/${editingMoment.id}`, data);
         setSuccess('Safety moment updated successfully.');
       } else {
-        await api.post('/admin/safety-moments', data);
+        await api.post('/safety-admin/safety-moments', data);
         setSuccess('Safety moment created successfully.');
       }
-      const res = await api.get('/admin/safety-moments');
+      const res = await api.get('/safety-admin/safety-moments');
       setMoments(res.data);
       setModalOpen(false);
       setEditingMoment(null);
@@ -104,11 +104,11 @@ const SafetyMoments = () => {
     setError('');
     setSuccess('');
     try {
-      await api.delete(`/admin/safety-moments/${moment.id}`);
+      await api.delete(`/safety-admin/safety-moments/${moment.id}`);
       setUndoMoment(moment);
       setSuccess('Safety moment archived. Undo?');
       undoTimeout.current = setTimeout(() => setUndoMoment(null), 8000);
-      const res = await api.get('/admin/safety-moments');
+      const res = await api.get('/safety-admin/safety-moments');
       setMoments(res.data);
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to archive safety moment.');
@@ -129,10 +129,10 @@ const SafetyMoments = () => {
     setError('');
     setSuccess('');
     try {
-      await api.post('/admin/safety-moments', undoMoment);
+      await api.post('/safety-admin/safety-moments', undoMoment);
       setSuccess('Archive undone.');
       setUndoMoment(null);
-      const res = await api.get('/admin/safety-moments');
+      const res = await api.get('/safety-admin/safety-moments');
       setMoments(res.data);
     } catch (err) {
       setError('Failed to undo archive.');
@@ -180,10 +180,10 @@ const SafetyMoments = () => {
     setError('');
     setSuccess('');
     try {
-      await Promise.all(selected.map(id => api.delete(`/admin/safety-moments/${id}`)));
+      await Promise.all(selected.map(id => api.delete(`/safety-admin/safety-moments/${id}`)));
       setSuccess('Selected safety moments archived.');
       setSelected([]);
-      const res = await api.get('/admin/safety-moments');
+      const res = await api.get('/safety-admin/safety-moments');
       setMoments(res.data);
     } catch (err) {
       setError('Bulk archive failed.');
@@ -224,9 +224,9 @@ const SafetyMoments = () => {
         setError('');
         setSuccess('');
         try {
-          await Promise.all(results.data.map(row => api.post('/admin/safety-moments', row)));
+          await Promise.all(results.data.map(row => api.post('/safety-admin/safety-moments', row)));
           setSuccess('Imported safety moments from CSV.');
-          const res = await api.get('/admin/safety-moments');
+          const res = await api.get('/safety-admin/safety-moments');
           setMoments(res.data);
         } catch (err) {
           setError('Import failed. Please check your CSV format.');

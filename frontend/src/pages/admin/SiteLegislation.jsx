@@ -48,7 +48,7 @@ const SiteLegislation = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await api.get('/admin/site-legislation');
+        const res = await api.get('/safety-admin/site-legislation');
         setLegislation(res.data);
       } catch (err) {
         setError('Failed to load site legislation.');
@@ -75,13 +75,13 @@ const SiteLegislation = () => {
     setSuccess('');
     try {
       if (editingLegislation) {
-        await api.put(`/admin/site-legislation/${editingLegislation.id}`, data);
+        await api.put(`/safety-admin/site-legislation/${editingLegislation.id}`, data);
         setSuccess('Legislation updated successfully.');
       } else {
-        await api.post('/admin/site-legislation', data);
+        await api.post('/safety-admin/site-legislation', data);
         setSuccess('Legislation created successfully.');
       }
-      const res = await api.get('/admin/site-legislation');
+      const res = await api.get('/safety-admin/site-legislation');
       setLegislation(res.data);
       setModalOpen(false);
       setEditingLegislation(null);
@@ -104,11 +104,11 @@ const SiteLegislation = () => {
     setError('');
     setSuccess('');
     try {
-      await api.delete(`/admin/site-legislation/${legislation.id}`);
+      await api.delete(`/safety-admin/site-legislation/${legislation.id}`);
       setUndoLegislation(legislation);
       setSuccess('Legislation archived. Undo?');
       undoTimeout.current = setTimeout(() => setUndoLegislation(null), 8000);
-      const res = await api.get('/admin/site-legislation');
+      const res = await api.get('/safety-admin/site-legislation');
       setLegislation(res.data);
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'Failed to archive legislation.');
@@ -129,10 +129,10 @@ const SiteLegislation = () => {
     setError('');
     setSuccess('');
     try {
-      await api.post('/admin/site-legislation', undoLegislation);
+      await api.post('/safety-admin/site-legislation', undoLegislation);
       setSuccess('Archive undone.');
       setUndoLegislation(null);
-      const res = await api.get('/admin/site-legislation');
+      const res = await api.get('/safety-admin/site-legislation');
       setLegislation(res.data);
     } catch (err) {
       setError('Failed to undo archive.');
@@ -180,10 +180,10 @@ const SiteLegislation = () => {
     setError('');
     setSuccess('');
     try {
-      await Promise.all(selected.map(id => api.delete(`/admin/site-legislation/${id}`)));
+      await Promise.all(selected.map(id => api.delete(`/safety-admin/site-legislation/${id}`)));
       setSuccess('Selected legislation archived.');
       setSelected([]);
-      const res = await api.get('/admin/site-legislation');
+      const res = await api.get('/safety-admin/site-legislation');
       setLegislation(res.data);
     } catch (err) {
       setError('Bulk archive failed.');
@@ -224,9 +224,9 @@ const SiteLegislation = () => {
         setError('');
         setSuccess('');
         try {
-          await Promise.all(results.data.map(row => api.post('/admin/site-legislation', row)));
+          await Promise.all(results.data.map(row => api.post('/safety-admin/site-legislation', row)));
           setSuccess('Imported site legislation from CSV.');
-          const res = await api.get('/admin/site-legislation');
+          const res = await api.get('/safety-admin/site-legislation');
           setLegislation(res.data);
         } catch (err) {
           setError('Import failed. Please check your CSV format.');
