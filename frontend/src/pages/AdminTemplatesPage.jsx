@@ -57,10 +57,10 @@ const AdminTemplatesPage = () => {
 
   return (
     <div className="page">
-      <form className="admin-form-card" onSubmit={handleSubmit}>
+      <form className="admin-form-card admin-form-card--inline" onSubmit={handleSubmit}>
         <h3>Create Template</h3>
         {error && <div className="error-text">{error}</div>}
-        <div className="admin-form-card__fields">
+        <div className="admin-form-card__inline-row">
           <label className="field">
             <span>Name *</span>
             <input value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} placeholder="e.g. Daily Site Inspection" />
@@ -69,8 +69,6 @@ const AdminTemplatesPage = () => {
             <span>Description</span>
             <input value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} placeholder="Optional description" />
           </label>
-        </div>
-        <div className="admin-form-card__actions">
           <button className="btn primary" type="submit" disabled={saving}>{saving ? 'Saving...' : 'Create Template'}</button>
         </div>
       </form>
@@ -95,7 +93,7 @@ const AdminTemplatesPage = () => {
                   <td>{template.description || '?'}</td>
                   <td>{template.itemCount}</td>
                   <td>
-                    <button className="btn ghost" onClick={() => navigate(`/admin/templates/${template.id}`)}>Manage</button>
+                    <button className="btn primary" onClick={() => navigate(`/admin/templates/${template.id}`)}>Manage</button>
                   </td>
                 </tr>
               ))}

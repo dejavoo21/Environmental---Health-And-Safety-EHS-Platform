@@ -5281,6 +5281,52 @@ textarea:focus {
   border-top-color: #4a5a6a;
 }
 
+/* Inline variant for horizontal forms */
+.admin-form-card--inline {
+  max-width: 100%;
+}
+
+.admin-form-card__inline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.admin-form-card__inline-row .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.admin-form-card__inline-row .field span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.admin-form-card__inline-row .field input {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: var(--color-bg-card);
+  color: var(--color-text-strong);
+}
+
+:root.dark-theme .admin-form-card__inline-row .field input {
+  background: #3a414d;
+  border-color: #4a5a6a;
+  color: #f6f1e7;
+}
+
+.admin-form-card__inline-row .btn {
+  height: fit-content;
+  white-space: nowrap;
+}
+
 /* =============================================================
    MODAL LAYOUT IMPROVEMENTS
    ============================================================= */
