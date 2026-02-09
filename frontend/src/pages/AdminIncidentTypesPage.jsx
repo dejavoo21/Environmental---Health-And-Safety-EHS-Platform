@@ -64,10 +64,10 @@ const AdminIncidentTypesPage = () => {
 
   return (
     <div className="page">
-      <form className="admin-form-card" onSubmit={handleSubmit}>
+      <form className="admin-form-card admin-form-card--inline" onSubmit={handleSubmit}>
         <h3>{form.id ? 'Edit Incident Type' : 'Add Incident Type'}</h3>
         {error && <div className="error-text">{error}</div>}
-        <div className="admin-form-card__fields">
+        <div className="admin-form-card__inline-row">
           <label className="field">
             <span>Name *</span>
             <input value={form.name} onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} placeholder="e.g. Near Miss" />
@@ -76,8 +76,6 @@ const AdminIncidentTypesPage = () => {
             <span>Description</span>
             <input value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} placeholder="Optional description" />
           </label>
-        </div>
-        <div className="admin-form-card__actions">
           {form.id && <button className="btn ghost" type="button" onClick={() => setForm({ id: null, name: '', description: '' })}>Cancel</button>}
           <button className="btn primary" type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save Type'}</button>
         </div>
