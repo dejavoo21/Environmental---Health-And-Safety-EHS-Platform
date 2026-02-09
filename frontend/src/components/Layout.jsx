@@ -269,6 +269,12 @@ const Layout = () => {
     setMobileNavOpen(false);
   }, [location.pathname]);
 
+  // Dynamic page title for WCAG 2.4.2 Page Titled
+  useEffect(() => {
+    const title = matchTitle(location.pathname);
+    document.title = `${title} | EHS Portal`;
+  }, [location.pathname]);
+
   const canAccess = (roles) => {
     if (!roles || roles.length === 0) return true;
     return roles.includes(user?.role);
@@ -405,10 +411,18 @@ const Layout = () => {
           </div>
         </header>
 
-        <main className="content">
+        <main id="main-content" className="content" role="main">
           <Outlet />
         </main>
       </div>
+      
+      {/* Live region for screen reader announcements */}
+      <div 
+        id="aria-live-announcer" 
+        className="aria-live-region" 
+        aria-live="polite" 
+        aria-atomic="true"
+      />
     </div>
   );
 };
