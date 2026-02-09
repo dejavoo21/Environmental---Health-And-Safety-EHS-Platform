@@ -344,6 +344,7 @@
 .admin-export-btn,
 .admin-import-btn,
 .admin-add-btn,
+.admin-create-btn,
 .admin-bulk-archive-btn {
   padding: 0.6rem 1rem;
   border: 1px solid #d0d0d0;
@@ -359,6 +360,7 @@
 .admin-export-btn:hover,
 .admin-import-btn:hover,
 .admin-add-btn:hover,
+.admin-create-btn:hover,
 .admin-bulk-archive-btn:hover {
   background: #e0e0e0;
   border-color: var(--color-primary);
