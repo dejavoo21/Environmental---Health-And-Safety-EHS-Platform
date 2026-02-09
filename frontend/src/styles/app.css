@@ -915,20 +915,15 @@ h1, h2, h3, h4 {
 .field input[type="date"]::-webkit-calendar-picker-indicator,
 .field input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  color: #0f766e !important;
-  opacity: 1 !important;
-  filter: none !important;
-  padding: 4px 8px !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  padding: 0 !important;
   margin: 0 !important;
-  border-radius: 4px;
-  background: transparent !important;
-  transition: all 0.2s ease;
-  width: 24px !important;
-  height: 24px !important;
-  display: block !important;
-  visibility: visible !important;
   z-index: 10 !important;
-  font-size: 16px !important;
   pointer-events: auto !important;
 }
 
@@ -966,7 +961,8 @@ h1, h2, h3, h4 {
 :root.dark-theme .filters label input[type="time"]::-webkit-calendar-picker-indicator,
 :root.dark-theme .field input[type="date"]::-webkit-calendar-picker-indicator,
 :root.dark-theme .field input[type="time"]::-webkit-calendar-picker-indicator {
-  color: #4db8b8 !important;
+  /* Invisible but clickable */
+  opacity: 0;
 }
 
 .field {
@@ -1048,20 +1044,15 @@ input[type="time"]:focus {
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  color: #0f766e !important;
-  opacity: 1 !important;
-  filter: none !important;
-  padding: 4px 8px !important;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  padding: 0 !important;
   margin: 0 !important;
-  border-radius: 4px;
-  background: transparent !important;
-  transition: all 0.2s ease;
-  width: 24px !important;
-  height: 24px !important;
-  display: block !important;
-  visibility: visible !important;
   z-index: 10 !important;
-  font-size: 16px !important;
   pointer-events: auto !important;
 }
 
@@ -1074,7 +1065,7 @@ input[type="time"]::-moz-calendar-picker-indicator {
 
 input[type="date"]::-webkit-calendar-picker-indicator:hover,
 input[type="time"]::-webkit-calendar-picker-indicator:hover {
-  background: rgba(15, 118, 110, 0.1) !important;
+  /* Invisible but clickable - no hover visual needed */
 }
 
 input[type="date"]::-webkit-inner-spin-button,
@@ -1096,7 +1087,8 @@ input[type="time"]::-webkit-inner-spin-button {
 
 :root.dark-theme input[type="date"]::-webkit-calendar-picker-indicator,
 :root.dark-theme input[type="time"]::-webkit-calendar-picker-indicator {
-  color: #4db8b8 !important;
+  /* Invisible but clickable */
+  opacity: 0;
 }
 
 input::placeholder,
@@ -2318,6 +2310,11 @@ textarea:focus {
   border: 1px solid #d7d9d4;
   border-radius: 8px;
   font-size: 0.9rem;
+}
+
+.export-filters input[type="date"] {
+  width: auto;
+  max-width: 160px;
 }
 
 .export-actions {
