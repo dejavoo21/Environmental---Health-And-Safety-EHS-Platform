@@ -2290,8 +2290,8 @@ textarea:focus {
 }
 
 .export-filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -2302,6 +2302,7 @@ textarea:focus {
   gap: 0.3rem;
   font-size: 0.9rem;
   color: #2f3e3e;
+  min-width: 120px;
 }
 
 .export-filters input,
@@ -2313,8 +2314,7 @@ textarea:focus {
 }
 
 .export-filters input[type="date"] {
-  width: auto;
-  max-width: 160px;
+  width: 140px;
 }
 
 .export-actions {
