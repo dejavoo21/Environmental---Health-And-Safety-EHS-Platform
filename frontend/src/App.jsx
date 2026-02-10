@@ -49,6 +49,12 @@ import IntegrationsPage from './pages/IntegrationsPage';
 import SafetyMoments from './pages/admin/SafetyMoments';
 import SiteLegislation from './pages/admin/SiteLegislation';
 import PPERules from './pages/admin/PPERules';
+// Phase 8: Training Module
+import TrainingPage from './pages/TrainingPage';
+import AdminTrainingPage from './pages/AdminTrainingPage';
+// Phase 11: Safety Advisor & Security Centre
+import SafetyAdvisorPage from './pages/SafetyAdvisorPage';
+import AdminSecurityPage from './pages/AdminSecurityPage';
 
 const RequireAuth = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -142,6 +148,13 @@ const App = () => (
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/settings/notifications" element={<NotificationPreferencesPage />} />
       <Route path="/security" element={<SecurityPage />} />
+      
+      {/* Phase 8: Training */}
+      <Route path="/training" element={<TrainingPage />} />
+      
+      {/* Phase 11: Safety Advisor */}
+      <Route path="/safety-advisor" element={<SafetyAdvisorPage />} />
+      
       <Route path="/help" element={<HelpPage />} />
       <Route
         path="/admin/sites"
@@ -212,6 +225,22 @@ const App = () => (
         element={(
           <RequireAuth roles={[ 'admin' ]}>
             <IntegrationsPage />
+          </RequireAuth>
+        )}
+      />
+      <Route
+        path="/admin/security"
+        element={(
+          <RequireAuth roles={[ 'admin' ]}>
+            <AdminSecurityPage />
+          </RequireAuth>
+        )}
+      />
+      <Route
+        path="/admin/training"
+        element={(
+          <RequireAuth roles={[ 'admin' ]}>
+            <AdminTrainingPage />
           </RequireAuth>
         )}
       />

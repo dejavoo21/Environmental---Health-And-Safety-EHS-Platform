@@ -88,10 +88,10 @@ const navGroups = [
   {
     id: 'learning',
     label: 'Learning & Safety',
-    defaultOpen: false,
+    defaultOpen: true,
     items: [
-      { to: '/training', label: 'Training', icon: 'graduation-cap', disabled: true },
-      { to: '/safety', label: 'Safety Advisor', icon: 'shield', disabled: true },
+      { to: '/training', label: 'Training', icon: 'graduation-cap' },
+      { to: '/safety-advisor', label: 'Safety Advisor', icon: 'shield' },
       { to: '/help', label: 'Help', icon: 'life-buoy' }
     ]
   },
@@ -106,8 +106,8 @@ const navGroups = [
       { to: '/admin/organisation', label: 'Organisation', icon: 'building' },
       { to: '/admin/sites', label: 'Sites', icon: 'map-pin' },
       { to: '/admin/integrations', label: 'Integrations', icon: 'plug' },
-      { to: '/admin/security', label: 'Security Centre', icon: 'shield-check', disabled: true },
-      { to: '/admin/training', label: 'Training Admin', icon: 'settings', disabled: true },
+      { to: '/admin/security', label: 'Security Centre', icon: 'shield-check' },
+      { to: '/admin/training', label: 'Training Admin', icon: 'settings' },
       { to: '/admin/safety-moments', label: 'Safety Moments', icon: 'sun' },
       { to: '/admin/site-legislation', label: 'Site Legislation', icon: 'scale' },
       { to: '/admin/ppe-rules', label: 'PPE Rules', icon: 'hard-hat' },
@@ -139,6 +139,8 @@ const pageTitles = {
   '/security': 'Security',
   '/reports': 'Reports & Exports',
   '/help': 'Help',
+  '/training': 'My Training',
+  '/safety-advisor': 'Safety Advisor',
   '/admin/users': 'User Management',
   '/admin/access-requests': 'Access Requests',
   '/admin/organisation': 'Organisation Settings',
@@ -146,7 +148,12 @@ const pageTitles = {
   '/admin/incident-types': 'Admin - Incident Types',
   '/admin/templates': 'Admin - Templates',
   '/admin/permit-types': 'Admin - Permit Types',
-  '/admin/integrations': 'Integrations'
+  '/admin/integrations': 'Integrations',
+  '/admin/security': 'Security Centre',
+  '/admin/training': 'Training Admin',
+  '/admin/safety-moments': 'Safety Moments',
+  '/admin/site-legislation': 'Site Legislation',
+  '/admin/ppe-rules': 'PPE Rules'
 };
 
 const matchTitle = (pathname) => {
