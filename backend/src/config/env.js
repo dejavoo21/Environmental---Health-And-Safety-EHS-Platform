@@ -85,10 +85,18 @@ const env = {
   phase10JobsEnabled: process.env.PHASE10_JOBS_ENABLED !== 'false',
   nodeEnv: process.env.NODE_ENV || 'development',
   // Phase 11 Weather configuration
-  weatherApiBaseUrl: process.env.WEATHER_API_BASE_URL || 'https://api.openweathermap.org/data/2.5/weather',
+  // Note: Base URL should NOT include /weather - just the API base path (e.g., https://api.openweathermap.org/data/2.5)
+  weatherApiBaseUrl: process.env.WEATHER_API_BASE_URL || 'https://api.openweathermap.org/data/2.5',
   weatherApiKey: process.env.WEATHER_API_KEY || '',
   weatherCacheTtlSeconds: Number(process.env.WEATHER_CACHE_TTL_SECONDS || 1800),
   weatherTimeoutMs: Number(process.env.WEATHER_TIMEOUT_MS || 5000)
 };
+
+// Log weather configuration status on startup
+if (!env.weatherApiKey) {
+  console.warn('[Config] WARNING: WEATHER_API_KEY is not set. Weather features will be unavailable.');
+} else {
+  console.log('[Config] Weather API configured with base URL:', env.weatherApiBaseUrl);
+}
 
 module.exports = env;

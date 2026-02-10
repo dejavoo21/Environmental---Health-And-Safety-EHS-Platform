@@ -129,6 +129,7 @@ const getWeatherForSite = async (siteId, orgId = null) => {
 
     // Check if we have API key configured
     if (!env.weatherApiKey) {
+      console.warn('[WeatherService] No WEATHER_API_KEY configured');
       return {
         status: 'error',
         error: 'Weather API not configured',
@@ -136,14 +137,19 @@ const getWeatherForSite = async (siteId, orgId = null) => {
       };
     }
 
+    // Build API URL - ensure base URL doesn't already have /weather appended
+    // User may set WEATHER_API_BASE_URL as https://api.openweathermap.org/data/2.5 or https://api.openweathermap.org/data/2.5/weather
+    const baseUrl = env.weatherApiBaseUrl.replace(/\/weather\/?$/, '');
+    const weatherEndpoint = `${baseUrl}/weather`;
+
     // Build API URL - prefer lat/long, fallback to city/country
     let url;
     if (latitude && longitude) {
-      url = `${env.weatherApiBaseUrl}?lat=${latitude}&lon=${longitude}&appid=${env.weatherApiKey}`;
+      url = `${weatherEndpoint}?lat=${latitude}&lon=${longitude}&appid=${env.weatherApiKey}`;
     } else if (weather_location_id) {
-      url = `${env.weatherApiBaseUrl}?id=${weather_location_id}&appid=${env.weatherApiKey}`;
+      url = `${weatherEndpoint}?id=${weather_location_id}&appid=${env.weatherApiKey}`;
     } else if (city && country_code) {
-      url = `${env.weatherApiBaseUrl}?q=${encodeURIComponent(city)},${country_code}&appid=${env.weatherApiKey}`;
+      url = `${weatherEndpoint}?q=${encodeURIComponent(city)},${country_code}&appid=${env.weatherApiKey}`;
     } else {
       return {
         status: 'error',
@@ -152,10 +158,14 @@ const getWeatherForSite = async (siteId, orgId = null) => {
       };
     }
 
+    console.log(`[WeatherService] Fetching weather for site ${siteId}: lat=${latitude}, lon=${longitude}`);
+
     // Fetch from API with timeout
     const response = await axios.get(url, {
       timeout: env.weatherTimeoutMs
     });
+
+    console.log(`[WeatherService] Success for site ${siteId}: ${response.data?.main?.temp}K (${Math.round(response.data?.main?.temp - 273.15)}°C), ${response.data?.weather?.[0]?.main}`);
 
     const normalized = normalizeWeatherData(response.data);
 
@@ -176,7 +186,20 @@ const getWeatherForSite = async (siteId, orgId = null) => {
       fromCache: false
     };
   } catch (error) {
-    console.error(`[WeatherService] Error fetching weather for site ${siteId}:`, error.message);
+    // Log full error details for debugging
+    const httpStatus = error.response?.status;
+    const httpData = error.response?.data;
+    const errorCode = error.code; // e.g., ECONNREFUSED, ETIMEDOUT
+
+    console.error(`[WeatherService] Error fetching weather for site ${siteId}:`);
+    console.error(`  - Message: ${error.message}`);
+    if (httpStatus) {
+      console.error(`  - HTTP Status: ${httpStatus}`);
+      console.error(`  - Response: ${JSON.stringify(httpData)}`);
+    }
+    if (errorCode) {
+      console.error(`  - Error Code: ${errorCode}`);
+    }
 
     // Try to return stale cache as fallback (BR-11-09)
     try {
@@ -191,10 +214,11 @@ const getWeatherForSite = async (siteId, orgId = null) => {
       if (staleCacheResult.rowCount > 0) {
         const cached = staleCacheResult.rows[0];
         const normalized = normalizeWeatherData(cached.data_json);
+        console.log(`[WeatherService] Returning stale cache for site ${siteId} from ${cached.as_of}`);
         return {
           status: 'stale',
           ...normalized,
-          summaryText: generateSummaryText(normalized) + ' (cached)',
+          summaryText: generateSummaryText(normalized),
           updatedAt: cached.as_of,
           fromCache: true,
           warning: 'Weather data may be outdated'
@@ -204,10 +228,14 @@ const getWeatherForSite = async (siteId, orgId = null) => {
       console.error(`[WeatherService] Cache fallback error:`, cacheError.message);
     }
 
-    // Return error status (BR-11-09)
+    // Return error status with more detail (BR-11-09)
+    const errorDetail = httpStatus
+      ? `API error ${httpStatus}: ${httpData?.message || error.message}`
+      : error.message || 'Failed to fetch weather';
+
     return {
       status: 'error',
-      error: error.response?.data?.message || error.message || 'Failed to fetch weather',
+      error: errorDetail,
       summaryText: 'Weather information temporarily unavailable'
     };
   }
@@ -248,7 +276,10 @@ const getForecastForSite = async (siteId) => {
     }
 
     // Use 5-day forecast API endpoint, we'll just take next 8 entries (24 hours at 3-hour intervals)
-    const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&cnt=8&appid=${env.weatherApiKey}`;
+    const baseUrl = env.weatherApiBaseUrl.replace(/\/weather\/?$/, '');
+    const forecastUrl = `${baseUrl}/forecast?lat=${latitude}&lon=${longitude}&cnt=8&appid=${env.weatherApiKey}`;
+
+    console.log(`[WeatherService] Fetching forecast for site ${siteId}`);
 
     const response = await axios.get(forecastUrl, {
       timeout: env.weatherTimeoutMs
