@@ -157,8 +157,7 @@ router.get('/sites/:id/forecast', authMiddleware, async (req, res, next) => {
  */
 router.get('/tasks/:type/:id/summary', authMiddleware, async (req, res, next) => {
   try {
-    const { type, id } = req.params;
-    const entityId = parseInt(id);
+    const { type, id: entityId } = req.params; // entityId is UUID string
     const { organisationId, id: userId, role } = req.user;
 
     const validTypes = ['incident', 'inspection', 'action', 'training', 'permit'];
@@ -166,7 +165,7 @@ router.get('/tasks/:type/:id/summary', authMiddleware, async (req, res, next) =>
       throw new AppError('Invalid entity type', 400, 'VALIDATION_ERROR');
     }
 
-    if (isNaN(entityId)) {
+    if (!entityId) {
       throw new AppError('Invalid entity ID', 400, 'VALIDATION_ERROR');
     }
 
@@ -178,6 +177,19 @@ router.get('/tasks/:type/:id/summary', authMiddleware, async (req, res, next) =>
 
     res.json(summary);
   } catch (err) {
+    // Handle missing tables gracefully
+    if (err.code === '42P01') {
+      console.error('[SafetyAdvisor] Tables not found:', err.message);
+      return res.json({
+        entityType: req.params.type,
+        entityId: req.params.id,
+        weather: { status: 'unavailable' },
+        ppeAdvice: { items: [], summary: 'Safety Advisor not configured' },
+        safetyMoment: null,
+        legislation: [],
+        hasAcknowledged: false
+      });
+    }
     next(err);
   }
 });
@@ -189,8 +201,7 @@ router.get('/tasks/:type/:id/summary', authMiddleware, async (req, res, next) =>
  */
 router.put('/tasks/:type/:id/acknowledge', authMiddleware, async (req, res, next) => {
   try {
-    const { type, id } = req.params;
-    const entityId = parseInt(id);
+    const { type, id: entityId } = req.params; // entityId is UUID string
     const { organisationId, id: userId } = req.user;
     const { siteId, isHighRisk, safetySummarySnapshot } = req.body || {};
 
@@ -199,9 +210,11 @@ router.put('/tasks/:type/:id/acknowledge', authMiddleware, async (req, res, next
       throw new AppError('Invalid entity type', 400, 'VALIDATION_ERROR');
     }
 
-    if (isNaN(entityId)) {
+    if (!entityId) {
       throw new AppError('Invalid entity ID', 400, 'VALIDATION_ERROR');
     }
+
+    console.log(`[SafetyAdvisor] Recording acknowledgement for ${type}/${entityId} by user ${userId}`);
 
     const acknowledgement = await recordSafetyAcknowledgement(
       organisationId,
@@ -209,14 +222,31 @@ router.put('/tasks/:type/:id/acknowledge', authMiddleware, async (req, res, next
       type,
       entityId,
       {
-        siteId: siteId ? parseInt(siteId) : null,
+        siteId: siteId || null, // siteId is also UUID, don't parseInt
         isHighRisk: !!isHighRisk,
         safetySummarySnapshot
       }
     );
 
-    res.json(acknowledgement);
+    console.log(`[SafetyAdvisor] Acknowledgement recorded successfully: ${acknowledgement.id}`);
+
+    res.json({ success: true, ...acknowledgement });
   } catch (err) {
+    console.error(`[SafetyAdvisor] Acknowledgement error for ${req.params.type}/${req.params.id}:`, err.message);
+
+    // Handle missing tables
+    if (err.code === '42P01') {
+      return res.status(500).json({
+        success: false,
+        error: 'Safety acknowledgement tables not configured. Please run migrations.'
+      });
+    }
+
+    // Handle unique constraint violation (already acknowledged)
+    if (err.code === '23505') {
+      return res.json({ success: true, message: 'Already acknowledged' });
+    }
+
     next(err);
   }
 });
@@ -228,8 +258,7 @@ router.put('/tasks/:type/:id/acknowledge', authMiddleware, async (req, res, next
  */
 router.get('/tasks/:type/:id/acknowledgement-status', authMiddleware, async (req, res, next) => {
   try {
-    const { type, id } = req.params;
-    const entityId = parseInt(id);
+    const { type, id: entityId } = req.params; // entityId is UUID string
     const { organisationId, id: userId } = req.user;
 
     const validTypes = ['incident', 'inspection', 'action', 'training', 'permit'];
@@ -237,13 +266,17 @@ router.get('/tasks/:type/:id/acknowledgement-status', authMiddleware, async (req
       throw new AppError('Invalid entity type', 400, 'VALIDATION_ERROR');
     }
 
-    if (isNaN(entityId)) {
+    if (!entityId) {
       throw new AppError('Invalid entity ID', 400, 'VALIDATION_ERROR');
     }
 
     const status = await checkSafetyAcknowledgement(organisationId, userId, type, entityId);
     res.json(status);
   } catch (err) {
+    // Handle missing tables gracefully
+    if (err.code === '42P01') {
+      return res.json({ hasAcknowledged: false, acknowledgedAt: null });
+    }
     next(err);
   }
 });
@@ -274,13 +307,17 @@ router.get('/missing-acknowledgements', authMiddleware, requireRole(['supervisor
     const { siteId, userId, limit } = req.query;
 
     const result = await getMissingAcknowledgements(organisationId, {
-      siteId: siteId ? parseInt(siteId) : null,
-      userId: userId ? parseInt(userId) : null,
+      siteId: siteId || null, // UUID string
+      userId: userId || null, // UUID string
       limit: limit ? parseInt(limit) : 50
     });
 
     res.json(result);
   } catch (err) {
+    // Handle missing tables gracefully
+    if (err.code === '42P01') {
+      return res.json({ missing: [], total: 0 });
+    }
     next(err);
   }
 });
@@ -298,11 +335,21 @@ router.get('/analytics', authMiddleware, requireRole(['manager', 'admin']), asyn
     const analytics = await getSafetyAdvisorAnalytics(organisationId, {
       startDate,
       endDate,
-      siteId: siteId ? parseInt(siteId) : null
+      siteId: siteId || null // UUID string
     });
 
     res.json(analytics);
   } catch (err) {
+    // Handle missing tables gracefully
+    if (err.code === '42P01') {
+      return res.json({
+        totalAcknowledgements: 0,
+        highRiskAcknowledgements: 0,
+        byEntityType: {},
+        bySite: {},
+        trend: []
+      });
+    }
     next(err);
   }
 });

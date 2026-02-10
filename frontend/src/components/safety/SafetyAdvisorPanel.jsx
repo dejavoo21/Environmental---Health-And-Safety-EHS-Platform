@@ -99,24 +99,46 @@ const SafetyAdvisorPanel = ({
     if (!entityType || !entityId) return;
 
     setAckLoading(true);
+    setError(''); // Clear previous errors
     try {
       const result = await acknowledgeSafetyAdvisor(entityType, entityId, {
         safetySummarySnapshot: safetySummary
       });
-      setHasAcknowledged(true);
-      setAcknowledgedAt(result.acknowledgedAt || new Date().toISOString());
 
-      // Call external callback if provided
-      if (onAcknowledge) {
-        onAcknowledge({
-          entityType,
-          entityId,
-          acknowledgedAt: result.acknowledgedAt
-        });
+      // Check for success flag in response
+      if (result.success || result.id || result.acknowledgedAt) {
+        setHasAcknowledged(true);
+        setAcknowledgedAt(result.acknowledgedAt || new Date().toISOString());
+
+        // Call external callback if provided
+        if (onAcknowledge) {
+          onAcknowledge({
+            entityType,
+            entityId,
+            acknowledgedAt: result.acknowledgedAt
+          });
+        }
+      } else if (result.error) {
+        setError(result.error);
       }
     } catch (err) {
-      setError('Unable to record acknowledgement. Please try again.');
       console.error('Acknowledgement error:', err);
+
+      // Handle specific error codes
+      const status = err.response?.status;
+      const serverError = err.response?.data?.error || err.response?.data?.message;
+
+      if (status === 400) {
+        setError(serverError || 'Invalid request. Please refresh and try again.');
+      } else if (status === 403) {
+        setError('You do not have permission to acknowledge this item.');
+      } else if (status === 404) {
+        setError('This item was not found. It may have been deleted.');
+      } else if (status >= 500) {
+        setError('Server error. Please contact support if this persists.');
+      } else {
+        setError('Unable to record acknowledgement. Please try again.');
+      }
     } finally {
       setAckLoading(false);
     }
