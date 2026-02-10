@@ -9,6 +9,8 @@
     "migrate": "node scripts/migrate.js",
     "seed": "node seeds/seed.js",
     "seed-org": "node scripts/seed-org.js",
+    "seed-demo": "node seeds/seed-demo-data.js",
+    "seed-analytics": "node seeds/seed-analytics-data.js",
     "test": "jest --runInBand"
   },
   "dependencies": {

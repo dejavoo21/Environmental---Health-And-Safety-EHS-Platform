@@ -23,13 +23,24 @@ const { recordAudit } = require('../utils/audit');
  * @returns {Object} Complete safety summary
  */
 const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
-  // Get site info
-  const siteResult = await query(`
-    SELECT s.id, s.name, sl.city, sl.country_code, sl.region
-    FROM sites s
-    LEFT JOIN site_locations sl ON sl.site_id = s.id
-    WHERE s.id = $1
-  `, [siteId]);
+  // Get site info - use simple query that doesn't depend on Phase 11 tables
+  let siteResult;
+  try {
+    siteResult = await query(`
+      SELECT s.id, s.name, sl.city, sl.country_code, sl.region
+      FROM sites s
+      LEFT JOIN site_locations sl ON sl.site_id = s.id
+      WHERE s.id = $1
+    `, [siteId]);
+  } catch (err) {
+    // If site_locations doesn't exist, try without it
+    if (err.code === '42P01') {
+      console.warn('site_locations table not found, using sites only');
+      siteResult = await query('SELECT id, name FROM sites WHERE id = $1', [siteId]);
+    } else {
+      throw err;
+    }
+  }
 
   if (siteResult.rowCount === 0) {
     return null;
@@ -38,31 +49,62 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
   const site = siteResult.rows[0];
   const siteLocation = [site.city, site.region, site.country_code].filter(Boolean).join(', ') || null;
 
-  // Fetch all data in parallel
-  const [weather, safetyMoment, legislation] = await Promise.all([
-    getWeatherForSite(siteId, orgId),
-    getTodaysSafetyMoment(orgId, userId, userRole, siteId),
-    getLegislationRefsForSite(siteId)
-  ]);
+  // Fetch all data in parallel with graceful fallbacks
+  let weather = { status: 'unavailable' };
+  let safetyMoment = null;
+  let legislation = [];
+  let ppeAdvice = { summary: 'PPE recommendations not available', items: [] };
+
+  try {
+    const results = await Promise.allSettled([
+      getWeatherForSite(siteId, orgId),
+      getTodaysSafetyMoment(orgId, userId, userRole, siteId).catch(err => {
+        if (err.code === '42P01') console.warn('Safety moments tables not found');
+        return null;
+      }),
+      getLegislationRefsForSite(siteId).catch(err => {
+        if (err.code === '42P01') console.warn('Legislation tables not found');
+        return [];
+      })
+    ]);
+
+    if (results[0].status === 'fulfilled') weather = results[0].value || weather;
+    if (results[1].status === 'fulfilled') safetyMoment = results[1].value;
+    if (results[2].status === 'fulfilled') legislation = results[2].value || [];
+  } catch (err) {
+    console.warn('Error fetching safety data:', err.message);
+  }
 
   // Get PPE recommendations based on weather
-  const ppeAdvice = await getPPERecommendations(orgId, siteId, {
-    weatherData: weather.status === 'ok' || weather.status === 'stale' ? weather : null
-  });
+  try {
+    ppeAdvice = await getPPERecommendations(orgId, siteId, {
+      weatherData: weather.status === 'ok' || weather.status === 'stale' ? weather : null
+    });
+  } catch (err) {
+    if (err.code === '42P01') console.warn('PPE tables not found');
+  }
 
   // Check if user has an existing acknowledgement for today
-  const ackCheck = await query(`
-    SELECT acknowledged_at FROM safety_acknowledgements
-    WHERE organisation_id = $1 AND user_id = $2 AND site_id = $3
-      AND acknowledged_at::date = CURRENT_DATE
-    ORDER BY acknowledged_at DESC
-    LIMIT 1
-  `, [orgId, userId, siteId]);
+  let lastAcknowledgedAt = null;
+  try {
+    const ackCheck = await query(`
+      SELECT acknowledged_at FROM safety_acknowledgements
+      WHERE organisation_id = $1 AND user_id = $2 AND site_id = $3
+        AND acknowledged_at::date = CURRENT_DATE
+      ORDER BY acknowledged_at DESC
+      LIMIT 1
+    `, [orgId, userId, siteId]);
+    lastAcknowledgedAt = ackCheck.rowCount > 0 ? ackCheck.rows[0].acknowledged_at : null;
+  } catch (err) {
+    if (err.code === '42P01') console.warn('safety_acknowledgements table not found');
+  }
 
-  const lastAcknowledgedAt = ackCheck.rowCount > 0 ? ackCheck.rows[0].acknowledged_at : null;
-
-  // Record view event
-  await recordSafetyAdvisorEvent(orgId, userId, siteId, 'view', null, null);
+  // Record view event (non-critical, ignore errors)
+  try {
+    await recordSafetyAdvisorEvent(orgId, userId, siteId, 'view', null, null);
+  } catch (err) {
+    console.warn('Failed to record safety advisor view event:', err.message);
+  }
 
   return {
     siteName: site.name,
@@ -86,10 +128,10 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
       acknowledged: safetyMoment.acknowledged
     } : null,
     ppeAdvice: {
-      summary: ppeAdvice.summary,
-      items: ppeAdvice.items
+      summary: ppeAdvice.summary || 'No PPE recommendations available',
+      items: ppeAdvice.items || []
     },
-    legislation: legislation.slice(0, 5).map(leg => ({
+    legislation: (legislation || []).slice(0, 5).map(leg => ({
       title: leg.title,
       refCode: leg.jurisdiction,
       category: leg.category,

@@ -28,21 +28,44 @@ const router = express.Router();
  */
 router.get('/sites/:id/summary', authMiddleware, async (req, res, next) => {
   try {
-    const siteId = parseInt(req.params.id);
+    const siteId = req.params.id; // UUID, not integer
     const { organisationId, id: userId, role } = req.user;
 
-    if (isNaN(siteId)) {
+    if (!siteId) {
       throw new AppError('Invalid site ID', 400, 'VALIDATION_ERROR');
     }
 
     const summary = await getSafetySummaryForSite(siteId, organisationId, userId, role);
 
     if (!summary) {
-      throw new AppError('Site not found', 404, 'NOT_FOUND');
+      // Return empty summary instead of 404 to avoid blank screen
+      return res.json({
+        siteId,
+        siteName: 'Unknown Site',
+        weather: { status: 'unavailable' },
+        ppeAdvice: { items: [], summary: 'No PPE data available' },
+        safetyMoment: null,
+        legislation: [],
+        lastAcknowledgedAt: null
+      });
     }
 
     res.json(summary);
   } catch (err) {
+    // Handle missing tables gracefully
+    if (err.code === '42P01') {
+      console.error('Safety Advisor tables not found - run migrations 010-011:', err.message);
+      return res.json({
+        siteId: req.params.id,
+        siteName: 'Site',
+        weather: { status: 'unavailable' },
+        ppeAdvice: { items: [], summary: 'Safety Advisor not configured' },
+        safetyMoment: null,
+        legislation: [],
+        lastAcknowledgedAt: null,
+        meta: { warning: 'Safety Advisor tables not found. Run migrations 010-011.' }
+      });
+    }
     next(err);
   }
 });
@@ -86,16 +109,20 @@ router.post('/sites/:id/acknowledge', authMiddleware, async (req, res, next) => 
  */
 router.get('/sites/:id/weather', authMiddleware, async (req, res, next) => {
   try {
-    const siteId = parseInt(req.params.id);
+    const siteId = req.params.id; // UUID
     const { organisationId } = req.user;
 
-    if (isNaN(siteId)) {
+    if (!siteId) {
       throw new AppError('Invalid site ID', 400, 'VALIDATION_ERROR');
     }
 
     const weather = await getWeatherForSite(siteId, organisationId);
     res.json(weather);
   } catch (err) {
+    // Handle missing tables or weather not configured
+    if (err.code === '42P01') {
+      return res.json({ status: 'unavailable', message: 'Weather tables not configured' });
+    }
     next(err);
   }
 });
@@ -107,15 +134,18 @@ router.get('/sites/:id/weather', authMiddleware, async (req, res, next) => {
  */
 router.get('/sites/:id/forecast', authMiddleware, async (req, res, next) => {
   try {
-    const siteId = parseInt(req.params.id);
+    const siteId = req.params.id; // UUID
 
-    if (isNaN(siteId)) {
+    if (!siteId) {
       throw new AppError('Invalid site ID', 400, 'VALIDATION_ERROR');
     }
 
     const forecast = await getForecastForSite(siteId);
     res.json(forecast);
   } catch (err) {
+    if (err.code === '42P01') {
+      return res.json({ status: 'unavailable', forecast: [] });
+    }
     next(err);
   }
 });

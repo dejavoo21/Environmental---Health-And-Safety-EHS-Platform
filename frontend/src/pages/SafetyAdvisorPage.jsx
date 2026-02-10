@@ -361,7 +361,7 @@ const SafetyAdvisorPage = () => {
             <select 
               value={selectedSite?.id || ''} 
               onChange={(e) => {
-                const site = sites.find(s => s.id === parseInt(e.target.value));
+                const site = sites.find(s => String(s.id) === e.target.value);
                 setSelectedSite(site);
               }}
               aria-label="Select site"
@@ -405,17 +405,17 @@ const SafetyAdvisorPage = () => {
               <p><MapPin size={14} /> {safetySummary.siteLocation}</p>
             )}
           </div>
-          
+
           <div className="advisor-grid">
             {renderWeatherCard()}
             {renderPPECard()}
             {renderSafetyMomentCard()}
             {renderLegislationCard()}
           </div>
-          
+
           <div className="advisor-actions">
             {!safetySummary.lastAcknowledgedAt ? (
-              <button 
+              <button
                 className="btn btn-primary btn-lg"
                 onClick={handleAcknowledge}
                 disabled={acknowledging}
@@ -440,6 +440,15 @@ const SafetyAdvisorPage = () => {
             )}
           </div>
         </>
+      ) : !error ? (
+        <div className="advisor-empty-state">
+          <Shield size={48} />
+          <h3>No Safety Data Available</h3>
+          <p>Safety information for the selected site is not yet configured. Please contact your administrator.</p>
+          <button onClick={fetchSafetySummary} className="btn btn-secondary">
+            <RefreshCw size={16} /> Refresh
+          </button>
+        </div>
       ) : null}
     </div>
   );

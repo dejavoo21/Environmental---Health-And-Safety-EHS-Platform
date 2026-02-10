@@ -75,7 +75,30 @@ const AdminSecurityPage = () => {
       });
     } catch (err) {
       console.error('Security overview error:', err);
-      setError(err.response?.data?.message || 'Failed to load security data');
+      const status = err.response?.status;
+      const serverMessage = err.response?.data?.message || err.message;
+      let errorMsg = 'Failed to load security data';
+
+      if (status === 500) {
+        errorMsg = `Failed to load security data (500). ${serverMessage}. Please ensure migrations are applied.`;
+      } else if (status === 404) {
+        errorMsg = `Security endpoint not found (404). API may not be configured.`;
+      } else if (status === 403) {
+        errorMsg = `Access denied (403). You may not have admin permissions.`;
+      } else if (serverMessage) {
+        errorMsg = serverMessage;
+      }
+
+      setError(errorMsg);
+      // Still set empty overview so page renders
+      setOverview({
+        totalUsers: 0,
+        activeUsers: 0,
+        with2FA: 0,
+        lockedOut: 0,
+        failedLogins24h: 0,
+        recentActivity: []
+      });
     } finally {
       setLoading(false);
     }
@@ -408,9 +431,13 @@ const AdminSecurityPage = () => {
     </div>
   );
 
-  if (loading && !overview) {
+  if (loading && overview === null) {
     return (
       <div className="admin-security-page">
+        <header className="security-header">
+          <h1><ShieldCheck size={28} /> Security Centre</h1>
+          <p>Monitor and manage security across your organisation</p>
+        </header>
         <div className="security-loading">
           <div className="spinner" />
           <p>Loading security centre...</p>

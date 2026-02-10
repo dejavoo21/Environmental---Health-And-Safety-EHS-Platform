@@ -32,6 +32,11 @@ router.get('/categories', async (req, res, next) => {
     const categories = await trainingService.listCategories(req.user.organisationId, req.query);
     res.json(categories);
   } catch (error) {
+    // Check if this is a missing table error
+    if (error.code === '42P01') {
+      console.error('Training tables not found:', error.message);
+      return res.json({ data: [], total: 0 });
+    }
     next(error);
   }
 });
@@ -105,6 +110,11 @@ router.get('/courses', async (req, res, next) => {
     });
     res.json(result);
   } catch (error) {
+    // Check if this is a missing table error
+    if (error.code === '42P01') {
+      console.error('Training tables not found:', error.message);
+      return res.json({ data: [], total: 0, page: 1, limit: 20 });
+    }
     next(error);
   }
 });
@@ -440,6 +450,17 @@ router.get('/my-training', async (req, res, next) => {
     );
     res.json(myTraining);
   } catch (error) {
+    // Check if this is a missing table error
+    if (error.code === '42P01') {
+      console.error('Training tables not found - migrations may not have run:', error.message);
+      return res.json({
+        assignments: [],
+        upcomingDue: [],
+        completed: 0,
+        overdueCount: 0,
+        meta: { warning: 'Training module not configured. Please run migrations 008+.' }
+      });
+    }
     next(error);
   }
 });
@@ -460,6 +481,11 @@ router.get('/my-training/history', async (req, res, next) => {
     );
     res.json(history);
   } catch (error) {
+    // Check if this is a missing table error
+    if (error.code === '42P01') {
+      console.error('Training tables not found:', error.message);
+      return res.json({ data: [], total: 0 });
+    }
     next(error);
   }
 });
