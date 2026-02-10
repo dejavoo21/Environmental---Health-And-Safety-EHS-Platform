@@ -151,14 +151,38 @@ const submitAccessRequest = async ({
     message: 'Your access request has been submitted. You will be notified when it is reviewed.'
   };
   } catch (err) {
-    console.error('Error submitting access request:', err);
-    if (err.code === 'ECONNREFUSED' || err.message.includes('connect') || err.message.includes('Connection')) {
+    console.error('[AccessRequest] Error submitting request:', {
+      message: err.message,
+      code: err.code,
+      severity: err.severity,
+    });
+    
+    // Check for database connection errors
+    if (err.code === 'ECONNREFUSED' || err.message?.includes('connect') || err.message?.includes('Connection') || err.message?.includes('ENOENT')) {
       return { 
         success: false, 
         error: 'DB_CONNECTION_ERROR', 
-        message: 'System is temporarily unavailable. Please try again in a few moments.' 
+        message: 'The system is temporarily unavailable. Our team has been notified. Please try again in a few moments.' 
       };
     }
+    
+    if (err.code === 'ETIMEDOUT' || err.message?.includes('timeout')) {
+      return { 
+        success: false, 
+        error: 'DB_TIMEOUT', 
+        message: 'The request took too long to process. Please try again.' 
+      };
+    }
+    
+    // For any other database error, return a safe message
+    if (err.code?.startsWith('EACCES') || err.code?.startsWith('ENOTFOUND')) {
+      return { 
+        success: false, 
+        error: 'SERVICE_UNAVAILABLE', 
+        message: 'The authentication service is currently unavailable. Please try again shortly.' 
+      };
+    }
+    
     throw err;
   }
 };

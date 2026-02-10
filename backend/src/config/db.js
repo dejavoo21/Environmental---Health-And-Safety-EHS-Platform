@@ -1,38 +1,46 @@
 const { Pool } = require('pg');
 const env = require('./env');
 
-console.log('DB Config:', {
-  hasDatabaseUrl: !!env.databaseUrl,
-  dbHost: env.dbHost,
-  dbPort: env.dbPort,
-  dbName: env.dbName,
-  dbUser: env.dbUser
-});
-
-const pool = env.databaseUrl
-  ? new Pool({ 
-      connectionString: env.databaseUrl,
-      max: 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-    })
-  : new Pool({
+// Enhanced logging for Railway debugging
+const dbConfig = env.databaseUrl
+  ? { connectionString: env.databaseUrl }
+  : {
       host: env.dbHost,
       port: env.dbPort,
       database: env.dbName,
       user: env.dbUser,
       password: env.dbPassword,
-      max: 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-    });
+    };
+
+console.log('[DB Config]', {
+  usingConnectionString: !!env.databaseUrl,
+  host: env.dbHost,
+  port: env.dbPort,
+  db: env.dbName,
+  connectionStringFirstChars: env.databaseUrl ? env.databaseUrl.substring(0, 30) + '...' : 'N/A'
+});
+
+const pool = new Pool({
+  ...dbConfig,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
+});
 
 pool.on('error', (err) => {
-  console.error('Unexpected PG pool error:', err);
+  console.error('[DB Pool Error]', {
+    message: err.message,
+    code: err.code,
+    severity: err.severity,
+  });
 });
 
 pool.on('connect', () => {
-  console.log('Database connection established');
+  console.log('[DB Connected]', 'Successfully connected to database');
+});
+
+pool.on('remove', () => {
+  console.log('[DB Pool]', 'Connection removed from pool');
 });
 
 const query = (text, params) => pool.query(text, params);
