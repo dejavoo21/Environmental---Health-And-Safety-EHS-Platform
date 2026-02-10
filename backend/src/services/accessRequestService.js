@@ -183,7 +183,13 @@ const submitAccessRequest = async ({
       };
     }
     
-    throw err;
+    // For all other errors (including database errors), return safe message instead of throwing
+    console.error('[AccessRequest] Unhandled error details:', err);
+    return {
+      success: false,
+      error: 'SYSTEM_ERROR',
+      message: 'An unexpected error occurred. Our team is investigating. Please try again later.'
+    };
   }
 };
 
