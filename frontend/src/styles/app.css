@@ -1367,6 +1367,11 @@ textarea:focus {
   display: grid;
   place-items: center;
   padding: 2rem;
+  background: linear-gradient(135deg, #1c3a3b 0%, #2a5556 50%, #1c3a3b 100%);
+}
+
+:root.dark-theme .login-page {
+  background: linear-gradient(135deg, #0f1f20 0%, #1a3435 50%, #0f1f20 100%);
 }
 
 .login-card {
@@ -1375,14 +1380,51 @@ textarea:focus {
   border-radius: 24px;
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
 }
 
+:root.dark-theme .login-card {
+  background: #2c313a;
+  border-color: #4a5a6a;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
 .login-header h1 {
-  margin: 0.2rem 0;
+  margin: 0.5rem 0;
+  color: #1c3a3b;
+  font-size: 1.75rem;
+}
+
+:root.dark-theme .login-header h1 {
+  color: #f6f1e7;
+}
+
+.login-header p {
+  color: #4a5a6a;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+:root.dark-theme .login-header p {
+  color: #c4c4c4;
+}
+
+/* Form field labels for login */
+.login-card .field span,
+.login-card label span {
+  display: block;
+  color: #1c3a3b;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+:root.dark-theme .login-card .field span,
+:root.dark-theme .login-card label span {
+  color: #f6f1e7;
 }
 
 .pill {
@@ -5123,6 +5165,46 @@ textarea:focus {
   margin-top: 1.5rem;
   text-align: center;
   font-size: 0.875rem;
+}
+
+.login-footer .btn.link {
+  color: #0f766e;
+}
+
+.login-footer .btn.link:hover {
+  color: #0a5651;
+  text-decoration: underline;
+}
+
+:root.dark-theme .login-footer .btn.link {
+  color: #5fd4d4;
+}
+
+:root.dark-theme .login-footer .btn.link:hover {
+  color: #8beeee;
+}
+
+.login-footer .separator {
+  color: #6b7280;
+  margin: 0 0.5rem;
+}
+
+:root.dark-theme .login-footer .separator {
+  color: #9ca3af;
+}
+
+/* Login divider for SSO */
+.login-divider span {
+  color: #4a5a6a;
+}
+
+:root.dark-theme .login-divider span {
+  color: #9ca3af;
+}
+
+:root.dark-theme .login-divider::before,
+:root.dark-theme .login-divider::after {
+  background: #4a5a6a;
 }
 
 /* Small button variant */
