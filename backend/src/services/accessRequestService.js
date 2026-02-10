@@ -53,50 +53,51 @@ const submitAccessRequest = async ({
   if (reason && reason.length > 500) {
     return { success: false, error: 'REASON_TOO_LONG', message: 'Reason must be 500 characters or less.' };
   }
-  
-  // Look up organisation by code
-  const orgResult = await query(
-    `SELECT id, name, access_request_enabled, access_request_auto_expire_days 
-     FROM organisations WHERE code = $1 AND is_active = TRUE`,
-    [organisationCode.toUpperCase().trim()]
-  );
-  
-  if (orgResult.rowCount === 0) {
-    return { success: false, error: 'ORG_NOT_FOUND', message: 'Organisation not found. Please check the code and try again.' };
-  }
-  
-  const org = orgResult.rows[0];
-  
-  // Check if access requests are enabled for this org
-  if (!org.access_request_enabled) {
-    return { success: false, error: 'REQUESTS_DISABLED', message: 'This organisation is not accepting access requests at this time.' };
-  }
-  
-  // Check if email is already registered
-  const existingUser = await query(
-    `SELECT id FROM users WHERE email = $1 AND organisation_id = $2`,
-    [email.toLowerCase().trim(), org.id]
-  );
-  
-  if (existingUser.rowCount > 0) {
-    return { success: false, error: 'EMAIL_EXISTS', message: 'An account with this email already exists.' };
-  }
-  
-  // Check for existing pending request
-  const existingRequest = await query(
-    `SELECT id, reference_number FROM access_requests 
-     WHERE email = $1 AND organisation_id = $2 AND status = 'pending'`,
-    [email.toLowerCase().trim(), org.id]
-  );
-  
-  if (existingRequest.rowCount > 0) {
-    return { 
-      success: false, 
-      error: 'REQUEST_EXISTS', 
-      message: 'You already have a pending request.',
-      referenceNumber: existingRequest.rows[0].reference_number
-    };
-  }
+
+  try {
+    // Look up organisation by code
+    const orgResult = await query(
+      `SELECT id, name, access_request_enabled, access_request_auto_expire_days 
+       FROM organisations WHERE code = $1 AND is_active = TRUE`,
+      [organisationCode.toUpperCase().trim()]
+    );
+    
+    if (orgResult.rowCount === 0) {
+      return { success: false, error: 'ORG_NOT_FOUND', message: 'Organisation not found. Please check the code and try again.' };
+    }
+    
+    const org = orgResult.rows[0];
+    
+    // Check if access requests are enabled for this org
+    if (!org.access_request_enabled) {
+      return { success: false, error: 'REQUESTS_DISABLED', message: 'This organisation is not accepting access requests at this time.' };
+    }
+    
+    // Check if email is already registered
+    const existingUser = await query(
+      `SELECT id FROM users WHERE email = $1 AND organisation_id = $2`,
+      [email.toLowerCase().trim(), org.id]
+    );
+    
+    if (existingUser.rowCount > 0) {
+      return { success: false, error: 'EMAIL_EXISTS', message: 'An account with this email already exists.' };
+    }
+    
+    // Check for existing pending request
+    const existingRequest = await query(
+      `SELECT id, reference_number FROM access_requests 
+       WHERE email = $1 AND organisation_id = $2 AND status = 'pending'`,
+      [email.toLowerCase().trim(), org.id]
+    );
+    
+    if (existingRequest.rowCount > 0) {
+      return { 
+        success: false, 
+        error: 'REQUEST_EXISTS', 
+        message: 'You already have a pending request.',
+        referenceNumber: existingRequest.rows[0].reference_number
+      };
+    }
   
   // Calculate expiry date
   const expireDays = org.access_request_auto_expire_days || DEFAULT_EXPIRE_DAYS;
@@ -149,6 +150,17 @@ const submitAccessRequest = async ({
     referenceNumber: request.reference_number,
     message: 'Your access request has been submitted. You will be notified when it is reviewed.'
   };
+  } catch (err) {
+    console.error('Error submitting access request:', err);
+    if (err.code === 'ECONNREFUSED' || err.message.includes('connect') || err.message.includes('Connection')) {
+      return { 
+        success: false, 
+        error: 'DB_CONNECTION_ERROR', 
+        message: 'System is temporarily unavailable. Please try again in a few moments.' 
+      };
+    }
+    throw err;
+  }
 };
 
 /**
