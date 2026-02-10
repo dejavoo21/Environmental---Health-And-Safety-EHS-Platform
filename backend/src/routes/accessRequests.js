@@ -57,6 +57,21 @@ router.post('/', async (req, res, next) => {
     
     return res.status(201).json(result);
   } catch (err) {
+    console.error('[AccessRequest Route] Error:', {
+      message: err.message,
+      code: err.code,
+      stack: err.stack
+    });
+    
+    // Handle database connection errors gracefully
+    if (err.code === 'ECONNREFUSED' || err.message?.includes('connect') || err.message?.includes('ENOENT')) {
+      return res.status(503).json({
+        success: false,
+        error: 'SERVICE_UNAVAILABLE',
+        message: 'The system is temporarily unavailable. Please try again in a few moments.'
+      });
+    }
+    
     return next(err);
   }
 });
