@@ -48,6 +48,38 @@ router.get('/sites/:id/summary', authMiddleware, async (req, res, next) => {
 });
 
 /**
+ * POST /api/safety-advisor/sites/:id/acknowledge
+ * Record site-based safety acknowledgement (daily briefing)
+ * BR-11-18 (C-287)
+ */
+router.post('/sites/:id/acknowledge', authMiddleware, async (req, res, next) => {
+  try {
+    const siteId = parseInt(req.params.id);
+    const { organisationId, id: userId } = req.user;
+
+    if (isNaN(siteId)) {
+      throw new AppError('Invalid site ID', 400, 'VALIDATION_ERROR');
+    }
+
+    const acknowledgement = await recordSafetyAcknowledgement(
+      organisationId,
+      userId,
+      'site_briefing',
+      siteId,
+      {
+        siteId,
+        isHighRisk: false,
+        safetySummarySnapshot: null
+      }
+    );
+
+    res.json(acknowledgement);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * GET /api/safety-advisor/sites/:id/weather
  * Get weather for a site
  * BR-11-07 (C-276)

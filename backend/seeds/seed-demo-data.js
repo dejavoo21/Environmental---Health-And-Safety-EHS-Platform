@@ -29,8 +29,75 @@ async function seedDemoData() {
 
     await client.query('BEGIN');
 
+    // Create site locations with coordinates for weather API
+    console.log('Creating site locations with coordinates...');
+    const siteLocations = [
+      { name: 'London HQ', lat: 51.5074, lng: -0.1278, city: 'London', country: 'GB', timezone: 'Europe/London' },
+      { name: 'Manchester Office', lat: 53.4808, lng: -2.2426, city: 'Manchester', country: 'GB', timezone: 'Europe/London' },
+      { name: 'Birmingham Depot', lat: 52.4862, lng: -1.8904, city: 'Birmingham', country: 'GB', timezone: 'Europe/London' }
+    ];
+
+    for (let i = 0; i < sites.length && i < siteLocations.length; i++) {
+      const site = sites[i];
+      const loc = siteLocations[i];
+
+      // Check if location already exists
+      const existingLoc = await client.query(
+        'SELECT id FROM site_locations WHERE site_id = $1 AND organisation_id = $2',
+        [site.id, orgId]
+      );
+
+      if (existingLoc.rows.length === 0) {
+        await client.query(
+          `INSERT INTO site_locations (site_id, organisation_id, latitude, longitude, city, country_code, timezone, created_by)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [site.id, orgId, loc.lat, loc.lng, loc.city, loc.country, loc.timezone, userId]
+        );
+      } else {
+        await client.query(
+          `UPDATE site_locations SET latitude = $1, longitude = $2, city = $3, country_code = $4, timezone = $5
+           WHERE site_id = $6 AND organisation_id = $7`,
+          [loc.lat, loc.lng, loc.city, loc.country, loc.timezone, site.id, orgId]
+        );
+      }
+    }
+    console.log('Created/updated site locations with coordinates');
+
+    // Create PPE recommendations for sites
+    console.log('Creating PPE recommendations...');
+    const ppeItems = ['Hard Hat', 'Safety Glasses', 'High-Visibility Vest', 'Steel-Toe Boots', 'Gloves', 'Ear Protection'];
+    for (const site of sites) {
+      // Check if PPE recommendation already exists
+      const existingPpe = await client.query(
+        'SELECT id FROM ppe_recommendations WHERE site_id = $1',
+        [site.id]
+      );
+
+      if (existingPpe.rows.length === 0) {
+        await client.query(
+          `INSERT INTO ppe_recommendations (site_id, ppe_list) VALUES ($1, $2)`,
+          [site.id, ppeItems]
+        );
+      }
+    }
+    console.log('Created PPE recommendations for', sites.length, 'sites');
+
     // Create safety moments
     console.log('Creating safety moments...');
+
+    // First create today's safety moment so it shows in Safety Advisor
+    const todayMoment = {
+      title: "Today's Focus: Situational Awareness",
+      content: "Stay alert and aware of your surroundings at all times. Before starting any task, take a moment to assess potential hazards and plan your work safely. If something doesn't feel right, stop and reassess."
+    };
+
+    await client.query(
+      `INSERT INTO safety_moments (title, body, category, is_active, organisation_id, created_by, site_id, user_id, moment_type, moment_text, acknowledged, display_date)
+       VALUES ($1, $2, $3, TRUE, $4, $5, $6, $7, $8, $2, FALSE, CURRENT_DATE) ON CONFLICT DO NOTHING`,
+      [todayMoment.title, todayMoment.content, 'awareness', orgId, userId, siteId, userId, 'positive']
+    );
+    console.log('Created today\'s safety moment');
+
     const safetyMoments = [
       { title: 'Ladder Safety', content: 'Always maintain 3 points of contact when climbing ladders.' },
       { title: 'PPE Requirements', content: 'Wear appropriate Personal Protective Equipment for the task.' },

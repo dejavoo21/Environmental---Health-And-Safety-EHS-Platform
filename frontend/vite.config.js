@@ -28,5 +28,14 @@ export default defineConfig(({ mode }) => ({
         inline: ['react-router', 'react-router-dom', 'react-router/dom']
       }
     }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://ehs-app-production.up.railway.app',
+        changeOrigin: true,
+        secure: true
+      }
+    }
   }
 }))
