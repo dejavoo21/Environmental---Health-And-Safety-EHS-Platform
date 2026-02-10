@@ -54,10 +54,10 @@ router.get('/sites/:id/summary', authMiddleware, async (req, res, next) => {
  */
 router.post('/sites/:id/acknowledge', authMiddleware, async (req, res, next) => {
   try {
-    const siteId = parseInt(req.params.id);
+    const siteId = req.params.id;
     const { organisationId, id: userId } = req.user;
 
-    if (isNaN(siteId)) {
+    if (!siteId) {
       throw new AppError('Invalid site ID', 400, 'VALIDATION_ERROR');
     }
 
