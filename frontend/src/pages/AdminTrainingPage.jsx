@@ -50,7 +50,8 @@ const AdminTrainingPage = () => {
   const fetchCourses = useCallback(async () => {
     try {
       const res = await api.get('/training/courses');
-      setCourses(res.data?.data || res.data || []);
+      const coursesData = res.data?.courses || res.data?.data || (Array.isArray(res.data) ? res.data : []);
+      setCourses(coursesData);
     } catch (err) {
       setError('Failed to load courses');
     }
@@ -59,7 +60,8 @@ const AdminTrainingPage = () => {
   const fetchCategories = useCallback(async () => {
     try {
       const res = await api.get('/training/categories');
-      setCategories(res.data?.data || res.data || []);
+      const categoriesData = res.data?.categories || res.data?.data || (Array.isArray(res.data) ? res.data : []);
+      setCategories(categoriesData);
     } catch (err) {
       setError('Failed to load categories');
     }
@@ -68,7 +70,8 @@ const AdminTrainingPage = () => {
   const fetchAssignments = useCallback(async () => {
     try {
       const res = await api.get('/training/assignments');
-      setAssignments(res.data?.data || res.data || []);
+      const assignmentsData = res.data?.assignments || res.data?.data || (Array.isArray(res.data) ? res.data : []);
+      setAssignments(assignmentsData);
     } catch (err) {
       setError('Failed to load assignments');
     }
@@ -77,7 +80,8 @@ const AdminTrainingPage = () => {
   const fetchUsers = useCallback(async () => {
     try {
       const res = await api.get('/admin/users');
-      setUsers(res.data?.data || res.data || []);
+      const usersData = res.data?.users || res.data?.data || (Array.isArray(res.data) ? res.data : []);
+      setUsers(usersData);
     } catch (err) {
       // Silently fail
     }

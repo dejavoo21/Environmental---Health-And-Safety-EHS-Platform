@@ -59,7 +59,7 @@ const SafetyAdvisorPage = () => {
   const fetchSites = useCallback(async () => {
     try {
       const res = await api.get('/sites');
-      const sitesData = res.data?.data || res.data || [];
+      const sitesData = res.data?.sites || res.data?.data || (Array.isArray(res.data) ? res.data : []);
       setSites(sitesData);
       
       // Auto-select first site if available

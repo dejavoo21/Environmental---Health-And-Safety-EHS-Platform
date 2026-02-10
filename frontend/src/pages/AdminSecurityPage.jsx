@@ -50,28 +50,28 @@ const AdminSecurityPage = () => {
         api.get('/audit-logs', { params: { limit: 50 } })
       ]);
       
-      const usersData = usersRes.data?.data || usersRes.data || [];
-      const logsData = logsRes.data?.data || logsRes.data || [];
+      const usersData = usersRes.data?.users || usersRes.data?.data || (Array.isArray(usersRes.data) ? usersRes.data : []);
+      const logsData = logsRes.data?.logs || logsRes.data?.data || (Array.isArray(logsRes.data) ? logsRes.data : []);
       
       setUsers(usersData);
       setAuditLogs(logsData);
       
       // Calculate overview stats
-      const activeUsers = usersData.filter(u => u.is_active).length;
-      const with2FA = usersData.filter(u => u.has_2fa_enabled).length;
-      const lockedOut = usersData.filter(u => u.locked_until && new Date(u.locked_until) > new Date()).length;
-      const failedLogins = logsData.filter(l => 
+      const activeUsers = Array.isArray(usersData) ? usersData.filter(u => u.is_active).length : 0;
+      const with2FA = Array.isArray(usersData) ? usersData.filter(u => u.has_2fa_enabled).length : 0;
+      const lockedOut = Array.isArray(usersData) ? usersData.filter(u => u.locked_until && new Date(u.locked_until) > new Date()).length : 0;
+      const failedLogins = Array.isArray(logsData) ? logsData.filter(l => 
         l.action === 'login_failed' && 
         new Date(l.created_at) > new Date(Date.now() - 24 * 60 * 60 * 1000)
-      ).length;
+      ).length : 0;
       
       setOverview({
-        totalUsers: usersData.length,
+        totalUsers: Array.isArray(usersData) ? usersData.length : 0,
         activeUsers,
         with2FA,
         lockedOut,
         failedLogins24h: failedLogins,
-        recentActivity: logsData.slice(0, 10)
+        recentActivity: Array.isArray(logsData) ? logsData.slice(0, 10) : []
       });
     } catch (err) {
       console.error('Security overview error:', err);

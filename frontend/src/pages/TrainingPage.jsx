@@ -98,8 +98,8 @@ const TrainingPage = () => {
       ]);
       
       // Handle paginated responses: courses and categories may return { data: [], total, page }
-      const coursesData = coursesRes.data?.data || coursesRes.data || [];
-      const categoriesData = categoriesRes.data?.data || categoriesRes.data || [];
+      const coursesData = coursesRes.data?.courses || coursesRes.data?.data || (Array.isArray(coursesRes.data) ? coursesRes.data : []);
+      const categoriesData = categoriesRes.data?.categories || categoriesRes.data?.data || (Array.isArray(categoriesRes.data) ? categoriesRes.data : []);
       
       setCourses(Array.isArray(coursesData) ? coursesData : []);
       setCategories(Array.isArray(categoriesData) ? categoriesData : []);
