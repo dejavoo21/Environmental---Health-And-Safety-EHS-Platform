@@ -92,8 +92,8 @@ async function seedDemoData() {
     };
 
     await client.query(
-      `INSERT INTO safety_moments (title, body, category, is_active, organisation_id, created_by, site_id, user_id, moment_type, moment_text, acknowledged, display_date)
-       VALUES ($1, $2, $3, TRUE, $4, $5, $6, $7, $8, $2, FALSE, CURRENT_DATE) ON CONFLICT DO NOTHING`,
+      `INSERT INTO safety_moments (title, body, category, is_active, organisation_id, created_by, site_id, user_id, moment_type, moment_text, acknowledged, start_date, end_date)
+       VALUES ($1, $2, $3, TRUE, $4, $5, $6, $7, $8, $2, FALSE, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days') ON CONFLICT DO NOTHING`,
       [todayMoment.title, todayMoment.content, 'awareness', orgId, userId, siteId, userId, 'positive']
     );
     console.log('Created today\'s safety moment');
@@ -113,8 +113,8 @@ async function seedDemoData() {
       const sm = safetyMoments[i];
       const momentType = momentTypes[i % momentTypes.length];
       await client.query(
-        `INSERT INTO safety_moments (title, body, category, is_active, organisation_id, created_by, site_id, user_id, moment_type, moment_text, acknowledged)
-         VALUES ($1, $2, $3, TRUE, $4, $5, $6, $7, $8, $2, FALSE) ON CONFLICT DO NOTHING`,
+        `INSERT INTO safety_moments (title, body, category, is_active, organisation_id, created_by, site_id, user_id, moment_type, moment_text, acknowledged, start_date)
+         VALUES ($1, $2, $3, TRUE, $4, $5, $6, $7, $8, $2, FALSE, CURRENT_DATE - INTERVAL '${i} days') ON CONFLICT DO NOTHING`,
         [sm.title, sm.content, 'general', orgId, userId, siteId, userId, momentType]
       );
     }
