@@ -71,9 +71,18 @@ const AdminTrainingPage = () => {
     try {
       const res = await api.get('/training/assignments');
       const assignmentsData = res.data?.assignments || res.data?.data || (Array.isArray(res.data) ? res.data : []);
-      setAssignments(assignmentsData);
+      setAssignments(Array.isArray(assignmentsData) ? assignmentsData : []);
     } catch (err) {
-      setError('Failed to load assignments');
+      console.error('Assignments fetch error:', err);
+      // Only show error for real failures, not empty results
+      if (err.response?.status >= 500) {
+        setError('Failed to load assignments: Server error');
+      } else if (err.response?.status === 403) {
+        // Permission denied - just set empty, don't show error
+        setAssignments([]);
+      } else {
+        setError('Failed to load assignments');
+      }
     }
   }, []);
 

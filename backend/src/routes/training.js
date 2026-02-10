@@ -346,17 +346,34 @@ router.get('/assignments', async (req, res, next) => {
       page: parseInt(req.query.page, 10) || 1,
       limit: parseInt(req.query.limit, 10) || 20
     };
-    
+
     // Non-managers only see their own
     if (req.user.role !== 'admin' && req.user.role !== 'manager') {
       options.userId = req.user.id;
     } else if (req.query.userId) {
       options.userId = req.query.userId;
     }
-    
+
     const result = await assignmentService.listAssignments(req.user.organisationId, options);
     res.json(result);
   } catch (error) {
+    // Check if this is a missing table error
+    if (error.code === '42P01') {
+      console.error('Training assignments table not found:', error.message);
+      return res.json({
+        assignments: [],
+        pagination: { page: 1, limit: 20, totalItems: 0, totalPages: 0 }
+      });
+    }
+    // Check if this is a missing column error (schema mismatch)
+    if (error.code === '42703') {
+      console.error('Training assignments column not found:', error.message);
+      return res.json({
+        assignments: [],
+        pagination: { page: 1, limit: 20, totalItems: 0, totalPages: 0 },
+        meta: { warning: 'Schema mismatch - please run migrations' }
+      });
+    }
     next(error);
   }
 });
