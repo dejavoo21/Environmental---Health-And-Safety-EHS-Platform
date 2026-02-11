@@ -55,11 +55,11 @@ const submitAccessRequest = async ({
       return { success: false, error: 'REASON_TOO_LONG', message: 'Reason must be 500 characters or less.' };
     }
 
-    // Look up organisation by code
+    // Look up organisation by slug (using slug instead of code since code column doesn't exist)
     const orgResult = await query(
       `SELECT id, name, access_request_enabled, access_request_auto_expire_days 
-       FROM organisations WHERE code = $1 AND is_active = TRUE`,
-      [organisationCode.toUpperCase().trim()]
+       FROM organisations WHERE slug = $1 AND is_active = TRUE`,
+      [organisationCode.toLowerCase().trim()]
     );
     
     if (orgResult.rowCount === 0) {

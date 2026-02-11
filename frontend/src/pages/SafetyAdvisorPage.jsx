@@ -83,6 +83,8 @@ const SafetyAdvisorPage = () => {
     
     try {
       const res = await api.get(`/safety-advisor/sites/${selectedSite.id}/summary`);
+      console.log('[SafetyAdvisor] Summary response:', res.data);
+      console.log('[SafetyAdvisor] lastAcknowledgedAt:', res.data?.lastAcknowledgedAt);
       setSafetySummary(res.data);
     } catch (err) {
       console.error('Safety summary error:', err);
@@ -108,14 +110,20 @@ const SafetyAdvisorPage = () => {
   }, [selectedSite, fetchSafetySummary]);
 
   const handleAcknowledge = async () => {
-    if (!selectedSite) return;
+    if (!selectedSite) {
+      console.error('No site selected');
+      return;
+    }
     
     setAcknowledging(true);
     try {
-      await api.post(`/safety-advisor/sites/${selectedSite.id}/acknowledge`);
-      fetchSafetySummary();
+      console.log(`[SafetyAdvisor] Acknowledging site ${selectedSite.id}...`);
+      const res = await api.post(`/safety-advisor/sites/${selectedSite.id}/acknowledge`);
+      console.log('[SafetyAdvisor] Acknowledgement response:', res.data);
+      await fetchSafetySummary();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to acknowledge');
+      console.error('[SafetyAdvisor] Acknowledgement error:', err);
+      setError(err.response?.data?.message || 'Failed to acknowledge safety briefing');
     } finally {
       setAcknowledging(false);
     }
