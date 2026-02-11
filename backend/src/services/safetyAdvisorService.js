@@ -57,22 +57,42 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
 
   try {
     const results = await Promise.allSettled([
-      getWeatherForSite(siteId, orgId),
+      getWeatherForSite(siteId, orgId).catch(err => {
+        console.warn('[SafetyAdvisor] Weather fetch failed:', err.code, err.message);
+        return { status: 'unavailable', tempC: null };
+      }),
       getTodaysSafetyMoment(orgId, userId, userRole, siteId).catch(err => {
-        if (err.code === '42P01') console.warn('Safety moments tables not found');
+        if (err.code === '42P01') console.warn('[SafetyAdvisor] Safety moments tables not found');
+        else console.warn('[SafetyAdvisor] Safety moment fetch failed:', err.code, err.message);
         return null;
       }),
       getLegislationRefsForSite(siteId).catch(err => {
-        if (err.code === '42P01') console.warn('Legislation tables not found');
+        if (err.code === '42P01') console.warn('[SafetyAdvisor] Legislation tables not found');
+        else console.warn('[SafetyAdvisor] Legislation fetch failed:', err.code, err.message);
         return [];
       })
     ]);
 
-    if (results[0].status === 'fulfilled') weather = results[0].value || weather;
-    if (results[1].status === 'fulfilled') safetyMoment = results[1].value;
-    if (results[2].status === 'fulfilled') legislation = results[2].value || [];
+    if (results[0].status === 'fulfilled') {
+      weather = results[0].value || weather;
+    } else if (results[0].status === 'rejected') {
+      console.warn('[SafetyAdvisor] Weather promise rejected:', results[0].reason);
+    }
+    
+    if (results[1].status === 'fulfilled') {
+      safetyMoment = results[1].value;
+    } else if (results[1].status === 'rejected') {
+      console.warn('[SafetyAdvisor] Safety moment promise rejected:', results[1].reason);
+    }
+    
+    if (results[2].status === 'fulfilled') {
+      legislation = results[2].value || [];
+    } else if (results[2].status === 'rejected') {
+      console.warn('[SafetyAdvisor] Legislation promise rejected:', results[2].reason);
+      legislation = [];
+    }
   } catch (err) {
-    console.warn('Error fetching safety data:', err.message);
+    console.warn('[SafetyAdvisor] Error fetching safety data:', err.message);
   }
 
   // Get PPE recommendations based on weather

@@ -34,15 +34,31 @@ const getLegislationRefsForSite = async (siteId, options = {}) => {
 
   values.push(limit);
 
-  const result = await query(`
-    SELECT id, site_id, title, jurisdiction, category, summary, reference_url, is_primary, created_at
-    FROM site_legislation_refs
-    WHERE ${conditions.join(' AND ')}
-    ORDER BY is_primary DESC, title ASC
-    LIMIT $${paramIndex}
-  `, values);
+  try {
+    const result = await query(`
+      SELECT id, site_id, title, jurisdiction, category, summary, reference_url, is_primary, created_at
+      FROM site_legislation_refs
+      WHERE ${conditions.join(' AND ')}
+      ORDER BY is_primary DESC, title ASC
+      LIMIT $${paramIndex}
+    `, values);
 
-  return result.rows;
+    return result.rows || [];
+  } catch (err) {
+    // If table doesn't exist, return empty array gracefully
+    if (err.code === '42P01') {
+      console.warn('[LegislationService] site_legislation_refs table not found, returning empty array');
+      return [];
+    }
+    // Log other errors but don't crash
+    console.error('[LegislationService] Error fetching legislation for site:', {
+      siteId,
+      code: err.code,
+      message: err.message
+    });
+    // Return empty array on any query error to keep Safety Advisor working
+    return [];
+  }
 };
 
 /**
