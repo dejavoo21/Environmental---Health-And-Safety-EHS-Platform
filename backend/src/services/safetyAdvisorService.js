@@ -23,23 +23,18 @@ const { recordAudit } = require('../utils/audit');
  * @returns {Object} Complete safety summary
  */
 const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
-  // Get site info - use simple query that doesn't depend on Phase 11 tables
+  // Get site info with location details
   let siteResult;
   try {
     siteResult = await query(`
-      SELECT s.id, s.name, sl.city, sl.country_code, sl.region
+      SELECT s.id, s.name, s.city, s.country_code, s.latitude, s.longitude
       FROM sites s
-      LEFT JOIN site_locations sl ON sl.site_id = s.id
       WHERE s.id = $1
     `, [siteId]);
   } catch (err) {
-    // If site_locations doesn't exist, try without it
-    if (err.code === '42P01') {
-      console.warn('site_locations table not found, using sites only');
-      siteResult = await query('SELECT id, name FROM sites WHERE id = $1', [siteId]);
-    } else {
-      throw err;
-    }
+    console.warn('Error fetching site details:', err.code, err.message);
+    // Fallback to basic info
+    siteResult = await query('SELECT id, name FROM sites WHERE id = $1', [siteId]);
   }
 
   if (siteResult.rowCount === 0) {
@@ -47,7 +42,7 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
   }
 
   const site = siteResult.rows[0];
-  const siteLocation = [site.city, site.region, site.country_code].filter(Boolean).join(', ') || null;
+  const siteLocation = [site.city, site.country_code].filter(Boolean).join(', ') || null;
 
   // Fetch all data in parallel with graceful fallbacks
   let weather = { status: 'unavailable' };
