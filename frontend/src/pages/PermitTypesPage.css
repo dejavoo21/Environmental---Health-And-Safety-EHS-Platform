@@ -134,12 +134,45 @@
 /* Modal Styles */
 .modal.large {
   max-width: 600px;
-  max-height: 80vh;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+}
+
+:root.dark-theme .modal.large {
+  background: #2c313a;
+  border-color: #3a414d;
 }
 
 .modal-body {
   max-height: 60vh;
   overflow-y: auto;
+  flex: 1;
+  padding: 1.5rem;
+}
+
+/* Dark theme scrollbar for modal */
+:root.dark-theme .modal-body {
+  background: #2c313a;
+  color: #f6f1e7;
+}
+
+:root.dark-theme .modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+:root.dark-theme .modal-body::-webkit-scrollbar-track {
+  background: #353c47;
+}
+
+:root.dark-theme .modal-body::-webkit-scrollbar-thumb {
+  background: #505a6a;
+  border-radius: 4px;
+}
+
+:root.dark-theme .modal-body::-webkit-scrollbar-thumb:hover {
+  background: #606a7a;
 }
 
 .form-row {
@@ -164,6 +197,10 @@
   color: var(--color-text-strong);
 }
 
+:root.dark-theme .form-group label {
+  color: #f6f1e7;
+}
+
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -173,6 +210,23 @@
   font-size: 0.875rem;
   background: var(--color-surface);
   color: var(--color-text-strong);
+}
+
+:root.dark-theme .form-group input,
+:root.dark-theme .form-group select,
+:root.dark-theme .form-group textarea {
+  background: #3a414d;
+  color: #f6f1e7;
+  border-color: #505a6a;
+}
+
+:root.dark-theme .form-group input:focus,
+:root.dark-theme .form-group select:focus,
+:root.dark-theme .form-group textarea:focus {
+  background: #3a414d;
+  color: #f6f1e7;
+  border-color: #606a7a;
+  outline: none;
 }
 
 .form-group input::placeholder,
@@ -200,13 +254,27 @@
   justify-content: center;
 }
 
+:root.dark-theme .icon-option {
+  background: #3a414d;
+  border-color: #505a6a;
+}
+
 .icon-option:hover {
   border-color: var(--color-primary);
+}
+
+:root.dark-theme .icon-option:hover {
+  border-color: #0d6efd;
 }
 
 .icon-option.selected {
   border-color: var(--color-primary);
   background: rgba(13, 110, 253, 0.1);
+}
+
+:root.dark-theme .icon-option.selected {
+  border-color: #0d6efd;
+  background: rgba(13, 110, 253, 0.2);
 }
 
 .checkbox-group {
@@ -224,6 +292,18 @@
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--color-border);
+}
+
+:root.dark-theme .controls-section {
+  border-top-color: #505a6a;
+}
+
+.controls-section h4 {
+  color: var(--color-text-strong);
+}
+
+:root.dark-theme .controls-section h4 {
+  color: #f6f1e7;
 }
 
 .controls-header {
@@ -258,6 +338,12 @@
   border: 1px solid var(--color-border);
   border-radius: 6px;
   font-size: 0.875rem;
+}
+
+:root.dark-theme .control-row input[type="text"] {
+  background: #3a414d;
+  color: #f6f1e7;
+  border-color: #505a6a;
 }
 
 .required-check {
