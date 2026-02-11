@@ -146,7 +146,7 @@ const submitAccessRequest = async ({
         userAgent
       });
       
-      // Send confirmation email if SMTP configured
+      // Send confirmation email if SMTP configured (fire-and-forget, don't block response)
       if (isSmtpConfigured()) {
         const orgQuery = await query(
           `SELECT name FROM organisations WHERE id = $1`,
@@ -154,22 +154,22 @@ const submitAccessRequest = async ({
         );
         const org = orgQuery.rows[0];
         
-        await sendAccessRequestConfirmationEmail({
+        sendAccessRequestConfirmationEmail({
           email: email.toLowerCase().trim(),
           fullName: fullName.trim(),
           referenceNumber: request.reference_number,
           organisationName: org?.name || 'Your Organization'
-        });
+        }).catch(err => console.error('[Email] Failed to send confirmation email:', err.message));
       }
     } else {
-      // Send confirmation email without organisation details
+      // Send confirmation email without organisation details (fire-and-forget, don't block response)
       if (isSmtpConfigured()) {
-        await sendAccessRequestConfirmationEmail({
+        sendAccessRequestConfirmationEmail({
           email: email.toLowerCase().trim(),
           fullName: fullName.trim(),
           referenceNumber: request.reference_number,
           organisationName: 'Pending Assignment'
-        });
+        }).catch(err => console.error('[Email] Failed to send confirmation email:', err.message));
       }
     }
     
