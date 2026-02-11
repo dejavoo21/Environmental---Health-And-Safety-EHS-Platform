@@ -24,10 +24,10 @@ const TIMEZONES = [
 
 const getTimezonesForCountry = (countryCode) => {
   const countryTimezones = {
-    'GB': ['Europe/London'],
-    'US': ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles'],
-    'CA': ['America/Toronto', 'America/Vancouver'],
-    'ZA': ['Africa/Johannesburg']
+    'GB': ['Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Amsterdam', 'Europe/Dublin'],
+    'US': ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Anchorage', 'Pacific/Honolulu'],
+    'CA': ['America/Toronto', 'America/Vancouver', 'America/Winnipeg', 'America/Calgary'],
+    'ZA': ['Africa/Johannesburg', 'Africa/Harare', 'Africa/Cairo']
   };
   return countryTimezones[countryCode] || TIMEZONES;
 };
@@ -58,6 +58,10 @@ const AdminSitesPage = () => {
   const resetForm = () => {
     setForm({ id: null, name: '', code: '', country_code: 'GB', city: '', timezone: 'Europe/London', latitude: null, longitude: null });
     setError('');
+  };
+
+  const handleAddNew = () => {
+    resetForm();
   };
 
   const handleSubmit = async (event) => {
@@ -227,6 +231,10 @@ const AdminSitesPage = () => {
 
         {/* Right Column: Table */}
         <div className="admin-table-column">
+          <div className="admin-table-header">
+            <h3>Sites</h3>
+            <button className="btn primary" onClick={handleAddNew}>+ Add New Site</button>
+          </div>
           {sites.length === 0 ? (
             <EmptyState message="No sites available." />
           ) : (

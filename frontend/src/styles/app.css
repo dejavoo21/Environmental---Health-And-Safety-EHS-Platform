@@ -6078,6 +6078,25 @@ textarea:focus {
   grid-column: 1 / -1;
 }
 
+.admin-sites-page .admin-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.admin-sites-page .admin-table-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.admin-sites-page .admin-table-header .btn {
+  white-space: nowrap;
+}
+
 @media (max-width: 1200px) {
   .admin-sites-page .admin-content-container {
     grid-template-columns: 1fr;
