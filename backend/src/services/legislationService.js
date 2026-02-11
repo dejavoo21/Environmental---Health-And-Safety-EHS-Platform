@@ -19,6 +19,34 @@ const { recordAudit } = require('../utils/audit');
 const getLegislationRefsForSite = async (siteId, options = {}) => {
   const { limit = 10, category = null, includeDeleted = false } = options;
 
+  // First try to get site info to get country code for legislation lookup
+  try {
+    const siteResult = await query(`
+      SELECT country_code FROM sites WHERE id = $1
+    `, [siteId]);
+
+    if (siteResult.rowCount > 0) {
+      const countryCode = siteResult.rows[0].country_code;
+      
+      // Get legislation by country code from legislation_references table
+      const result = await query(`
+        SELECT id, title, category, NULL as jurisdiction, NULL as reference_url, NULL as summary
+        FROM legislation_references
+        WHERE country_code = $1
+          AND is_active = TRUE
+        ORDER BY category, title ASC
+        LIMIT $2
+      `, [countryCode, limit]);
+
+      if (result.rowCount > 0) {
+        return result.rows;
+      }
+    }
+  } catch (err) {
+    console.warn('[LegislationService] Error fetching legislation by country:', err.message);
+  }
+
+  // Fallback to site-specific legislation if available
   const conditions = ['site_id = $1'];
   const values = [siteId];
   let paramIndex = 2;
