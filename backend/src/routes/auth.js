@@ -442,6 +442,11 @@ router.post('/2fa/verify', authMiddleware, async (req, res, next) => {
     
     return res.json(result);
   } catch (err) {
+    console.error('[Auth] 2FA Verify Error:', {
+      userId: req.user?.id,
+      code: err.code,
+      message: err.message
+    });
     return next(err);
   }
 });
@@ -609,6 +614,10 @@ router.post('/2fa/login-verify', async (req, res, next) => {
       backupCodeWarning
     });
   } catch (err) {
+    console.error('[Auth] 2FA Login Verify Error:', {
+      code: err.code,
+      message: err.message
+    });
     return next(err);
   }
 });
