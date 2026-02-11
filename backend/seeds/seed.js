@@ -60,6 +60,7 @@ const run = async () => {
        VALUES
        ('Head Office', 'HO', $1, 'GB', 'Manchester', 'Europe/London', 53.4808, -2.2426),
        ('Warehouse 1', 'WH1', $1, 'GB', 'Birmingham', 'Europe/London', 52.4862, -1.8904),
+       ('Warehouse 2', 'WH2', $1, 'GB', 'Bristol', 'Europe/London', 51.4545, -2.5879),
        ('Distribution Center', 'DC1', $1, 'GB', 'London', 'Europe/London', 51.5074, -0.1278)
        ON CONFLICT DO NOTHING`,
       [orgId]
