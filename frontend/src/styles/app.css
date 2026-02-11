@@ -789,13 +789,18 @@ h1, h2, h3, h4 {
   top: 100%;
   right: 0;
   margin-top: 4px;
-  min-width: 180px;
+  min-width: 240px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   z-index: 500;
   animation: menuSlideIn 0.15s ease;
+}
+
+:root.dark-theme .user-menu-dropdown {
+  background: #2c313a;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes menuSlideIn {
@@ -822,13 +827,26 @@ h1, h2, h3, h4 {
   transition: background 0.1s ease;
 }
 
+:root.dark-theme .user-menu-item {
+  color: #f6f1e7;
+}
+
 .user-menu-item:hover {
   background: #f5f5f5;
+}
+
+:root.dark-theme .user-menu-item:hover {
+  background: #3a414d;
 }
 
 .user-menu-item.logout {
   border-top: 1px solid #eee;
   color: #c62828;
+}
+
+:root.dark-theme .user-menu-item.logout {
+  border-top-color: #4a5a6a;
+  color: #ff6b6b;
 }
 
 /* Inline loading state */
@@ -6026,3 +6044,47 @@ textarea:focus {
   }
 }
 
+/* =============================================================
+   ADMIN SITES PAGE - HORIZONTAL LAYOUT (Phase 11.5)
+   Form on left, table on right for better readability
+   ============================================================= */
+.admin-sites-page .admin-content-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.admin-sites-page .admin-form-column {
+  position: sticky;
+  top: 1rem;
+}
+
+.admin-sites-page .admin-table-column {
+  min-width: 0; /* Allow table to shrink */
+}
+
+.admin-sites-page .admin-form-card {
+  margin: 0;
+}
+
+.admin-sites-page .admin-form-card__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.admin-sites-page .field-full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1200px) {
+  .admin-sites-page .admin-content-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .admin-sites-page .admin-form-column {
+    position: static;
+  }
+}

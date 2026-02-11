@@ -54,13 +54,13 @@ const run = async () => {
       [adminHash, managerHash, workerHash, orgId]
     );
 
-    // Create sites with organisation_id (Phase 3)
+    // Create sites with organisation_id and location fields (Phase 3, 11.5)
     await client.query(
-      `INSERT INTO sites (name, code, organisation_id)
+      `INSERT INTO sites (name, code, organisation_id, country_code, city, timezone, latitude, longitude)
        VALUES
-       ('Head Office', 'HO', $1),
-       ('Warehouse 1', 'WH1', $1),
-       ('Distribution Center', 'DC1', $1)
+       ('Head Office', 'HO', $1, 'GB', 'Manchester', 'Europe/London', 53.4808, -2.2426),
+       ('Warehouse 1', 'WH1', $1, 'GB', 'Birmingham', 'Europe/London', 52.4862, -1.8904),
+       ('Distribution Center', 'DC1', $1, 'GB', 'London', 'Europe/London', 51.5074, -0.1278)
        ON CONFLICT DO NOTHING`,
       [orgId]
     );

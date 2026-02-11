@@ -218,6 +218,41 @@ async function seedDemoData() {
       { title: 'PPE Usage', desc: 'Using PPE properly', duration: 0.75 }
     ];
 
+    // Create sample training courses with validity periods (Phase 11.5)
+    const sampleCourses = [
+      { title: 'Fire Safety Awareness', desc: 'Learn fire prevention and emergency procedures', duration: 0.5, validity: 12, delivery: 'e-learning', mandatory: true },
+      { title: 'First Aid Basics', desc: 'Introduction to emergency first aid certification', duration: 1, validity: 24, delivery: 'classroom', mandatory: true },
+      { title: 'Manual Handling & Ergonomics', desc: 'Safe lifting and ergonomic workplace practices', duration: 0.75, validity: 24, delivery: 'e-learning', mandatory: false }
+    ];
+
+    // Get or create Safety Training category
+    const catResult = await client.query(
+      `INSERT INTO training_categories (organisation_id, name, description, created_by)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT DO NOTHING
+       RETURNING id`,
+      [orgId, 'Safety Training', 'Core safety and compliance training', userId]
+    );
+
+    let safetyCategoryId = catResult.rows[0]?.id;
+    if (!safetyCategoryId) {
+      const existCat = await client.query('SELECT id FROM training_categories WHERE organisation_id = $1 AND name = $2', [orgId, 'Safety Training']);
+      safetyCategoryId = existCat.rows[0]?.id;
+    }
+
+    if (safetyCategoryId) {
+      for (const course of sampleCourses) {
+        const code = 'SAFE-' + course.title.substring(0, 3).toUpperCase() + '-001';
+        await client.query(
+          `INSERT INTO training_courses (code, title, description, category_id, duration_hours, delivery_type, requirement_level, validity_months, status, organisation_id, created_by)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'active', $9, $10)
+           ON CONFLICT (organisation_id, code) DO NOTHING`,
+          [code, course.title, course.desc, safetyCategoryId, course.duration, course.delivery, course.mandatory ? 'mandatory' : 'optional', course.validity, orgId, userId]
+        );
+      }
+      console.log('Created', sampleCourses.length, 'sample safety training courses');
+    }
+
     for (let i = 0; i < courses.length; i++) {
       const course = courses[i];
       const cat = trainingCategories[i % trainingCategories.length];

@@ -96,14 +96,21 @@ const SafetyAdvisorPanel = ({
 
   // Handle acknowledgement
   const handleAcknowledge = async () => {
-    if (!entityType || !entityId) return;
+    if (!entityType || !entityId) {
+      setError('Missing entity type or ID');
+      return;
+    }
 
     setAckLoading(true);
     setError(''); // Clear previous errors
     try {
+      console.log(`[SafetyAdvisor] Attempting to acknowledge ${entityType}/${entityId}`);
+      
       const result = await acknowledgeSafetyAdvisor(entityType, entityId, {
         safetySummarySnapshot: safetySummary
       });
+
+      console.log(`[SafetyAdvisor] Acknowledgement result:`, result);
 
       // Check for success flag in response
       if (result.success || result.id || result.acknowledgedAt) {
@@ -123,6 +130,11 @@ const SafetyAdvisorPanel = ({
       }
     } catch (err) {
       console.error('Acknowledgement error:', err);
+      console.error('Error details:', {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message
+      });
 
       // Handle specific error codes
       const status = err.response?.status;
@@ -137,7 +149,7 @@ const SafetyAdvisorPanel = ({
       } else if (status >= 500) {
         setError('Server error. Please contact support if this persists.');
       } else {
-        setError('Unable to record acknowledgement. Please try again.');
+        setError(serverError || 'Unable to record acknowledgement. Please try again.');
       }
     } finally {
       setAckLoading(false);

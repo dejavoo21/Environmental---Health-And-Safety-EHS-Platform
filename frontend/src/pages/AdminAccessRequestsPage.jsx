@@ -37,13 +37,14 @@ const AdminAccessRequestsPage = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await api.get('/admin/access-requests', {
+      const response = await api.get('/access-requests/admin', {
         params: { status: statusFilter, page, limit: 20 }
       });
       setRequests(response.data.data);
       setPagination(response.data.pagination);
       setCounts(response.data.counts || {});
     } catch (err) {
+      console.error('Failed to fetch access requests:', err);
       setError(err.response?.data?.message || 'Failed to load access requests');
     } finally {
       setLoading(false);
@@ -80,14 +81,14 @@ const AdminAccessRequestsPage = () => {
     setModalLoading(true);
     setModalError('');
     try {
-      await api.post(`/admin/access-requests/${selectedRequest.id}/approve`, {
-        role: modalData.role,
-        siteIds: modalData.siteIds.length > 0 ? modalData.siteIds : undefined,
-        notes: modalData.notes.trim() || undefined
+      await api.post(`/access-requests/admin/${selectedRequest.id}/approve`, {
+        assignedRole: modalData.role,
+        sendWelcomeEmail: true
       });
       closeModal();
       fetchRequests(pagination.page);
     } catch (err) {
+      console.error('Approve error:', err);
       setModalError(err.response?.data?.message || 'Failed to approve request');
     } finally {
       setModalLoading(false);
@@ -100,13 +101,14 @@ const AdminAccessRequestsPage = () => {
     setModalLoading(true);
     setModalError('');
     try {
-      await api.post(`/admin/access-requests/${selectedRequest.id}/reject`, {
+      await api.post(`/access-requests/admin/${selectedRequest.id}/reject`, {
         reason: modalData.reason.trim() || undefined,
         sendEmail: modalData.sendEmail
       });
       closeModal();
       fetchRequests(pagination.page);
     } catch (err) {
+      console.error('Reject error:', err);
       setModalError(err.response?.data?.message || 'Failed to reject request');
     } finally {
       setModalLoading(false);

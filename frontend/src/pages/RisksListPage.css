@@ -158,7 +158,11 @@
 
 .pagination__info {
   font-size: 0.9rem;
-  color: #666;
+  color: #1a1a1a;
+}
+
+:root.dark-theme .pagination__info {
+  color: #e0e0e0;
 }
 
 /* ==================== SIDEBAR ==================== */
@@ -180,10 +184,15 @@
 }
 
 .sidebar-empty {
-  color: #999;
+  color: #4a4a4a;
   font-size: 0.85rem;
   text-align: center;
   padding: 16px 0;
+  font-weight: 500;
+}
+
+:root.dark-theme .sidebar-empty {
+  color: #b0b0b0;
 }
 
 .top-risks-list,
@@ -221,6 +230,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+:root.dark-theme .top-risk-title {
+  color: #e0e0e0;
 }
 
 .review-reference {
@@ -231,8 +246,13 @@
 
 .review-date {
   font-size: 0.8rem;
-  color: #666;
+  color: #4a4a4a;
   margin-left: auto;
+  font-weight: 500;
+}
+
+:root.dark-theme .review-date {
+  color: #a0a0a0;
 }
 
 /* ==================== BUTTONS ==================== */
