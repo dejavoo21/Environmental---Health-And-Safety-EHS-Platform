@@ -34,16 +34,14 @@ router.post('/', async (req, res, next) => {
   if (!fullName) {
     return next(new AppError('Full name is required', 400, 'VALIDATION_ERROR'));
   }
-  
-  if (!organisationCode) {
-    return next(new AppError('Organisation code is required', 400, 'VALIDATION_ERROR'));
-  }
+
+  // Organisation code is optional - can be assigned by admin later
   
   try {
     const result = await accessRequestService.submitAccessRequest({
       email,
       fullName,
-      organisationCode,
+      organisationCode: organisationCode || null,
       requestedRole: requestedRole || 'worker',
       reason,
       termsAccepted: termsAccepted === true,
