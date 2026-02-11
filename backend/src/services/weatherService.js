@@ -108,12 +108,18 @@ const getWeatherForSite = async (siteId, orgId = null) => {
       };
     }
 
-    // Get site location
+    // Get site location - prefer site_locations table, fall back to sites table
     const locationResult = await query(`
-      SELECT sl.latitude, sl.longitude, sl.weather_location_id, sl.city, sl.country_code, s.name as site_name
-      FROM site_locations sl
-      JOIN sites s ON s.id = sl.site_id
-      WHERE sl.site_id = $1
+      SELECT 
+        COALESCE(sl.latitude, s.latitude) as latitude,
+        COALESCE(sl.longitude, s.longitude) as longitude,
+        sl.weather_location_id,
+        COALESCE(sl.city, s.city) as city,
+        COALESCE(sl.country_code, s.country_code) as country_code,
+        s.name as site_name
+      FROM sites s
+      LEFT JOIN site_locations sl ON sl.site_id = s.id
+      WHERE s.id = $1
     `, [siteId]);
 
     if (locationResult.rowCount === 0) {
