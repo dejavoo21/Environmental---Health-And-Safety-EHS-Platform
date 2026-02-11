@@ -179,10 +179,10 @@ const getWeatherForSite = async (siteId, orgId = null) => {
     const expiresAt = new Date(Date.now() + (env.weatherCacheTtlSeconds * 1000));
     await query(`
       INSERT INTO weather_cache (site_id, organisation_id, data_json, as_of, expires_at)
-      VALUES ($1, $2, $3, NOW(), $4)
+      VALUES ($1, $2, $3::jsonb, NOW(), $4)
       ON CONFLICT (site_id) DO UPDATE
-      SET data_json = $3, as_of = NOW(), expires_at = $4, organisation_id = COALESCE($2, weather_cache.organisation_id)
-    `, [siteId, orgId, response.data, expiresAt]);
+      SET data_json = $3::jsonb, as_of = NOW(), expires_at = $4, organisation_id = COALESCE($2, weather_cache.organisation_id)
+    `, [siteId, orgId, JSON.stringify(response.data), expiresAt]);
 
     return {
       status: 'ok',
