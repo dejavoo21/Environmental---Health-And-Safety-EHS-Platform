@@ -29,9 +29,10 @@ authenticator.options = {
  * @returns {Buffer} - 32-byte key
  */
 const getEncryptionKey = () => {
-  const key = env.totpEncryptionKey || process.env.TOTP_ENCRYPTION_KEY;
+  // Use TOTP_ENCRYPTION_KEY if available, fall back to JWT_SECRET
+  const key = env.totpEncryptionKey || process.env.TOTP_ENCRYPTION_KEY || env.jwtSecret || process.env.JWT_SECRET;
   if (!key) {
-    throw new Error('TOTP_ENCRYPTION_KEY environment variable is required for 2FA');
+    throw new Error('No encryption key available for 2FA. Set TOTP_ENCRYPTION_KEY or JWT_SECRET.');
   }
   // Ensure key is 32 bytes for AES-256
   return crypto.scryptSync(key, 'salt', 32);

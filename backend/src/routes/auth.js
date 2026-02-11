@@ -402,6 +402,12 @@ router.post('/2fa/setup', authMiddleware, async (req, res, next) => {
     );
     return res.json(result);
   } catch (err) {
+    console.error('[Auth] 2FA Setup Error:', {
+      userId: req.user?.id,
+      email: req.user?.email,
+      code: err.code,
+      message: err.message
+    });
     return next(err);
   }
 });
