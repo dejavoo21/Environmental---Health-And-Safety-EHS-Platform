@@ -175,14 +175,16 @@ const getWeatherForSite = async (siteId, orgId = null) => {
 
     const normalized = normalizeWeatherData(response.data);
 
-    // Update cache
+    // Update cache (non-blocking - don't fail if cache update fails)
     const expiresAt = new Date(Date.now() + (env.weatherCacheTtlSeconds * 1000));
-    await query(`
+    query(`
       INSERT INTO weather_cache (site_id, organisation_id, data_json, as_of, expires_at)
       VALUES ($1, $2, $3::jsonb, NOW(), $4)
       ON CONFLICT (site_id) DO UPDATE
       SET data_json = $3::jsonb, as_of = NOW(), expires_at = $4, organisation_id = COALESCE($2, weather_cache.organisation_id)
-    `, [siteId, orgId, JSON.stringify(response.data), expiresAt]);
+    `, [siteId, orgId, JSON.stringify(response.data), expiresAt]).catch(err => {
+      console.warn(`[WeatherService] Could not cache weather for site ${siteId}: ${err.message}`);
+    });
 
     return {
       status: 'ok',
