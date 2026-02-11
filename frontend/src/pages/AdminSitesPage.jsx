@@ -24,26 +24,48 @@ const TIMEZONES = [
 
 const getTimezonesForCountry = (countryCode) => {
   const countryTimezones = {
-    'GB': ['Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Amsterdam', 'Europe/Dublin'],
+    // North America
     'US': ['America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Anchorage', 'Pacific/Honolulu'],
     'CA': ['America/Toronto', 'America/Vancouver', 'America/Winnipeg', 'America/Calgary'],
-    'ZA': ['Africa/Johannesburg', 'Africa/Harare', 'Africa/Cairo']
+    'MX': ['America/Mexico_City', 'America/Monterrey', 'America/Cancun'],
+    // South America
+    'BR': ['America/Sao_Paulo', 'America/Rio_Branco', 'America/Manaus'],
+    'AR': ['America/Argentina/Buenos_Aires', 'America/Argentina/Cordoba'],
+    'CL': ['America/Santiago', 'America/Punta_Arenas'],
+    'CO': ['America/Bogota'],
+    'PE': ['America/Lima'],
+    // Europe
+    'GB': ['Europe/London'],
+    'FR': ['Europe/Paris'],
+    'DE': ['Europe/Berlin'],
+    'ES': ['Europe/Madrid'],
+    'IT': ['Europe/Rome'],
+    'NL': ['Europe/Amsterdam'],
+    'PL': ['Europe/Warsaw'],
+    'RU': ['Europe/Moscow', 'Europe/Samara', 'Asia/Yekaterinburg', 'Asia/Vladivostok'],
+    // Asia
+    'JP': ['Asia/Tokyo'],
+    'IN': ['Asia/Kolkata'],
+    'CN': ['Asia/Shanghai'],
+    'AU': ['Australia/Sydney', 'Australia/Melbourne', 'Australia/Brisbane', 'Australia/Perth'],
+    'SG': ['Asia/Singapore'],
+    'TH': ['Asia/Bangkok'],
+    'ID': ['Asia/Jakarta'],
+    // Africa
+    'ZA': ['Africa/Johannesburg'],
+    'EG': ['Africa/Cairo'],
+    'NG': ['Africa/Lagos'],
+    'KE': ['Africa/Nairobi'],
+    'ET': ['Africa/Addis_Ababa'],
+    'GH': ['Africa/Accra'],
+    'MA': ['Africa/Casablanca']
   };
   return countryTimezones[countryCode] || TIMEZONES;
 };
 
 // City to coordinates mapping for automatic population
 const CITY_COORDINATES = {
-  'GB': {
-    'London': { lat: 51.5074, lon: -0.1278 },
-    'Manchester': { lat: 53.4808, lon: -2.2426 },
-    'Birmingham': { lat: 52.4862, lon: -1.8904 },
-    'Bristol': { lat: 51.4545, lon: -2.5879 },
-    'Leeds': { lat: 53.8008, lon: -1.5491 },
-    'Edinburgh': { lat: 55.9533, lon: -3.1883 },
-    'Glasgow': { lat: 55.8642, lon: -4.2518 },
-    'Liverpool': { lat: 53.4084, lon: -2.9916 }
-  },
+  // NORTH AMERICA
   'US': {
     'New York': { lat: 40.7128, lon: -74.0060 },
     'Los Angeles': { lat: 34.0522, lon: -118.2437 },
@@ -66,13 +88,183 @@ const CITY_COORDINATES = {
     'Winnipeg': { lat: 49.8951, lon: -97.1384 },
     'Quebec City': { lat: 46.8139, lon: -71.2080 }
   },
+  'MX': {
+    'Mexico City': { lat: 19.4326, lon: -99.1332 },
+    'Monterrey': { lat: 25.6866, lon: -100.3161 },
+    'Cancun': { lat: 21.1619, lon: -86.8515 },
+    'Guadalajara': { lat: 20.6596, lon: -103.2494 }
+  },
+  // SOUTH AMERICA
+  'BR': {
+    'São Paulo': { lat: -23.5505, lon: -46.6333 },
+    'Rio de Janeiro': { lat: -22.9068, lon: -43.1729 },
+    'Brasília': { lat: -15.7942, lon: -47.8822 },
+    'Salvador': { lat: -12.9714, lon: -38.5014 },
+    'Fortaleza': { lat: -3.7319, lon: -38.5267 }
+  },
+  'AR': {
+    'Buenos Aires': { lat: -34.6037, lon: -58.3816 },
+    'Córdoba': { lat: -31.4135, lon: -64.1895 },
+    'Rosario': { lat: -32.9442, lon: -60.6500 },
+    'La Plata': { lat: -34.9205, lon: -57.9545 }
+  },
+  'CL': {
+    'Santiago': { lat: -33.4489, lon: -70.6693 },
+    'Valparaíso': { lat: -33.0472, lon: -71.6127 },
+    'Puerta Montt': { lat: -41.3272, lon: -72.7522 },
+    'La Serena': { lat: -29.9037, lon: -71.5522 }
+  },
+  'CO': {
+    'Bogotá': { lat: 4.7110, lon: -74.0721 },
+    'Medellín': { lat: 6.2442, lon: -75.5812 },
+    'Cali': { lat: 3.4372, lon: -76.5197 },
+    'Barranquilla': { lat: 10.9639, lon: -74.7964 }
+  },
+  'PE': {
+    'Lima': { lat: -12.0464, lon: -77.0428 },
+    'Arequipa': { lat: -16.3889, lon: -71.5350 },
+    'Cusco': { lat: -13.5320, lon: -71.9789 }
+  },
+  // EUROPE
+  'GB': {
+    'London': { lat: 51.5074, lon: -0.1278 },
+    'Manchester': { lat: 53.4808, lon: -2.2426 },
+    'Birmingham': { lat: 52.4862, lon: -1.8904 },
+    'Bristol': { lat: 51.4545, lon: -2.5879 },
+    'Leeds': { lat: 53.8008, lon: -1.5491 },
+    'Edinburgh': { lat: 55.9533, lon: -3.1883 },
+    'Glasgow': { lat: 55.8642, lon: -4.2518 },
+    'Liverpool': { lat: 53.4084, lon: -2.9916 }
+  },
+  'FR': {
+    'Paris': { lat: 48.8566, lon: 2.3522 },
+    'Lyon': { lat: 45.7640, lon: 4.8357 },
+    'Marseille': { lat: 43.2965, lon: 5.3698 },
+    'Toulouse': { lat: 43.6047, lon: 1.4442 },
+    'Nice': { lat: 43.7102, lon: 7.2620 }
+  },
+  'DE': {
+    'Berlin': { lat: 52.5200, lon: 13.4050 },
+    'Munich': { lat: 48.1351, lon: 11.5820 },
+    'Hamburg': { lat: 53.5511, lon: 9.4769 },
+    'Cologne': { lat: 50.9375, lon: 6.9603 },
+    'Frankfurt': { lat: 50.1109, lon: 8.6821 }
+  },
+  'ES': {
+    'Madrid': { lat: 40.4168, lon: -3.7038 },
+    'Barcelona': { lat: 41.3851, lon: 2.1734 },
+    'Valencia': { lat: 39.4699, lon: -0.3763 },
+    'Seville': { lat: 37.3886, lon: -5.9823 },
+    'Málaga': { lat: 36.7213, lon: -4.4214 }
+  },
+  'IT': {
+    'Rome': { lat: 41.9028, lon: 12.4964 },
+    'Milan': { lat: 45.4642, lon: 9.1900 },
+    'Naples': { lat: 40.8518, lon: 14.2681 },
+    'Florence': { lat: 43.7695, lon: 11.2558 },
+    'Venice': { lat: 45.4408, lon: 12.3155 }
+  },
+  'NL': {
+    'Amsterdam': { lat: 52.3676, lon: 4.9041 },
+    'Rotterdam': { lat: 51.9225, lon: 4.4792 },
+    'The Hague': { lat: 52.0705, lon: 4.3007 },
+    'Utrecht': { lat: 52.0907, lon: 5.1214 }
+  },
+  'PL': {
+    'Warsaw': { lat: 52.2297, lon: 21.0122 },
+    'Krakow': { lat: 50.0647, lon: 19.9450 },
+    'Wroclaw': { lat: 51.1079, lon: 17.0385 },
+    'Gdansk': { lat: 54.3520, lon: 18.6466 }
+  },
+  'RU': {
+    'Moscow': { lat: 55.7558, lon: 37.6173 },
+    'Saint Petersburg': { lat: 59.9311, lon: 30.3609 },
+    'Novosibirsk': { lat: 55.0084, lon: 82.9357 },
+    'Yekaterinburg': { lat: 56.8389, lon: 60.6057 },
+    'Vladivostok': { lat: 43.1135, lon: 131.8859 }
+  },
+  // ASIA
+  'JP': {
+    'Tokyo': { lat: 35.6762, lon: 139.6503 },
+    'Osaka': { lat: 34.6937, lon: 135.5023 },
+    'Kyoto': { lat: 35.0116, lon: 135.7681 },
+    'Yokohama': { lat: 35.4437, lon: 139.6380 },
+    'Sapporo': { lat: 43.0642, lon: 141.3469 }
+  },
+  'IN': {
+    'Delhi': { lat: 28.7041, lon: 77.1025 },
+    'Mumbai': { lat: 19.0760, lon: 72.8777 },
+    'Bangalore': { lat: 12.9716, lon: 77.5946 },
+    'Kolkata': { lat: 22.5726, lon: 88.3639 },
+    'Chennai': { lat: 13.0827, lon: 80.2707 }
+  },
+  'CN': {
+    'Beijing': { lat: 39.9042, lon: 116.4074 },
+    'Shanghai': { lat: 31.2304, lon: 121.4737 },
+    'Guangzhou': { lat: 23.1291, lon: 113.2644 },
+    'Shenzhen': { lat: 22.5431, lon: 114.0579 },
+    'Chengdu': { lat: 30.5728, lon: 104.0668 }
+  },
+  'AU': {
+    'Sydney': { lat: -33.8688, lon: 151.2093 },
+    'Melbourne': { lat: -37.8136, lon: 144.9631 },
+    'Brisbane': { lat: -27.4698, lon: 153.0251 },
+    'Perth': { lat: -31.9505, lon: 115.8605 },
+    'Adelaide': { lat: -34.9285, lon: 138.6007 }
+  },
+  'SG': {
+    'Singapore': { lat: 1.3521, lon: 103.8198 }
+  },
+  'TH': {
+    'Bangkok': { lat: 13.7563, lon: 100.5018 },
+    'Chiang Mai': { lat: 18.7883, lon: 98.9853 },
+    'Pattaya': { lat: 12.9271, lon: 100.8765 }
+  },
+  'ID': {
+    'Jakarta': { lat: -6.2088, lon: 106.8456 },
+    'Surabaya': { lat: -7.2575, lon: 112.7521 },
+    'Bandung': { lat: -6.9175, lon: 107.6191 },
+    'Medan': { lat: 3.1957, lon: 98.6722 }
+  },
+  // AFRICA
   'ZA': {
     'Johannesburg': { lat: -26.2023, lon: 28.0436 },
     'Cape Town': { lat: -33.9249, lon: 18.4241 },
     'Durban': { lat: -29.8587, lon: 31.0218 },
     'Pretoria': { lat: -25.7461, lon: 28.2293 },
-    'Port Elizabeth': { lat: -33.9685, lon: 25.6068 },
-    'Bloemfontein': { lat: -29.1084, lon: 25.5186 }
+    'Port Elizabeth': { lat: -33.9685, lon: 25.6068 }
+  },
+  'EG': {
+    'Cairo': { lat: 30.0444, lon: 31.2357 },
+    'Alexandria': { lat: 31.2001, lon: 29.9187 },
+    'Giza': { lat: 30.0131, lon: 31.2089 },
+    'Luxor': { lat: 25.6872, lon: 32.6396 }
+  },
+  'NG': {
+    'Lagos': { lat: 6.5244, lon: 3.3792 },
+    'Abuja': { lat: 9.0765, lon: 7.3986 },
+    'Kano': { lat: 12.0022, lon: 8.6753 },
+    'Ibadan': { lat: 7.3957, lon: 3.8711 }
+  },
+  'KE': {
+    'Nairobi': { lat: -1.2921, lon: 36.8219 },
+    'Mombasa': { lat: -4.0435, lon: 39.6682 },
+    'Kisumu': { lat: -0.1022, lon: 34.7617 }
+  },
+  'ET': {
+    'Addis Ababa': { lat: 9.0320, lon: 38.7469 },
+    'Dire Dawa': { lat: 9.5898, lon: 41.8625 }
+  },
+  'GH': {
+    'Accra': { lat: 5.6037, lon: -0.1870 },
+    'Kumasi': { lat: 6.6749, lon: -1.6236 },
+    'Sekondi-Takoradi': { lat: 4.8916, lon: -2.0042 }
+  },
+  'MA': {
+    'Casablanca': { lat: 33.5731, lon: -7.5898 },
+    'Fez': { lat: 34.0657, lon: -5.0055 },
+    'Marrakech': { lat: 31.6295, lon: -8.0088 },
+    'Tangier': { lat: 35.7595, lon: -5.8340 }
   }
 };
 
