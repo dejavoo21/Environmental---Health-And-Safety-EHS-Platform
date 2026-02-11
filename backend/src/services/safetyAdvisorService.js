@@ -416,7 +416,8 @@ const getUserSafetyOverview = async (orgId, userId, userRole, primarySiteId = nu
     FROM incidents i
     LEFT JOIN incident_types it ON it.id = i.type_id
     LEFT JOIN safety_acknowledgements sa ON sa.entity_type = 'incident' AND sa.entity_id = i.id AND sa.user_id = $2
-    WHERE i.reported_by = $2
+    WHERE i.organisation_id = $1
+      AND i.reported_by = $2
       AND i.status != 'closed'
       AND (i.severity IN ('high', 'critical') OR it.requires_safety_acknowledgement = TRUE)
       AND sa.id IS NULL
