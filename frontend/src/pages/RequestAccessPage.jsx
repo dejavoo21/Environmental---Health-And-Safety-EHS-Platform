@@ -52,9 +52,7 @@ const RequestAccessPage = () => {
       newErrors.email = 'Please enter a valid email address';
     }
 
-    if (!formData.organisationCode.trim()) {
-      newErrors.organisationCode = 'Organisation code is required';
-    }
+    // Organisation code is optional - can be added by admin later
 
     if (!formData.requestedRole) {
       newErrors.requestedRole = 'Please select a role';
@@ -85,7 +83,7 @@ const RequestAccessPage = () => {
       const response = await api.post('/access-requests', {
         fullName: formData.fullName.trim(),
         email: formData.email.trim().toLowerCase(),
-        organisationCode: formData.organisationCode.trim().toUpperCase(),
+        organisationCode: formData.organisationCode.trim() ? formData.organisationCode.trim().toUpperCase() : null,
         requestedRole: formData.requestedRole,
         reason: formData.reason.trim() || undefined,
         termsAccepted: formData.termsAccepted
@@ -97,12 +95,7 @@ const RequestAccessPage = () => {
       const errorCode = err.response?.data?.code;
       const errorMessage = err.response?.data?.message;
 
-      if (errorCode === 'INVALID_ORG') {
-        setErrors((prev) => ({
-          ...prev,
-          organisationCode: 'Organisation code not found'
-        }));
-      } else if (errorCode === 'DUPLICATE_REQUEST') {
+      if (errorCode === 'DUPLICATE_REQUEST') {
         setApiError('You already have a pending access request for this organisation.');
       } else if (errorCode === 'EMAIL_REGISTERED') {
         setApiError('This email is already registered. Please log in instead.');
@@ -195,7 +188,7 @@ const RequestAccessPage = () => {
           </label>
 
           <label className="field">
-            <span>Organisation Code <span className="required">*</span></span>
+            <span>Organisation Code (Optional)</span>
             <input
               type="text"
               value={formData.organisationCode}
@@ -208,7 +201,7 @@ const RequestAccessPage = () => {
               <span className="field-error">{errors.organisationCode}</span>
             )}
             <span className="field-hint">
-              Ask your administrator for the organisation code
+              If you know your organisation code, enter it here. Otherwise, leave blank and an admin will assign you later.
             </span>
           </label>
 
