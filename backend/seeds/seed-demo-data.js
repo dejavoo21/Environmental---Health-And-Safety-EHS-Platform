@@ -131,11 +131,16 @@ async function seedDemoData() {
 
     for (const site of sites) {
       for (const leg of legislation) {
-        await client.query(
-          `INSERT INTO site_legislation_refs (site_id, title, summary, jurisdiction, category, organisation_id, created_by, is_primary)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, FALSE) ON CONFLICT DO NOTHING`,
-          [site.id, leg.title, leg.summary, leg.jurisdiction, leg.category, orgId, userId]
-        );
+        try {
+          await client.query(
+            `INSERT INTO site_legislation_refs (site_id, title, summary, jurisdiction, category, organisation_id, created_by, is_primary)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, TRUE) ON CONFLICT DO NOTHING`,
+            [site.id, leg.title, leg.summary, leg.jurisdiction, leg.category, orgId, userId]
+          );
+        } catch (err) {
+          // Log error but continue - table might not exist yet
+          console.warn('[Legislation] Error creating legislation ref:', err.code, err.message);
+        }
       }
     }
     console.log('Created site legislation for', sites.length, 'sites');
