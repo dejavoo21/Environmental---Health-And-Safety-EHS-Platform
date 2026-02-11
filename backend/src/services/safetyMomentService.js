@@ -72,6 +72,64 @@ const getTodaysSafetyMoment = async (orgId, userId, userRole, siteId = null) => 
 };
 
 /**
+ * Get all active safety moments for today (for diverse safety briefing)
+ * Returns multiple moments instead of just the first one
+ *
+ * @param {string} orgId - Organisation ID
+ * @param {string} userId - User ID
+ * @param {string} userRole - User's role
+ * @param {string} siteId - Site ID (optional)
+ * @returns {Array} Array of safety moments
+ */
+const getTodaysSafetyMoments = async (orgId, userId, userRole, siteId = null) => {
+  const today = new Date().toISOString().split('T')[0];
+
+  const result = await query(`
+    SELECT
+      sm.id,
+      sm.title,
+      sm.body,
+      sm.category,
+      sm.tags,
+      sm.start_date,
+      sm.end_date,
+      EXISTS(
+        SELECT 1 FROM safety_moment_acknowledgements sma
+        WHERE sma.safety_moment_id = sm.id
+          AND sma.user_id = $2
+          AND sma.acknowledged_at::date = $4::date
+      ) as acknowledged
+    FROM safety_moments sm
+    WHERE sm.organisation_id = $1
+      AND sm.is_active = TRUE
+      AND sm.deleted_at IS NULL
+      AND sm.start_date <= $4::date
+      AND (sm.end_date IS NULL OR sm.end_date >= $4::date)
+      AND (
+        sm.applicable_sites IS NULL
+        OR cardinality(sm.applicable_sites) = 0
+        OR $3::uuid = ANY(sm.applicable_sites)
+      )
+      AND (
+        sm.applicable_roles IS NULL
+        OR cardinality(sm.applicable_roles) = 0
+        OR $5 = ANY(sm.applicable_roles)
+      )
+    ORDER BY sm.start_date DESC, sm.created_at DESC
+    LIMIT 10
+  `, [orgId, userId, siteId, today, userRole]);
+
+  return result.rows.map(row => ({
+    id: row.id,
+    title: row.title,
+    body: row.body,
+    category: row.category,
+    tags: row.tags || [],
+    acknowledged: row.acknowledged
+  }));
+};
+
+/**
  * Get Safety Moments list with pagination and filters
  * BR-11-04 (C-273)
  *
@@ -527,6 +585,7 @@ const getSafetyMomentAnalytics = async (orgId, options = {}) => {
 
 module.exports = {
   getTodaysSafetyMoment,
+  getTodaysSafetyMoments,
   getSafetyMoments,
   createSafetyMoment,
   updateSafetyMoment,

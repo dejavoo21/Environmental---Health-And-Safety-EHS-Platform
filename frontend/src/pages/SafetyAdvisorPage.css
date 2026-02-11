@@ -301,6 +301,22 @@
 }
 
 /* Safety Moment */
+.safety-moments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.safety-moment {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.safety-moments-list .safety-moment:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
 .safety-moment h4 {
   margin: 0 0 0.5rem;
   font-size: 1.125rem;

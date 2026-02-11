@@ -8,7 +8,7 @@
 const { query } = require('../config/db');
 const { getWeatherForSite } = require('./weatherService');
 const { getPPERecommendations, categorizeWeather } = require('./ppeRecommendationService');
-const { getTodaysSafetyMoment, acknowledgeSafetyMoment } = require('./safetyMomentService');
+const { getTodaysSafetyMoment, getTodaysSafetyMoments, acknowledgeSafetyMoment } = require('./safetyMomentService');
 const { getLegislationRefsForSite } = require('./legislationService');
 const { recordAudit } = require('../utils/audit');
 
@@ -46,7 +46,7 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
 
   // Fetch all data in parallel with graceful fallbacks
   let weather = { status: 'unavailable' };
-  let safetyMoment = null;
+  let safetyMoments = [];
   let legislation = [];
   let ppeAdvice = { summary: 'PPE recommendations not available', items: [] };
 
@@ -56,10 +56,10 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
         console.warn('[SafetyAdvisor] Weather fetch failed:', err.code, err.message);
         return { status: 'unavailable', tempC: null };
       }),
-      getTodaysSafetyMoment(orgId, userId, userRole, siteId).catch(err => {
+      getTodaysSafetyMoments(orgId, userId, userRole, siteId).catch(err => {
         if (err.code === '42P01') console.warn('[SafetyAdvisor] Safety moments tables not found');
         else console.warn('[SafetyAdvisor] Safety moment fetch failed:', err.code, err.message);
-        return null;
+        return [];
       }),
       getLegislationRefsForSite(siteId).catch(err => {
         if (err.code === '42P01') console.warn('[SafetyAdvisor] Legislation tables not found');
@@ -75,9 +75,9 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
     }
     
     if (results[1].status === 'fulfilled') {
-      safetyMoment = results[1].value;
+      safetyMoments = results[1].value || [];
     } else if (results[1].status === 'rejected') {
-      console.warn('[SafetyAdvisor] Safety moment promise rejected:', results[1].reason);
+      console.warn('[SafetyAdvisor] Safety moments promise rejected:', results[1].reason);
     }
     
     if (results[2].status === 'fulfilled') {
@@ -135,13 +135,13 @@ const getSafetySummaryForSite = async (siteId, orgId, userId, userRole) => {
       summaryText: weather.summaryText || null,
       warning: weather.warning || null
     },
-    safetyMoment: safetyMoment ? {
-      id: safetyMoment.id,
-      title: safetyMoment.title,
-      body: safetyMoment.body,
-      category: safetyMoment.category,
-      acknowledged: safetyMoment.acknowledged
-    } : null,
+    safetyMoments: safetyMoments && safetyMoments.length > 0 ? safetyMoments.map(m => ({
+      id: m.id,
+      title: m.title,
+      body: m.body,
+      category: m.category,
+      acknowledged: m.acknowledged
+    })) : [],
     ppeAdvice: {
       summary: ppeAdvice.summary || 'No PPE recommendations available',
       items: ppeAdvice.items || []

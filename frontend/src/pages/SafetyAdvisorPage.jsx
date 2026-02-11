@@ -259,32 +259,34 @@ const SafetyAdvisorPage = () => {
   };
 
   const renderSafetyMomentCard = () => {
-    const moment = safetySummary?.safetyMoment;
+    const moments = safetySummary?.safetyMoments || [];
     
     return (
       <div className="advisor-card advisor-card--highlight">
         <div className="advisor-card-header" onClick={() => toggleSection('moment')}>
           <Sun size={24} />
-          <h3>Today's Safety Moment</h3>
-          {moment?.acknowledged && (
-            <span className="advisor-status advisor-status--ok">
-              <CheckCircle2 size={14} /> Acknowledged
-            </span>
+          <h3>Safety Moments</h3>
+          {moments?.length > 0 && (
+            <span className="advisor-badge">{moments.length}</span>
           )}
           {expandedSections.moment ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </div>
         
         {expandedSections.moment && (
           <div className="advisor-card-content">
-            {!moment ? (
-              <p className="advisor-empty-message">No safety moment available for today.</p>
+            {moments.length === 0 ? (
+              <p className="advisor-empty-message">No safety moments available.</p>
             ) : (
-              <div className="safety-moment">
-                <h4>{moment.title}</h4>
-                {moment.category && (
-                  <span className="moment-category">{moment.category}</span>
-                )}
-                <p>{moment.body}</p>
+              <div className="safety-moments-list">
+                {moments.map((moment, index) => (
+                  <div key={moment.id || index} className="safety-moment">
+                    <h4>{moment.title}</h4>
+                    {moment.category && (
+                      <span className="moment-category">{moment.category}</span>
+                    )}
+                    <p>{moment.body}</p>
+                  </div>
+                ))}
               </div>
             )}
           </div>
