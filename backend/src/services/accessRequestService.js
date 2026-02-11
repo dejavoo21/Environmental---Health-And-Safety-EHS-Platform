@@ -144,16 +144,33 @@ const submitAccessRequest = async ({
         email: email.toLowerCase().trim(),
         ipAddress,
         userAgent
-    });
-    
-    // Send confirmation email if SMTP configured
-    if (isSmtpConfigured()) {
-      await sendAccessRequestConfirmationEmail({
-        email: email.toLowerCase().trim(),
-        fullName: fullName.trim(),
-        referenceNumber: request.reference_number,
-        organisationName: org.name
       });
+      
+      // Send confirmation email if SMTP configured
+      if (isSmtpConfigured()) {
+        const orgQuery = await query(
+          `SELECT name FROM organisations WHERE id = $1`,
+          [organisationId]
+        );
+        const org = orgQuery.rows[0];
+        
+        await sendAccessRequestConfirmationEmail({
+          email: email.toLowerCase().trim(),
+          fullName: fullName.trim(),
+          referenceNumber: request.reference_number,
+          organisationName: org?.name || 'Your Organization'
+        });
+      }
+    } else {
+      // Send confirmation email without organisation details
+      if (isSmtpConfigured()) {
+        await sendAccessRequestConfirmationEmail({
+          email: email.toLowerCase().trim(),
+          fullName: fullName.trim(),
+          referenceNumber: request.reference_number,
+          organisationName: 'Pending Assignment'
+        });
+      }
     }
     
     return {
