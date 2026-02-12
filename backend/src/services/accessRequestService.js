@@ -223,11 +223,9 @@ const listAccessRequests = async ({
   const values = [];
   let paramIndex = 1;
   
-  // For admins, show all requests. For org users, filter by organisation
-  // NOTE: Currently all access requests shown to all admins
-  // If you want to filter by org, uncomment the line below:
-  // conditions.push(`ar.organisation_id = $${paramIndex++}`);
-  // values.push(organisationId);
+  // Filter by organisation - admins should only see requests for their organisation
+  conditions.push(`ar.organisation_id = $${paramIndex++}`);
+  values.push(organisationId);
   
   if (status && status !== 'all') {
     conditions.push(`ar.status = $${paramIndex++}`);
