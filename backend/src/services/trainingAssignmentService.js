@@ -288,7 +288,7 @@ const getMyTraining = async (userId, organisationId) => {
     `SELECT s.*, e.status as enrollment_status,
             c.code as course_code, c.title as course_title,
             site.name as site_name,
-            t.full_name as trainer_name
+            t.name as trainer_name
      FROM training_session_enrollments e
      JOIN training_sessions s ON e.session_id = s.id
      JOIN training_courses c ON s.course_id = c.id

@@ -78,7 +78,7 @@ const listSessions = async (organisationId, options = {}) => {
     SELECT s.*,
            c.code as course_code, c.title as course_title,
            site.name as site_name,
-           t.full_name as trainer_name,
+           t.name as trainer_name,
            (SELECT COUNT(*) FROM training_session_enrollments e WHERE e.session_id = s.id AND e.status = 'enrolled') as enrolled_count,
            (SELECT COUNT(*) FROM training_session_enrollments e WHERE e.session_id = s.id AND e.status = 'waitlisted') as waitlist_count
     FROM training_sessions s
@@ -111,8 +111,8 @@ const getSessionById = async (sessionId, organisationId) => {
     `SELECT s.*,
             c.code as course_code, c.title as course_title, c.validity_months,
             site.name as site_name,
-            t.full_name as trainer_name,
-            cb.full_name as created_by_name
+            t.name as trainer_name,
+            cb.name as created_by_name
      FROM training_sessions s
      LEFT JOIN training_courses c ON s.course_id = c.id
      LEFT JOIN sites site ON s.site_id = site.id
