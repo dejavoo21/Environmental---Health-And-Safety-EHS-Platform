@@ -25,8 +25,13 @@ app.use(express.json());
 // Serve static files from uploads directory (logos, attachments)
 app.use('/uploads', express.static(path.join(process.cwd(), env.uploadsDir)));
 
+// Health check endpoint - responds immediately without any DB checks
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+  try {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
 });
 
 // API routes

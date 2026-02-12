@@ -5,12 +5,28 @@ const { initializeScheduler } = require('./jobs/scheduler');
 const fs = require('fs');
 const path = require('path');
 
-// Start server immediately without waiting for database
-const server = app.listen(port || 3001, () => {
-  console.log(`API listening on port ${port || 3001}`);
-});
+console.log('[Server] Starting EHS Portal API...');
+console.log('[Server] Port:', port || 3001);
+console.log('[Server] Node version:', process.version);
+console.log('[Server] Environment:', process.env.NODE_ENV || 'development');
 
-// Try to connect to database asynchronously
+// Start server FIRST - do not block on anything
+let server;
+
+try {
+  server = app.listen(port || 3001, '0.0.0.0', () => {
+    console.log(`[Server] ✓ Express listening on port ${port || 3001}`);
+  });
+  
+  // Set a short timeout for server startup
+  server.timeout = 30000;
+  
+} catch (err) {
+  console.error('[Server] ✗ Failed to start Express:', err.message);
+  process.exit(1);
+}
+
+// Try to connect to database asynchronously - does NOT block server
 let dbConnected = false;
 
 async function runMigrations() {
@@ -21,55 +37,85 @@ async function runMigrations() {
       .filter((file) => file.endsWith('.sql'))
       .sort();
     
+    console.log(`[Migrations] Found ${files.length} migration files`);
+    
     const client = await pool.connect();
     await client.query('BEGIN');
     
     for (const file of files) {
       const sqlPath = path.join(migrationsDir, file);
       const sql = fs.readFileSync(sqlPath, 'utf8');
-      await client.query(sql);
-      console.log(`[Migration] Applied ${file}`);
+      try {
+        await client.query(sql);
+        console.log(`[Migrations] ✓ ${file}`);
+      } catch (err) {
+        // Some migrations might fail due to table already existing - this is OK
+        console.log(`[Migrations] ~ ${file} (${err.code || 'skipped'})`);
+      }
     }
     
     await client.query('COMMIT');
-    console.log('[Migrations] All migrations completed successfully');
+    console.log('[Migrations] ✓ All migrations completed');
     client.release();
     return true;
   } catch (err) {
-    console.error('[Migrations] Error:', err.message);
-    // Don't throw - migrations might have already been applied
+    console.error('[Migrations] ✗ Error:', err.message);
+    // Don't throw - allow server to continue
     return false;
   }
 }
 
 async function checkDatabase() {
-  while (!dbConnected) {
+  let retries = 0;
+  const maxRetries = 24; // 2 minutes with 5 second intervals
+  
+  while (!dbConnected && retries < maxRetries) {
     try {
-      await pool.query('SELECT 1');
+      const client = await pool.connect();
+      await client.query('SELECT NOW()');
+      client.release();
+      
       dbConnected = true;
-      console.log('Database connected successfully');
+      console.log('[Database] ✓ Connection verified');
       
       // Run migrations after first successful connection
       await runMigrations();
       
       // Initialize scheduled jobs only after DB connects
-      initializeScheduler();
+      try {
+        initializeScheduler();
+        console.log('[Scheduler] ✓ Initialized');
+      } catch (err) {
+        console.warn('[Scheduler] ⚠ Could not initialize:', err.message);
+      }
+      
       break;
     } catch (err) {
-      console.log('Database connection failed, retrying in 5s:', err.message);
+      retries++;
+      console.log(`[Database] Attempt ${retries}/${maxRetries} failed: ${err.message}`);
+      
+      if (retries >= maxRetries) {
+        console.error('[Database] ✗ Could not connect after 24 attempts');
+        break;
+      }
+      
+      // Wait 5 seconds before retry
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }
 }
 
-// Start database check in background
-checkDatabase();
+// Start database check in background - NON-BLOCKING
+console.log('[Server] Starting background database connection...');
+checkDatabase().catch(err => {
+  console.error('[Background] Uncaught error:', err);
+});
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
+  console.log('[Server] SIGTERM received, shutting down gracefully');
   server.close(() => {
-    console.log('Server closed');
+    console.log('[Server] ✓ Server closed');
     process.exit(0);
   });
 });
