@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const cors = require('cors');
 const env = require('./config/env');
 const routes = require('./routes');
@@ -31,14 +32,29 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/api', routes);
 
-// Serve frontend static files
+// Serve frontend static files (if built)
 const frontendDistPath = path.join(__dirname, '../../frontend/dist');
-app.use(express.static(frontendDistPath));
+const frontendDistExists = fs.existsSync(frontendDistPath);
 
-// SPA fallback - serve index.html for all non-API routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendDistPath, 'index.html'));
-});
+if (frontendDistExists) {
+  app.use(express.static(frontendDistPath));
+  
+  // SPA fallback - serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    const indexPath = path.join(frontendDistPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).json({ error: 'Frontend not available' });
+    }
+  });
+} else {
+  // Frontend not built - serve API-only message
+  app.get('*', (req, res) => {
+    res.status(404).json({ error: 'Frontend not available. API is running at /api' });
+  });
+  console.warn('[App] Frontend dist folder not found. API-only mode.');
+}
 
 app.use(errorHandler);
 
