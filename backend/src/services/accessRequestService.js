@@ -223,8 +223,8 @@ const listAccessRequests = async ({
   const values = [];
   let paramIndex = 1;
   
-  // Filter by organisation - admins should only see requests for their organisation
-  conditions.push(`ar.organisation_id = $${paramIndex++}`);
+  // Filter by organisation - admins see requests for their org OR unassigned requests (NULL org)
+  conditions.push(`(ar.organisation_id = $${paramIndex++} OR ar.organisation_id IS NULL)`);
   values.push(organisationId);
   
   if (status && status !== 'all') {
@@ -299,7 +299,7 @@ const getAccessRequest = async (id, organisationId) => {
       ar.*, u.name AS decided_by_name, u.email AS decided_by_email
      FROM access_requests ar
      LEFT JOIN users u ON u.id = ar.decision_by
-     WHERE ar.id = $1 AND ar.organisation_id = $2`,
+     WHERE ar.id = $1 AND (ar.organisation_id = $2 OR ar.organisation_id IS NULL)`,
     [id, organisationId]
   );
   
@@ -397,12 +397,13 @@ const approveAccessRequest = async ({
   
   const newUser = userResult.rows[0];
   
-  // Update access request
+  // Update access request - also set organisation_id if it was NULL (unassigned request)
   await query(
     `UPDATE access_requests 
-     SET status = 'approved', decision_by = $1, decision_at = NOW(), updated_at = NOW()
+     SET status = 'approved', decision_by = $1, decision_at = NOW(), updated_at = NOW(),
+         organisation_id = COALESCE(organisation_id, $3)
      WHERE id = $2`,
-    [adminUserId, requestId]
+    [adminUserId, requestId, organisationId]
   );
   
   // Log the event
@@ -464,13 +465,14 @@ const rejectAccessRequest = async ({
     return { success: false, error: 'ALREADY_PROCESSED', message: `This request has already been ${request.status}.` };
   }
   
-  // Update access request
+  // Update access request - also set organisation_id if it was NULL (unassigned request)
   await query(
     `UPDATE access_requests 
      SET status = 'rejected', decision_by = $1, decision_at = NOW(), 
-         decision_reason = $2, updated_at = NOW()
+         decision_reason = $2, updated_at = NOW(),
+         organisation_id = COALESCE(organisation_id, $4)
      WHERE id = $3`,
-    [adminUserId, reason, requestId]
+    [adminUserId, reason, requestId, organisationId]
   );
   
   // Log the event
