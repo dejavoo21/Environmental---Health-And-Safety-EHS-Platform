@@ -416,25 +416,35 @@ const approveAccessRequest = async ({
     userAgent
   });
   
-  // Send welcome email if configured
+  // Send welcome email if configured - don't fail approval if email fails
+  let emailSent = false;
   if (sendWelcomeEmail && isSmtpConfigured()) {
-    await sendApprovalEmail({
-      email: newUser.email,
-      name: newUser.name,
-      tempPassword,
-      loginUrl: `${env.frontendUrl}/login`
-    });
+    try {
+      await sendApprovalEmail({
+        email: newUser.email,
+        name: newUser.name,
+        tempPassword,
+        loginUrl: `${env.frontendUrl}/login`
+      });
+      emailSent = true;
+    } catch (emailError) {
+      console.error('[AccessRequest] Failed to send approval email:', emailError.message);
+      // Continue - user is still approved, admin can share credentials manually
+    }
   }
   
   return {
     success: true,
-    message: 'Access request approved. User account created.',
+    message: emailSent 
+      ? 'Access request approved. User account created and welcome email sent.'
+      : 'Access request approved. User account created. (Email not sent - share credentials manually)',
     user: {
       id: newUser.id,
       email: newUser.email,
       name: newUser.name,
       role: newUser.role
     },
+    emailSent,
     // Only include temp password in dev for testing
     ...(env.nodeEnv === 'development' && { _devTempPassword: tempPassword })
   };
