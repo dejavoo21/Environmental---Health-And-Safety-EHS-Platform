@@ -5620,6 +5620,8 @@ textarea:focus {
 /* Inline variant for horizontal forms */
 .admin-form-card--inline {
   max-width: 100%;
+  margin: 0 0 24px;
+  width: 100%;
 }
 
 .admin-form-card__inline-row {
@@ -5627,6 +5629,7 @@ textarea:focus {
   flex-wrap: wrap;
   gap: 16px;
   align-items: flex-end;
+  width: 100%;
 }
 
 .admin-form-card__inline-row .field {
@@ -5634,7 +5637,7 @@ textarea:focus {
   flex-direction: column;
   gap: 6px;
   flex: 1;
-  min-width: 200px;
+  min-width: 140px;
 }
 
 .admin-form-card__inline-row .field span {
