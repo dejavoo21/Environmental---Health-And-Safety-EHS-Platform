@@ -369,10 +369,9 @@
   opacity: 1;
 }
 
+/* Common admin button base styles (export/import/bulk archive) */
 .admin-export-btn,
 .admin-import-btn,
-.admin-add-btn,
-.admin-create-btn,
 .admin-bulk-archive-btn {
   padding: 0.6rem 1rem;
   border: 1px solid #d0d0d0;
@@ -387,8 +386,6 @@
 
 .admin-export-btn:hover,
 .admin-import-btn:hover,
-.admin-add-btn:hover,
-.admin-create-btn:hover,
 .admin-bulk-archive-btn:hover {
   background: #e0e0e0;
   border-color: var(--color-primary);
@@ -397,9 +394,15 @@
 /* Green styling for add/create buttons */
 .admin-add-btn,
 .admin-create-btn {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--color-success);
+  border-radius: 8px;
   background: var(--color-success);
-  border-color: var(--color-success);
   color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .admin-add-btn:hover,
