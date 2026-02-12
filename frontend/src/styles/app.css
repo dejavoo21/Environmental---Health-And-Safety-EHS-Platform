@@ -420,6 +420,8 @@
   --color-text-muted: #595959; /* WCAG AA compliant 7:1 contrast */
   --color-text-strong: #111827;
   --color-primary: #2563eb;
+  --color-success: #22c55e;
+  --color-error: #dc2626;
   --color-background: var(--color-bg-page);
   --color-surface: var(--color-bg-card);
   --color-text: var(--color-text-strong);
