@@ -212,17 +212,21 @@ const listAccessRequests = async ({
   page = 1,
   limit = 20
 }) => {
-  const conditions = ['(organisation_id = $1 OR organisation_id IS NULL)'];
-  const values = [organisationId];
-  let paramIndex = 2;
+  const conditions = [];
+  const values = [];
+  let paramIndex = 1;
+  
+  // Include both requests for the specific org AND requests without org (for manual assignment)
+  conditions.push(`(ar.organisation_id = $${paramIndex++} OR ar.organisation_id IS NULL)`);
+  values.push(organisationId);
   
   if (status && status !== 'all') {
-    conditions.push(`status = $${paramIndex++}`);
+    conditions.push(`ar.status = $${paramIndex++}`);
     values.push(status);
   }
   
   if (search) {
-    conditions.push(`(email ILIKE $${paramIndex} OR full_name ILIKE $${paramIndex} OR reference_number ILIKE $${paramIndex})`);
+    conditions.push(`(ar.email ILIKE $${paramIndex} OR ar.full_name ILIKE $${paramIndex} OR ar.reference_number ILIKE $${paramIndex})`);
     values.push(`%${search}%`);
     paramIndex++;
   }
@@ -232,7 +236,7 @@ const listAccessRequests = async ({
   
   // Get total count
   const countResult = await query(
-    `SELECT COUNT(*) FROM access_requests WHERE ${whereClause}`,
+    `SELECT COUNT(*) FROM access_requests ar WHERE ${whereClause}`,
     values
   );
   const total = parseInt(countResult.rows[0].count, 10);
