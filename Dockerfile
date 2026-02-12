@@ -1,5 +1,6 @@
 FROM node:20-alpine
 
+# Build timestamp: 2026-02-12
 WORKDIR /app
 
 # Copy both backend and frontend
