@@ -151,6 +151,7 @@ const submitAccessRequest = async ({
       // if (isSmtpConfigured()) {
       //   ... email code ...
       // }
+    }
     
     return {
       success: true,
