@@ -216,9 +216,11 @@ const listAccessRequests = async ({
   const values = [];
   let paramIndex = 1;
   
-  // Include both requests for the specific org AND requests without org (for manual assignment)
-  conditions.push(`(ar.organisation_id = $${paramIndex++} OR ar.organisation_id IS NULL)`);
-  values.push(organisationId);
+  // For admins, show all requests. For org users, filter by organisation
+  // NOTE: Currently all access requests shown to all admins
+  // If you want to filter by org, uncomment the line below:
+  // conditions.push(`ar.organisation_id = $${paramIndex++}`);
+  // values.push(organisationId);
   
   if (status && status !== 'all') {
     conditions.push(`ar.status = $${paramIndex++}`);
@@ -231,12 +233,12 @@ const listAccessRequests = async ({
     paramIndex++;
   }
   
-  const whereClause = conditions.join(' AND ');
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
   const offset = (page - 1) * limit;
   
   // Get total count
   const countResult = await query(
-    `SELECT COUNT(*) FROM access_requests ar WHERE ${whereClause}`,
+    `SELECT COUNT(*) FROM access_requests ar ${whereClause}`,
     values
   );
   const total = parseInt(countResult.rows[0].count, 10);
@@ -249,7 +251,7 @@ const listAccessRequests = async ({
       u.name AS decided_by_name, ar.decision_at
      FROM access_requests ar
      LEFT JOIN users u ON u.id = ar.decision_by
-     WHERE ${whereClause}
+     ${whereClause}
      ORDER BY 
        CASE WHEN ar.status = 'pending' THEN 0 ELSE 1 END,
        ar.created_at DESC
