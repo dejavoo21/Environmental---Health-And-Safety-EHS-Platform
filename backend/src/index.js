@@ -73,3 +73,15 @@ process.on('SIGTERM', () => {
     process.exit(0);
   });
 });
+
+// Catch unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Unhandled Rejection] Promise:', promise);
+  console.error('[Unhandled Rejection] Reason:', reason);
+});
+
+// Catch uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('[Uncaught Exception]', error);
+  // Don't exit - let the server continue running
+});
