@@ -394,6 +394,20 @@
   border-color: var(--color-primary);
 }
 
+/* Green styling for add/create buttons */
+.admin-add-btn,
+.admin-create-btn {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #ffffff;
+}
+
+.admin-add-btn:hover,
+.admin-create-btn:hover {
+  background: #16a34a;
+  border-color: #16a34a;
+}
+
 :root {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
   color: var(--color-text-strong);
