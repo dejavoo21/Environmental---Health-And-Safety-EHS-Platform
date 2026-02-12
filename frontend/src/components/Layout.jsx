@@ -200,9 +200,14 @@ const OrgLogo = () => {
     );
   }
 
+  // Don't show placeholder name "Default Organisation" - only show custom org names
+  if (!organisation.name || organisation.name === 'Default Organisation') {
+    return null;
+  }
+
   return (
     <span className="org-name-display">
-      {organisation.name || 'EHS Portal'}
+      {organisation.name}
     </span>
   );
 };
