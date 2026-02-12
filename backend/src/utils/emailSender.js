@@ -136,13 +136,14 @@ const isValidEmail = (email) => {
 
 /**
  * Check if SMTP is configured
- * @returns {boolean} - True if SMTP is configured (or mock transporter is set)
+ * @returns {boolean} - True if SMTP is configured with host AND credentials (or mock transporter is set)
  */
 const isSmtpConfigured = () => {
   // If a transporter has been set (e.g., for testing), consider it configured
   if (transporter) return true;
   const config = getSmtpConfig();
-  return Boolean(config.host);
+  // Must have host AND auth credentials configured
+  return Boolean(config.host && config.auth && config.auth.user && config.auth.pass);
 };
 
 /**

@@ -90,16 +90,28 @@ const requestPasswordReset = async ({
   });
   
   // Send email if SMTP is configured
+  let emailSent = false;
   if (isSmtpConfigured()) {
     const resetUrl = `${env.frontendUrl}/reset-password?token=${plainToken}`;
-    await sendPasswordResetEmail(user, resetUrl);
+    try {
+      await sendPasswordResetEmail(user, resetUrl);
+      emailSent = true;
+      console.log('[PasswordReset] Reset email sent to:', user.email);
+    } catch (emailError) {
+      console.error('[PasswordReset] Failed to send reset email:', emailError.message);
+      // Continue - token is still valid, user just won't receive email
+    }
+  } else {
+    console.warn('[PasswordReset] SMTP not configured - email not sent for:', user.email);
   }
   
   return { 
     success: true, 
     message: 'If this email exists in our system, you will receive password reset instructions.',
     // Only include token in development for testing
-    ...(env.nodeEnv === 'development' && { _devToken: plainToken })
+    ...(env.nodeEnv === 'development' && { _devToken: plainToken }),
+    // Include email status for debugging (not exposed to users)
+    _emailSent: emailSent
   };
 };
 
