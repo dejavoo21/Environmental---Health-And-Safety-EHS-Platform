@@ -146,44 +146,11 @@ const submitAccessRequest = async ({
         userAgent
       });
       
-      // Send confirmation email if SMTP configured (fire-and-forget, don't block response)
-      if (isSmtpConfigured()) {
-        const orgQuery = await query(
-          `SELECT name FROM organisations WHERE id = $1`,
-          [organisationId]
-        );
-        const org = orgQuery.rows[0];
-        
-        sendAccessRequestConfirmationEmail({
-          email: email.toLowerCase().trim(),
-          fullName: fullName.trim(),
-          referenceNumber: request.reference_number,
-          organisationName: org?.name || 'Your Organization'
-        }).catch(err => {
-          console.error('[Email] Failed to send confirmation email for request:', request.reference_number, {
-            to: email,
-            error: err.message,
-            code: err.code
-          });
-        });
-      }
-    } else {
-      // Send confirmation email without organisation details (fire-and-forget, don't block response)
-      if (isSmtpConfigured()) {
-        sendAccessRequestConfirmationEmail({
-          email: email.toLowerCase().trim(),
-          fullName: fullName.trim(),
-          referenceNumber: request.reference_number,
-          organisationName: 'Pending Assignment'
-        }).catch(err => {
-          console.error('[Email] Failed to send confirmation email for request:', request.reference_number, {
-            to: email,
-            error: err.message,
-            code: err.code
-          });
-        });
-      }
-    }
+      // Email sending disabled on Railway (SMTP timeout issues)
+      // Emails will be sent by admin through other channels or email service
+      // if (isSmtpConfigured()) {
+      //   ... email code ...
+      // }
     
     return {
       success: true,
