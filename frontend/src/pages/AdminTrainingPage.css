@@ -2,6 +2,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .admin-training-header {
@@ -76,11 +79,20 @@
   color: white;
 }
 
+/* Content Container */
+.admin-training-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1rem;
+  overflow: hidden;
+}
+
 /* Toolbar */
 .admin-training-toolbar {
   display: flex;
   gap: 0.75rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
   flex-wrap: wrap;
 }
 
@@ -115,13 +127,17 @@
 /* Table */
 .admin-training-table-wrapper {
   overflow-x: auto;
+  flex: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: var(--card-bg);
 }
 
 .admin-training-table {
   width: 100%;
   border-collapse: collapse;
   background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  border: none;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -276,6 +292,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .category-card {

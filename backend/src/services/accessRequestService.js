@@ -212,7 +212,7 @@ const listAccessRequests = async ({
   page = 1,
   limit = 20
 }) => {
-  const conditions = ['organisation_id = $1'];
+  const conditions = ['(organisation_id = $1 OR organisation_id IS NULL)'];
   const values = [organisationId];
   let paramIndex = 2;
   

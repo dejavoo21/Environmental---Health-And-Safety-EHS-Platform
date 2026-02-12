@@ -6,7 +6,11 @@ const COUNTRIES = [
   { code: 'GB', name: 'United Kingdom' },
   { code: 'US', name: 'United States' },
   { code: 'CA', name: 'Canada' },
-  { code: 'ZA', name: 'South Africa' }
+  { code: 'ZA', name: 'South Africa' },
+  { code: 'KE', name: 'Kenya' },
+  { code: 'NG', name: 'Nigeria' },
+  { code: 'GH', name: 'Ghana' },
+  { code: 'AE', name: 'United Arab Emirates' }
 ];
 
 const TIMEZONES = [
@@ -19,6 +23,10 @@ const TIMEZONES = [
   'America/Los_Angeles',
   'America/Toronto',
   'Africa/Johannesburg',
+  'Africa/Nairobi',
+  'Africa/Lagos',
+  'Africa/Accra',
+  'Asia/Dubai',
   'Australia/Sydney'
 ];
 
@@ -58,7 +66,9 @@ const getTimezonesForCountry = (countryCode) => {
     'KE': ['Africa/Nairobi'],
     'ET': ['Africa/Addis_Ababa'],
     'GH': ['Africa/Accra'],
-    'MA': ['Africa/Casablanca']
+    'MA': ['Africa/Casablanca'],
+    // Middle East
+    'AE': ['Asia/Dubai']
   };
   return countryTimezones[countryCode] || TIMEZONES;
 };
