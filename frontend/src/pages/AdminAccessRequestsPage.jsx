@@ -3,6 +3,7 @@ import api from '../api/client';
 
 const STATUS_OPTIONS = [
   { value: 'pending', label: 'Pending' },
+  { value: 'info_requested', label: 'Info Requested' },
   { value: 'approved', label: 'Approved' },
   { value: 'rejected', label: 'Rejected' },
   { value: 'all', label: 'All' }
@@ -27,8 +28,8 @@ const AdminAccessRequestsPage = () => {
 
   // Modal state
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [modalType, setModalType] = useState(null); // 'approve' | 'reject' | 'view'
-  const [modalData, setModalData] = useState({ role: '', siteIds: [], notes: '', reason: '', sendEmail: true });
+  const [modalType, setModalType] = useState(null); // 'approve' | 'reject' | 'view' | 'request-info'
+  const [modalData, setModalData] = useState({ role: '', siteIds: [], notes: '', reason: '', sendEmail: true, infoMessage: '' });
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState('');
 
@@ -63,7 +64,8 @@ const AdminAccessRequestsPage = () => {
       siteIds: [],
       notes: '',
       reason: '',
-      sendEmail: true
+      sendEmail: true,
+      infoMessage: ''
     });
     setModalError('');
   };
@@ -71,7 +73,7 @@ const AdminAccessRequestsPage = () => {
   const closeModal = () => {
     setSelectedRequest(null);
     setModalType(null);
-    setModalData({ role: '', siteIds: [], notes: '', reason: '', sendEmail: true });
+    setModalData({ role: '', siteIds: [], notes: '', reason: '', sendEmail: true, infoMessage: '' });
     setModalError('');
   };
 
@@ -115,14 +117,47 @@ const AdminAccessRequestsPage = () => {
     }
   };
 
+  const handleRequestInfo = async () => {
+    if (!selectedRequest) return;
+    
+    if (!modalData.infoMessage.trim()) {
+      setModalError('Please provide a message describing what information is needed.');
+      return;
+    }
+    
+    setModalLoading(true);
+    setModalError('');
+    try {
+      await api.post(`/access-requests/admin/${selectedRequest.id}/request-info`, {
+        message: modalData.infoMessage.trim(),
+        sendEmail: true
+      });
+      closeModal();
+      fetchRequests(pagination.page);
+    } catch (err) {
+      console.error('Request info error:', err);
+      setModalError(err.response?.data?.message || 'Failed to request information');
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
   const getStatusBadge = (status) => {
     const classes = {
       pending: 'badge warning',
+      info_requested: 'badge info',
       approved: 'badge success',
       rejected: 'badge error',
       expired: 'badge muted'
     };
-    return <span className={classes[status] || 'badge'}>{status}</span>;
+    const labels = {
+      pending: 'pending',
+      info_requested: 'info requested',
+      approved: 'approved',
+      rejected: 'rejected',
+      expired: 'expired'
+    };
+    return <span className={classes[status] || 'badge'}>{labels[status] || status}</span>;
   };
 
   return (
@@ -137,6 +172,10 @@ const AdminAccessRequestsPage = () => {
         <div className="count-item pending">
           <span className="count-value">{counts.pending || 0}</span>
           <span className="count-label">Awaiting Review</span>
+        </div>
+        <div className="count-item info">
+          <span className="count-value">{counts.info_requested || 0}</span>
+          <span className="count-label">Info Requested</span>
         </div>
         <div className="count-item approved">
           <span className="count-value">{counts.approved || 0}</span>
@@ -214,7 +253,7 @@ const AdminAccessRequestsPage = () => {
                       >
                         View
                       </button>
-                      {req.status === 'pending' && (
+                      {(req.status === 'pending' || req.status === 'info_requested') && (
                         <>
                           <button
                             type="button"
@@ -233,6 +272,16 @@ const AdminAccessRequestsPage = () => {
                             Reject
                           </button>
                         </>
+                      )}
+                      {req.status === 'pending' && (
+                        <button
+                          type="button"
+                          className="btn small info"
+                          onClick={() => openModal(req, 'request-info')}
+                          data-testid={`request-info-${req.id}`}
+                        >
+                          Request Info
+                        </button>
                       )}
                     </div>
                   </td>
@@ -296,10 +345,44 @@ const AdminAccessRequestsPage = () => {
                     <dd>{formatDate(selectedRequest.createdAt)}</dd>
                     <dt>Expires</dt>
                     <dd>{formatDate(selectedRequest.expiresAt)}</dd>
+                    {selectedRequest.infoRequestMessage && (
+                      <>
+                        <dt>Info Requested</dt>
+                        <dd className="info-box">{selectedRequest.infoRequestMessage}</dd>
+                        <dt>Requested At</dt>
+                        <dd>{formatDate(selectedRequest.infoRequestedAt)}</dd>
+                      </>
+                    )}
+                    {selectedRequest.infoResponse && (
+                      <>
+                        <dt>Applicant Response</dt>
+                        <dd className="response-box">{selectedRequest.infoResponse}</dd>
+                        <dt>Responded At</dt>
+                        <dd>{formatDate(selectedRequest.infoRespondedAt)}</dd>
+                      </>
+                    )}
                   </dl>
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn" onClick={closeModal}>Close</button>
+                  {(selectedRequest.status === 'pending' || selectedRequest.status === 'info_requested') && (
+                    <>
+                      <button
+                        type="button"
+                        className="btn success"
+                        onClick={() => setModalType('approve')}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        className="btn error"
+                        onClick={() => setModalType('reject')}
+                      >
+                        Reject
+                      </button>
+                    </>
+                  )}
                 </div>
               </>
             )}
@@ -403,6 +486,54 @@ const AdminAccessRequestsPage = () => {
                     data-testid="confirm-reject-btn"
                   >
                     {modalLoading ? 'Rejecting...' : 'Reject'}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {modalType === 'request-info' && (
+              <>
+                <div className="modal-header">
+                  <h2>Request Additional Information</h2>
+                  <button type="button" className="close-btn" onClick={closeModal}>×</button>
+                </div>
+                <div className="modal-body">
+                  <p>
+                    Request additional information from <strong>{selectedRequest.fullName}</strong> ({selectedRequest.email})?
+                  </p>
+
+                  <label className="field">
+                    <span>Message to Applicant *</span>
+                    <textarea
+                      value={modalData.infoMessage}
+                      onChange={(e) => setModalData((p) => ({ ...p, infoMessage: e.target.value }))}
+                      placeholder="Please describe what additional information you need..."
+                      rows={4}
+                      required
+                    />
+                  </label>
+
+                  <p className="help-text">
+                    The applicant will receive an email with your message and a link to respond.
+                    Their response will appear in this request's details.
+                  </p>
+
+                  {modalError && (
+                    <div className="error-text" role="alert">{modalError}</div>
+                  )}
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn" onClick={closeModal} disabled={modalLoading}>
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn info"
+                    onClick={handleRequestInfo}
+                    disabled={modalLoading || !modalData.infoMessage.trim()}
+                    data-testid="confirm-request-info-btn"
+                  >
+                    {modalLoading ? 'Sending...' : 'Send Request'}
                   </button>
                 </div>
               </>

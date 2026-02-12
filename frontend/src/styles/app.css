@@ -1662,6 +1662,31 @@ textarea:focus {
   font-size: 0.8rem;
 }
 
+.badge.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge.info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge.muted {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
 .status-row {
   display: flex;
   align-items: center;
@@ -5227,6 +5252,12 @@ textarea:focus {
   color: #721c24;
 }
 
+.count-item.info {
+  background: linear-gradient(135deg, #dbeafe 0%, #f0f7ff 100%);
+  border: 2px solid #3b82f6;
+  color: #1e40af;
+}
+
 .count-value {
   display: block;
   font-size: 2rem;
@@ -5322,6 +5353,28 @@ textarea:focus {
   margin: 0;
 }
 
+.detail-list .info-box {
+  background: #dbeafe;
+  border-left: 4px solid #3b82f6;
+  padding: 0.75rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+
+.detail-list .response-box {
+  background: #dcfce7;
+  border-left: 4px solid #22c55e;
+  padding: 0.75rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+
+.help-text {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin: 0.5rem 0;
+}
+
 /* Login footer */
 .login-footer {
   margin-top: 1.5rem;
@@ -5400,6 +5453,15 @@ textarea:focus {
 
 .btn.error:hover {
   background: #b91c1c;
+}
+
+.btn.info {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.btn.info:hover {
+  background: #2563eb;
 }
 
 .btn-link {

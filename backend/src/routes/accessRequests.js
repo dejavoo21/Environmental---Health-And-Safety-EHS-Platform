@@ -178,6 +178,75 @@ router.post('/admin/:id/reject', authMiddleware, requireRole('admin'), async (re
 });
 
 /**
+ * POST /api/access-requests/admin/:id/request-info
+ * Request additional information from applicant (admin only)
+ */
+router.post('/admin/:id/request-info', authMiddleware, requireRole('admin'), async (req, res, next) => {
+  const { message, sendEmail = true } = req.body || {};
+  
+  if (!message || message.trim().length === 0) {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'VALIDATION_ERROR', 
+      message: 'Please provide a message describing what information is needed.' 
+    });
+  }
+  
+  try {
+    const result = await accessRequestService.requestMoreInfo({
+      requestId: req.params.id,
+      organisationId: req.user.organisationId,
+      adminUserId: req.user.id,
+      message: message.trim(),
+      sendEmail,
+      ipAddress: getClientIp(req),
+      userAgent: req.headers['user-agent']
+    });
+    
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    
+    return res.json(result);
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/**
+ * POST /api/access-requests/respond
+ * Submit additional information response (public - for applicant)
+ */
+router.post('/respond', async (req, res, next) => {
+  const { referenceNumber, email, response } = req.body || {};
+  
+  if (!referenceNumber || !email || !response) {
+    return res.status(400).json({ 
+      success: false, 
+      error: 'VALIDATION_ERROR', 
+      message: 'Reference number, email, and response are required.' 
+    });
+  }
+  
+  try {
+    const result = await accessRequestService.submitInfoResponse({
+      referenceNumber,
+      email,
+      response: response.trim(),
+      ipAddress: getClientIp(req)
+    });
+    
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    
+    return res.json(result);
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/**
  * GET /api/access-requests/admin/pending-count
  * Get count of pending requests (for badge/notification)
  */
@@ -185,7 +254,7 @@ router.get('/admin/pending-count', authMiddleware, requireRole('admin'), async (
   try {
     const result = await query(
       `SELECT COUNT(*) FROM access_requests 
-       WHERE organisation_id = $1 AND status = 'pending' AND expires_at > NOW()`,
+       WHERE (organisation_id = $1 OR organisation_id IS NULL) AND status IN ('pending', 'info_requested') AND expires_at > NOW()`,
       [req.user.organisationId]
     );
     

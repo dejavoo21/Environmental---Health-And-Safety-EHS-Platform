@@ -253,16 +253,31 @@ const listAccessRequests = async ({
     `SELECT 
       ar.id, ar.reference_number, ar.email, ar.full_name, ar.requested_role,
       ar.reason, ar.status, ar.created_at, ar.expires_at,
+      ar.info_requested_at, ar.info_request_message, ar.info_response, ar.info_responded_at,
       u.name AS decided_by_name, ar.decision_at
      FROM access_requests ar
      LEFT JOIN users u ON u.id = ar.decision_by
      ${whereClause}
      ORDER BY 
-       CASE WHEN ar.status = 'pending' THEN 0 ELSE 1 END,
+       CASE WHEN ar.status = 'pending' THEN 0 WHEN ar.status = 'info_requested' THEN 1 ELSE 2 END,
        ar.created_at DESC
      LIMIT $${paramIndex++} OFFSET $${paramIndex}`,
     [...values, limit, offset]
   );
+  
+  // Get counts by status
+  const countsResult = await query(
+    `SELECT status, COUNT(*) as count 
+     FROM access_requests 
+     WHERE organisation_id = $1 OR organisation_id IS NULL
+     GROUP BY status`,
+    [organisationId]
+  );
+  
+  const counts = {};
+  countsResult.rows.forEach(row => {
+    counts[row.status] = parseInt(row.count, 10);
+  });
   
   return {
     data: dataResult.rows.map(row => ({
@@ -276,8 +291,13 @@ const listAccessRequests = async ({
       createdAt: row.created_at,
       expiresAt: row.expires_at,
       decidedByName: row.decided_by_name,
-      decisionAt: row.decision_at
+      decisionAt: row.decision_at,
+      infoRequestedAt: row.info_requested_at,
+      infoRequestMessage: row.info_request_message,
+      infoResponse: row.info_response,
+      infoRespondedAt: row.info_responded_at
     })),
+    counts,
     pagination: {
       page,
       limit,
@@ -328,7 +348,12 @@ const getAccessRequest = async (id, organisationId) => {
     termsAccepted: row.terms_accepted,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
-    expiresAt: row.expires_at
+    expiresAt: row.expires_at,
+    infoRequestedAt: row.info_requested_at,
+    infoRequestedBy: row.info_requested_by,
+    infoRequestMessage: row.info_request_message,
+    infoResponse: row.info_response,
+    infoRespondedAt: row.info_responded_at
   };
 };
 
@@ -353,7 +378,7 @@ const approveAccessRequest = async ({
     return { success: false, error: 'NOT_FOUND', message: 'Access request not found.' };
   }
   
-  if (request.status !== 'pending') {
+  if (request.status !== 'pending' && request.status !== 'info_requested') {
     return { success: false, error: 'ALREADY_PROCESSED', message: `This request has already been ${request.status}.` };
   }
   
@@ -471,7 +496,7 @@ const rejectAccessRequest = async ({
     return { success: false, error: 'NOT_FOUND', message: 'Access request not found.' };
   }
   
-  if (request.status !== 'pending') {
+  if (request.status !== 'pending' && request.status !== 'info_requested') {
     return { success: false, error: 'ALREADY_PROCESSED', message: `This request has already been ${request.status}.` };
   }
   
@@ -495,12 +520,18 @@ const rejectAccessRequest = async ({
     userAgent
   });
   
-  // Send rejection email if configured (polite, no reason given)
+  // Send rejection email if configured (polite, no reason given) - don't fail rejection if email fails
   if (sendEmail && isSmtpConfigured()) {
-    await sendRejectionEmail({
-      email: request.email,
-      name: request.fullName
-    });
+    try {
+      await sendRejectionEmail({
+        email: request.email,
+        name: request.fullName
+      });
+      console.log('[AccessRequest] Rejection email sent to:', request.email);
+    } catch (emailError) {
+      console.error('[AccessRequest] Failed to send rejection email:', emailError.message);
+      // Continue - request is still rejected
+    }
   }
   
   return {
@@ -694,11 +725,203 @@ const expirePendingRequests = async () => {
   return { expired: result.rowCount };
 };
 
+/**
+ * Request additional information from an applicant
+ * @param {Object} params - Request parameters
+ * @returns {Promise<Object>} - Result
+ */
+const requestMoreInfo = async ({
+  requestId,
+  organisationId,
+  adminUserId,
+  message,
+  sendEmail = true,
+  ipAddress = null,
+  userAgent = null
+}) => {
+  // Get the request
+  const request = await getAccessRequest(requestId, organisationId);
+  
+  if (!request) {
+    return { success: false, error: 'NOT_FOUND', message: 'Access request not found.' };
+  }
+  
+  if (request.status !== 'pending' && request.status !== 'info_requested') {
+    return { success: false, error: 'ALREADY_PROCESSED', message: `This request has already been ${request.status}.` };
+  }
+  
+  // Update access request status
+  await query(
+    `UPDATE access_requests 
+     SET status = 'info_requested', 
+         info_requested_at = NOW(), 
+         info_requested_by = $1, 
+         info_request_message = $2,
+         updated_at = NOW(),
+         organisation_id = COALESCE(organisation_id, $4)
+     WHERE id = $3`,
+    [adminUserId, message, requestId, organisationId]
+  );
+  
+  // Log the event
+  await securityAuditService.logSecurityEvent({
+    eventType: 'ACCESS_REQUEST_INFO_REQUESTED',
+    organisationId,
+    userId: adminUserId,
+    metadata: {
+      referenceNumber: request.referenceNumber,
+      requestId,
+      message
+    },
+    ipAddress,
+    userAgent
+  });
+  
+  // Send email if configured
+  if (sendEmail && isSmtpConfigured()) {
+    try {
+      await sendInfoRequestEmail({
+        email: request.email,
+        name: request.fullName,
+        referenceNumber: request.referenceNumber,
+        message
+      });
+      console.log('[AccessRequest] Info request email sent to:', request.email);
+    } catch (emailError) {
+      console.error('[AccessRequest] Failed to send info request email:', emailError.message);
+    }
+  }
+  
+  return {
+    success: true,
+    message: 'Additional information requested from applicant.'
+  };
+};
+
+/**
+ * Submit additional information response (public endpoint for applicant)
+ * @param {Object} params - Response parameters
+ * @returns {Promise<Object>} - Result
+ */
+const submitInfoResponse = async ({
+  referenceNumber,
+  email,
+  response,
+  ipAddress = null
+}) => {
+  // Find the request by reference number and email
+  const result = await query(
+    `SELECT id, organisation_id, status, full_name 
+     FROM access_requests 
+     WHERE reference_number = $1 AND LOWER(email) = LOWER($2)`,
+    [referenceNumber, email]
+  );
+  
+  if (result.rowCount === 0) {
+    return { success: false, error: 'NOT_FOUND', message: 'Access request not found.' };
+  }
+  
+  const request = result.rows[0];
+  
+  if (request.status !== 'info_requested') {
+    return { success: false, error: 'INVALID_STATUS', message: 'This request is not awaiting additional information.' };
+  }
+  
+  // Update with response and change status back to pending
+  await query(
+    `UPDATE access_requests 
+     SET status = 'pending', 
+         info_response = $1, 
+         info_responded_at = NOW(),
+         updated_at = NOW()
+     WHERE id = $2`,
+    [response, request.id]
+  );
+  
+  // Log the event
+  await securityAuditService.logSecurityEvent({
+    eventType: 'ACCESS_REQUEST_INFO_RESPONDED',
+    organisationId: request.organisation_id,
+    metadata: {
+      referenceNumber,
+      requestId: request.id
+    },
+    ipAddress
+  });
+  
+  return {
+    success: true,
+    message: 'Additional information submitted successfully. Your request is now pending review.'
+  };
+};
+
+/**
+ * Send info request email to applicant
+ */
+const sendInfoRequestEmail = async ({ email, name, referenceNumber, message }) => {
+  const responseUrl = `${env.frontendUrl}/access-request/respond?ref=${referenceNumber}&email=${encodeURIComponent(email)}`;
+  
+  const subject = 'EHS Portal - Additional Information Required';
+  const text = `
+Hi ${name},
+
+We need some additional information regarding your access request (Reference: ${referenceNumber}).
+
+Message from Administrator:
+${message}
+
+Please respond to this request by visiting:
+${responseUrl}
+
+If you have any questions, please contact the organisation administrator.
+
+Best regards,
+EHS Portal Team
+  `.trim();
+  
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .message-box { background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0; }
+    .button { display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white !important; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Additional Information Required</h2>
+    <p>Hi ${name},</p>
+    <p>We need some additional information regarding your access request.</p>
+    <p><strong>Reference Number:</strong> ${referenceNumber}</p>
+    <div class="message-box">
+      <strong>Message from Administrator:</strong>
+      <p>${message.replace(/\n/g, '<br>')}</p>
+    </div>
+    <p>Please click the button below to respond:</p>
+    <a href="${responseUrl}" class="button">Respond to Request</a>
+    <div class="footer">
+      <p>Best regards,<br>EHS Portal Team</p>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim();
+  
+  await sendEmail({ to: email, subject, text, html });
+};
+
 module.exports = {
   submitAccessRequest,
   listAccessRequests,
   getAccessRequest,
   approveAccessRequest,
   rejectAccessRequest,
+  requestMoreInfo,
+  submitInfoResponse,
   expirePendingRequests
 };
