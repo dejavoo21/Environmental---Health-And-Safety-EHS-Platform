@@ -467,6 +467,7 @@ router.get('/my-training', async (req, res, next) => {
     );
     res.json(myTraining);
   } catch (error) {
+    console.error('[Training] my-training error:', error.message, error.code, error.stack?.split('\n').slice(0, 3).join(' '));
     // Check if this is a missing table error
     if (error.code === '42P01') {
       console.error('Training tables not found - migrations may not have run:', error.message);
@@ -498,6 +499,7 @@ router.get('/my-training/history', async (req, res, next) => {
     );
     res.json(history);
   } catch (error) {
+    console.error('[Training] my-training/history error:', error.message, error.code, error.stack?.split('\n').slice(0, 3).join(' '));
     // Check if this is a missing table error
     if (error.code === '42P01') {
       console.error('Training tables not found:', error.message);

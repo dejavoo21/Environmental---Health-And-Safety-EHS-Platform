@@ -79,7 +79,7 @@ const listAssignments = async (organisationId, options = {}) => {
   const sql = `
     SELECT a.*,
            u.name as user_name, u.email as user_email,
-           c.code as course_code, c.title as course_title, c.delivery_method,
+           c.code as course_code, c.title as course_title, c.delivery_type,
            ab.name as assigned_by_name
     FROM training_assignments a
     JOIN users u ON a.user_id = u.id
@@ -112,7 +112,7 @@ const getAssignmentById = async (assignmentId, organisationId) => {
   const result = await query(
     `SELECT a.*,
             u.name as user_name, u.email as user_email,
-            c.code as course_code, c.title as course_title, c.delivery_method, c.estimated_duration_hours,
+            c.code as course_code, c.title as course_title, c.delivery_type, c.duration_hours,
             ab.name as assigned_by_name,
             comp.id as completion_id, comp.completion_date, comp.result, comp.expires_at
      FROM training_assignments a
@@ -271,8 +271,8 @@ const getMyTraining = async (userId, organisationId) => {
   // Get active assignments
   const assignedResult = await query(
     `SELECT a.*, 
-            c.code as course_code, c.title as course_title, c.delivery_method,
-            c.estimated_duration_hours
+            c.code as course_code, c.title as course_title, c.delivery_type,
+            c.duration_hours as estimated_duration_hours
      FROM training_assignments a
      JOIN training_courses c ON a.course_id = c.id
      WHERE a.user_id = $1 AND a.organisation_id = $2 
@@ -320,7 +320,7 @@ const getMyTraining = async (userId, organisationId) => {
         id: row.course_id,
         code: row.course_code,
         title: row.course_title,
-        deliveryMethod: row.delivery_method,
+        deliveryMethod: row.delivery_type,
         estimatedDurationHours: row.estimated_duration_hours
       },
       dueDate: row.due_date,
@@ -456,7 +456,7 @@ const mapAssignmentRow = (row) => ({
     id: row.course_id,
     code: row.course_code,
     title: row.course_title,
-    deliveryMethod: row.delivery_method
+    deliveryMethod: row.delivery_type
   },
   assignedBy: row.assigned_by_name ? {
     id: row.assigned_by,
@@ -479,7 +479,7 @@ const mapAssignmentDetailRow = (row) => ({
     result: row.result,
     expiresAt: row.expires_at
   } : null,
-  estimatedDurationHours: row.estimated_duration_hours,
+  estimatedDurationHours: row.duration_hours,
   createdAt: row.created_at,
   updatedAt: row.updated_at
 });

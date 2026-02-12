@@ -343,7 +343,7 @@ const getUserTrainingHistory = async (userId, organisationId, options = {}) => {
        COUNT(*) FILTER (WHERE result = 'failed') as failed,
        COUNT(*) FILTER (WHERE expires_at IS NOT NULL AND expires_at < CURRENT_DATE) as expired,
        COUNT(*) FILTER (WHERE expires_at BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '30 days') as expiring_soon,
-       SUM(CASE WHEN c.estimated_duration_hours IS NOT NULL THEN c.estimated_duration_hours ELSE 0 END) as total_hours
+       SUM(CASE WHEN c.duration_hours IS NOT NULL THEN c.duration_hours ELSE 0 END) as total_hours
      FROM training_completions comp
      JOIN training_courses c ON comp.course_id = c.id
      WHERE comp.user_id = $1 AND comp.organisation_id = $2`,
