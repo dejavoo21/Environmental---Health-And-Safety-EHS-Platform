@@ -99,7 +99,7 @@ const processAssignmentRule = async (rule) => {
   
   // Find users matching criteria who don't have active assignment for this course
   const usersResult = await query(`
-    SELECT u.id, u.email, u.full_name
+    SELECT u.id, u.email, u.name as full_name
     FROM users u
     WHERE ${conditions.join(' AND ')}
     AND NOT EXISTS (

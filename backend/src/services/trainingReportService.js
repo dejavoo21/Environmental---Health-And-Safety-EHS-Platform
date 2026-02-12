@@ -162,7 +162,7 @@ const generateComplianceReport = async (organisationId, options = {}) => {
     WITH user_requirements AS (
       SELECT 
         u.id as user_id,
-        u.full_name,
+        u.name as full_name,
         u.email,
         s.name as site_name,
         d.name as department_name,

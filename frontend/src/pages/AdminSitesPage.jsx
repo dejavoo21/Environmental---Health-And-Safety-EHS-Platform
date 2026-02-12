@@ -236,6 +236,11 @@ const CITY_COORDINATES = {
     'Bandung': { lat: -6.9175, lon: 107.6191 },
     'Medan': { lat: 3.1957, lon: 98.6722 }
   },
+  'AE': {
+    'Dubai': { lat: 25.2048, lon: 55.2708 },
+    'Abu Dhabi': { lat: 24.4539, lon: 54.3773 },
+    'Sharjah': { lat: 25.3573, lon: 55.4033 }
+  },
   // AFRICA
   'ZA': {
     'Johannesburg': { lat: -26.2023, lon: 28.0436 },

@@ -21,7 +21,7 @@ const runTrainingExpiryCheck = async () => {
     // Find newly expired certifications (expired today)
     const expiredResult = await query(`
       SELECT comp.id, comp.user_id, comp.course_id, comp.expires_at, comp.organisation_id,
-             u.email, u.full_name,
+             u.email, u.name as full_name,
              c.title as course_title
       FROM training_completions comp
       JOIN users u ON comp.user_id = u.id
@@ -51,7 +51,7 @@ const runTrainingExpiryCheck = async () => {
     // Find certifications expiring in 30 days
     const expiring30Result = await query(`
       SELECT comp.id, comp.user_id, comp.course_id, comp.expires_at, comp.organisation_id,
-             u.email, u.full_name,
+             u.email, u.name as full_name,
              c.title as course_title
       FROM training_completions comp
       JOIN users u ON comp.user_id = u.id
@@ -82,7 +82,7 @@ const runTrainingExpiryCheck = async () => {
     // Find certifications expiring in 7 days
     const expiring7Result = await query(`
       SELECT comp.id, comp.user_id, comp.course_id, comp.expires_at, comp.organisation_id,
-             u.email, u.full_name,
+             u.email, u.name as full_name,
              c.title as course_title
       FROM training_completions comp
       JOIN users u ON comp.user_id = u.id

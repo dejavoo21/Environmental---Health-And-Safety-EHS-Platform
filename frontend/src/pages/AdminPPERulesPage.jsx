@@ -238,7 +238,7 @@ const AdminPPERulesPage = () => {
           <p className="muted">Define conditions that trigger PPE requirements</p>
         </div>
         {!showForm && (
-          <button className="btn primary" onClick={() => setShowForm(true)}>
+          <button className="btn success" onClick={() => setShowForm(true)}>
             + Add PPE Rule
           </button>
         )}

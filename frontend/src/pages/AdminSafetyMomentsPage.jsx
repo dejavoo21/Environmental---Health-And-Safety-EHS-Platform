@@ -146,7 +146,7 @@ const AdminSafetyMomentsPage = () => {
           <p className="muted">Manage daily safety messages for your organization</p>
         </div>
         {!showForm && (
-          <button className="btn primary" onClick={() => setShowForm(true)}>
+          <button className="btn success" onClick={() => setShowForm(true)}>
             + Add Safety Moment
           </button>
         )}

@@ -164,7 +164,7 @@ const AdminSiteLegislationPage = () => {
           <p className="muted">Manage legislation and regulatory references for sites</p>
         </div>
         {!showForm && (
-          <button className="btn primary" onClick={() => setShowForm(true)}>
+          <button className="btn success" onClick={() => setShowForm(true)}>
             + Add Legislation
           </button>
         )}

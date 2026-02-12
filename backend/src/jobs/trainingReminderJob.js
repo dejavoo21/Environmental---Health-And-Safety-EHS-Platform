@@ -25,7 +25,7 @@ const runTrainingReminders = async () => {
              s.organisation_id,
              c.title as course_title,
              e.user_id,
-             u.full_name, u.email,
+             u.name as full_name, u.email,
              site.name as site_name
       FROM training_sessions s
       JOIN training_courses c ON s.course_id = c.id

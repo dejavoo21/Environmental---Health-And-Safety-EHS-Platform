@@ -5374,6 +5374,33 @@ textarea:focus {
   background: #16a34a;
 }
 
+.btn.error {
+  background: var(--color-error);
+  color: #fff;
+}
+
+.btn.error:hover {
+  background: #b91c1c;
+}
+
+.btn-link {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.btn-xs {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
 .btn.full-width {
   width: 100%;
 }

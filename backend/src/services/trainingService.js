@@ -240,8 +240,8 @@ const getCourseById = async (courseId, organisationId) => {
   const result = await query(
     `SELECT c.*, 
             cat.name as category_name, cat.code as category_code,
-            u.full_name as owner_name,
-            cb.full_name as created_by_name,
+            u.name as owner_name,
+            cb.name as created_by_name,
             rc.id as refresher_id, rc.code as refresher_code, rc.title as refresher_title
      FROM training_courses c
      LEFT JOIN training_categories cat ON c.category_id = cat.id

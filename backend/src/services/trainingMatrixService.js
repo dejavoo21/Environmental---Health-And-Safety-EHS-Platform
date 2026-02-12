@@ -37,14 +37,14 @@ const getTrainingMatrix = async (organisationId, options = {}) => {
   }
   
   const usersResult = await query(
-    `SELECT u.id, u.full_name, u.email, u.role_id, u.site_id, u.department_id,
+    `SELECT u.id, u.name as full_name, u.email, u.role_id, u.site_id, u.department_id,
             r.name as role_name, s.name as site_name, d.name as department_name
      FROM users u
      LEFT JOIN roles r ON u.role_id = r.id
      LEFT JOIN sites s ON u.site_id = s.id
      LEFT JOIN departments d ON u.department_id = d.id
      WHERE ${userConditions.join(' AND ')}
-     ORDER BY u.full_name`,
+     ORDER BY u.name`,
     userValues
   );
   

@@ -130,8 +130,8 @@ const getSessionById = async (sessionId, organisationId) => {
   
   // Get enrollments
   const enrollResult = await query(
-    `SELECT e.*, u.full_name as user_name, u.email as user_email,
-            eb.full_name as enrolled_by_name
+    `SELECT e.*, u.name as user_name, u.email as user_email,
+            eb.name as enrolled_by_name
      FROM training_session_enrollments e
      JOIN users u ON e.user_id = u.id
      LEFT JOIN users eb ON e.enrolled_by = eb.id

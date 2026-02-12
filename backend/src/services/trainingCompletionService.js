@@ -88,10 +88,10 @@ const listCompletions = async (organisationId, options = {}) => {
   const offset = (page - 1) * limit;
   const sql = `
     SELECT comp.*,
-           u.full_name as user_name, u.email as user_email,
+           u.name as user_name, u.email as user_email,
            c.code as course_code, c.title as course_title, c.category_id,
            cat.name as category_name,
-           t.full_name as trainer_name,
+           t.name as trainer_name,
            s.session_date
     FROM training_completions comp
     JOIN users u ON comp.user_id = u.id
@@ -123,13 +123,13 @@ const listCompletions = async (organisationId, options = {}) => {
 const getCompletionById = async (completionId, organisationId) => {
   const result = await query(
     `SELECT comp.*,
-            u.full_name as user_name, u.email as user_email,
+            u.name as user_name, u.email as user_email,
             c.code as course_code, c.title as course_title, c.category_id, c.validity_months,
             cat.name as category_name,
-            t.full_name as trainer_name,
+            t.name as trainer_name,
             s.session_date, s.location_detail,
-            v.full_name as verified_by_name,
-            r.full_name as recorded_by_name
+            v.name as verified_by_name,
+            r.name as recorded_by_name
      FROM training_completions comp
      JOIN users u ON comp.user_id = u.id
      JOIN training_courses c ON comp.course_id = c.id
@@ -413,7 +413,7 @@ const getExpiringCertifications = async (organisationId, options = {}) => {
   
   const result = await query(
     `SELECT comp.*, 
-            u.full_name as user_name, u.email as user_email, u.site_id, u.department_id,
+            u.name as user_name, u.email as user_email, u.site_id, u.department_id,
             c.code as course_code, c.title as course_title, c.validity_months
      FROM training_completions comp
      JOIN users u ON comp.user_id = u.id

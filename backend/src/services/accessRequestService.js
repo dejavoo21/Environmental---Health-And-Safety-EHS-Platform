@@ -29,6 +29,8 @@ const submitAccessRequest = async ({
   userAgent = null
 }) => {
   try {
+    let org = null;
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
@@ -70,7 +72,7 @@ const submitAccessRequest = async ({
         return { success: false, error: 'ORG_NOT_FOUND', message: 'Organisation code not found. Please check and try again, or leave blank to request without specifying an organisation.' };
       }
       
-      const org = orgResult.rows[0];
+      org = orgResult.rows[0];
       organisationId = org.id;
       
       // Check if access requests are enabled for this org
@@ -146,11 +148,15 @@ const submitAccessRequest = async ({
         userAgent
       });
       
-      // Email sending disabled on Railway (SMTP timeout issues)
-      // Emails will be sent by admin through other channels or email service
-      // if (isSmtpConfigured()) {
-      //   ... email code ...
-      // }
+      // Send confirmation email when SMTP is configured.
+      if (isSmtpConfigured()) {
+        await sendAccessRequestConfirmationEmail({
+          email: email.toLowerCase().trim(),
+          fullName: fullName.trim(),
+          referenceNumber: request.reference_number,
+          organisationName: org.name
+        });
+      }
     }
     
     return {
@@ -413,7 +419,7 @@ const approveAccessRequest = async ({
   
   // Send welcome email if configured
   if (sendWelcomeEmail && isSmtpConfigured()) {
-    await sendWelcomeEmail({
+    await sendApprovalEmail({
       email: newUser.email,
       name: newUser.name,
       tempPassword,
