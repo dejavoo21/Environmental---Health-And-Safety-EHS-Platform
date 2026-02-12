@@ -159,7 +159,13 @@ const submitAccessRequest = async ({
           fullName: fullName.trim(),
           referenceNumber: request.reference_number,
           organisationName: org?.name || 'Your Organization'
-        }).catch(err => console.error('[Email] Failed to send confirmation email:', err.message));
+        }).catch(err => {
+          console.error('[Email] Failed to send confirmation email for request:', request.reference_number, {
+            to: email,
+            error: err.message,
+            code: err.code
+          });
+        });
       }
     } else {
       // Send confirmation email without organisation details (fire-and-forget, don't block response)
@@ -169,7 +175,13 @@ const submitAccessRequest = async ({
           fullName: fullName.trim(),
           referenceNumber: request.reference_number,
           organisationName: 'Pending Assignment'
-        }).catch(err => console.error('[Email] Failed to send confirmation email:', err.message));
+        }).catch(err => {
+          console.error('[Email] Failed to send confirmation email for request:', request.reference_number, {
+            to: email,
+            error: err.message,
+            code: err.code
+          });
+        });
       }
     }
     

@@ -76,8 +76,11 @@ const getTransporter = () => {
     port: config.port,
     secure: config.secure,
     auth: config.auth,
-    connectionTimeout: 5000,
-    socketTimeout: 5000
+    connectionTimeout: 10000,
+    socketTimeout: 10000,
+    tls: {
+      rejectUnauthorized: false
+    }
   });
 
   return transporter;
