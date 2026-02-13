@@ -369,14 +369,14 @@
   opacity: 1;
 }
 
-/* Common admin button base styles (export/import/bulk archive) - green to match Send Report */
+/* Common admin button base styles (export/import/bulk archive) - sidebar color #1c3a3b */
 .admin-export-btn,
 .admin-import-btn,
 .admin-bulk-archive-btn {
   padding: 0.6rem 1rem;
   border: none;
   border-radius: 8px;
-  background: #22c55e;
+  background: #1c3a3b;
   color: #ffffff;
   font-weight: 700;
   font-size: 0.9rem;
@@ -387,9 +387,9 @@
 .admin-export-btn:hover,
 .admin-import-btn:hover,
 .admin-bulk-archive-btn:hover {
-  background: #16a34a;
+  background: #2a4a4b;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(28, 58, 59, 0.3);
 }
 
 /* Green styling for add/create buttons */
@@ -2741,11 +2741,11 @@ textarea:focus {
   min-width: 120px;
 }
 
-/* All export buttons use green color scheme (matching Send Report button) */
+/* All export buttons use sidebar dark blue color */
 .export-btn.btn.primary,
 .export-btn.btn.secondary,
 .export-btn.btn.outline {
-  background: #22c55e;
+  background: #1e3a5f;
   border: none;
   color: white;
 }
@@ -2753,9 +2753,9 @@ textarea:focus {
 .export-btn.btn.primary:hover:not(:disabled),
 .export-btn.btn.secondary:hover:not(:disabled),
 .export-btn.btn.outline:hover:not(:disabled) {
-  background: #16a34a;
+  background: #2d4a6f;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
 }
 
 .export-btn:disabled {
@@ -2819,7 +2819,7 @@ textarea:focus {
 :root.dark-theme .export-btn.btn.primary,
 :root.dark-theme .export-btn.btn.secondary,
 :root.dark-theme .export-btn.btn.outline {
-  background: #22c55e;
+  background: #1c3a3b;
   border: none;
   color: white;
 }
@@ -2827,9 +2827,9 @@ textarea:focus {
 :root.dark-theme .export-btn.btn.primary:hover:not(:disabled),
 :root.dark-theme .export-btn.btn.secondary:hover:not(:disabled),
 :root.dark-theme .export-btn.btn.outline:hover:not(:disabled) {
-  background: #16a34a;
+  background: #2a4a4b;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+  box-shadow: 0 4px 12px rgba(28, 58, 59, 0.4);
 }
 
 :root.dark-theme .export-hint {
