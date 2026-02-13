@@ -235,10 +235,11 @@ const fetchIncidentsData = async (req) => {
   }
 
   // Count first to enforce row limit
-  const countResult = await query(
-    `SELECT COUNT(*) AS cnt FROM incidents i WHERE ${conditions.join(' AND ')}`,
-    values
-  );
+  const countSql = `SELECT COUNT(*) AS cnt FROM incidents i WHERE ${conditions.join(' AND ')}`;
+  console.log('[Exports] Count SQL:', countSql);
+  console.log('[Exports] Count values:', values);
+  
+  const countResult = await query(countSql, values);
   const rowCount = parseInt(countResult.rows[0].cnt, 10);
 
   if (rowCount > env.exportRowLimit) {
@@ -250,8 +251,7 @@ const fetchIncidentsData = async (req) => {
   }
 
   // Fetch data with action count
-  const result = await query(
-    `SELECT i.id, i.title, i.occurred_at, s.name AS site_name,
+  const fetchSql = `SELECT i.id, i.title, i.occurred_at, s.name AS site_name,
             it.name AS incident_type, i.severity, i.status,
             u.name AS reported_by_name,
             (SELECT COUNT(*) FROM actions a WHERE a.source_type = 'incident' AND a.source_id = i.id) AS actions_count
@@ -261,9 +261,12 @@ const fetchIncidentsData = async (req) => {
      JOIN users u ON u.id = i.reported_by
      WHERE ${conditions.join(' AND ')}
      ORDER BY i.occurred_at DESC
-     LIMIT ${env.exportRowLimit}`,
-    values
-  );
+     LIMIT ${env.exportRowLimit}`;
+  
+  console.log('[Exports] Fetch SQL:', fetchSql);
+  console.log('[Exports] Fetch values:', values);
+  
+  const result = await query(fetchSql, values);
 
   // Get site name for filter display
   const siteName = siteId ? await getSiteName(siteId, req.orgId) : null;
