@@ -369,14 +369,14 @@
   opacity: 1;
 }
 
-/* Common admin button base styles (export/import/bulk archive) */
+/* Common admin button base styles (export/import/bulk archive) - green to match Send Report */
 .admin-export-btn,
 .admin-import-btn,
 .admin-bulk-archive-btn {
   padding: 0.6rem 1rem;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+  background: #22c55e;
   color: #ffffff;
   font-weight: 700;
   font-size: 0.9rem;
@@ -387,9 +387,9 @@
 .admin-export-btn:hover,
 .admin-import-btn:hover,
 .admin-bulk-archive-btn:hover {
-  background: linear-gradient(135deg, #2d4a6f 0%, #3d5a7f 100%);
+  background: #16a34a;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 /* Green styling for add/create buttons */
@@ -2741,41 +2741,21 @@ textarea:focus {
   min-width: 120px;
 }
 
-/* All export buttons use sidebar color scheme */
-.export-btn.btn.primary {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
-  border: none;
-  color: white;
-}
-
-.export-btn.btn.primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2d4a6f 0%, #3d5a7f 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
-}
-
-.export-btn.btn.secondary {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
-  border: none;
-  color: white;
-}
-
-.export-btn.btn.secondary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2d4a6f 0%, #3d5a7f 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
-}
-
+/* All export buttons use green color scheme (matching Send Report button) */
+.export-btn.btn.primary,
+.export-btn.btn.secondary,
 .export-btn.btn.outline {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+  background: #22c55e;
   border: none;
   color: white;
 }
 
+.export-btn.btn.primary:hover:not(:disabled),
+.export-btn.btn.secondary:hover:not(:disabled),
 .export-btn.btn.outline:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2d4a6f 0%, #3d5a7f 100%);
+  background: #16a34a;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 .export-btn:disabled {
@@ -2839,7 +2819,7 @@ textarea:focus {
 :root.dark-theme .export-btn.btn.primary,
 :root.dark-theme .export-btn.btn.secondary,
 :root.dark-theme .export-btn.btn.outline {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2d4a6f 100%);
+  background: #22c55e;
   border: none;
   color: white;
 }
@@ -2847,9 +2827,9 @@ textarea:focus {
 :root.dark-theme .export-btn.btn.primary:hover:not(:disabled),
 :root.dark-theme .export-btn.btn.secondary:hover:not(:disabled),
 :root.dark-theme .export-btn.btn.outline:hover:not(:disabled) {
-  background: linear-gradient(135deg, #2d4a6f 0%, #3d5a7f 100%);
+  background: #16a34a;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.4);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
 }
 
 :root.dark-theme .export-hint {
