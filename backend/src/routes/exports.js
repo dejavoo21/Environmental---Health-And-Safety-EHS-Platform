@@ -406,8 +406,12 @@ router.post('/incidents/email', exportRateLimit, async (req, res, next) => {
       uploadsDir: env.uploadsDir
     });
 
+    console.log('[Exports] PDF buffer generated, size:', pdfBuffer.length);
+
     const emailSubject = subject || `EHS Report - Incidents - ${req.organisation.name}`;
     const generatedAt = new Date().toISOString();
+
+    console.log('[Exports] Sending email to:', toEmail, 'subject:', emailSubject);
 
     await sendEmail({
       to: toEmail,
@@ -416,6 +420,8 @@ router.post('/incidents/email', exportRateLimit, async (req, res, next) => {
       attachmentBuffer: pdfBuffer,
       attachmentFilename: filename
     });
+
+    console.log('[Exports] Email sent successfully to:', toEmail);
 
     return res.json({
       success: true,
@@ -427,6 +433,7 @@ router.post('/incidents/email', exportRateLimit, async (req, res, next) => {
       }
     });
   } catch (err) {
+    console.error('[Exports] Email error:', err.message, err.stack);
     return next(err);
   }
 });
@@ -650,8 +657,12 @@ router.post('/inspections/email', exportRateLimit, async (req, res, next) => {
       uploadsDir: env.uploadsDir
     });
 
+    console.log('[Exports] Inspections PDF buffer generated, size:', pdfBuffer.length);
+
     const emailSubject = subject || `EHS Report - Inspections - ${req.organisation.name}`;
     const generatedAt = new Date().toISOString();
+
+    console.log('[Exports] Sending inspections email to:', toEmail);
 
     await sendEmail({
       to: toEmail,
@@ -660,6 +671,8 @@ router.post('/inspections/email', exportRateLimit, async (req, res, next) => {
       attachmentBuffer: pdfBuffer,
       attachmentFilename: filename
     });
+
+    console.log('[Exports] Inspections email sent successfully');
 
     return res.json({
       success: true,
@@ -671,6 +684,7 @@ router.post('/inspections/email', exportRateLimit, async (req, res, next) => {
       }
     });
   } catch (err) {
+    console.error('[Exports] Inspections email error:', err.message, err.stack);
     return next(err);
   }
 });
@@ -896,8 +910,12 @@ router.post('/actions/email', exportRateLimit, async (req, res, next) => {
       uploadsDir: env.uploadsDir
     });
 
+    console.log('[Exports] Actions PDF buffer generated, size:', pdfBuffer.length);
+
     const emailSubject = subject || `EHS Report - Actions - ${req.organisation.name}`;
     const generatedAt = new Date().toISOString();
+
+    console.log('[Exports] Sending actions email to:', toEmail);
 
     await sendEmail({
       to: toEmail,
@@ -906,6 +924,8 @@ router.post('/actions/email', exportRateLimit, async (req, res, next) => {
       attachmentBuffer: pdfBuffer,
       attachmentFilename: filename
     });
+
+    console.log('[Exports] Actions email sent successfully');
 
     return res.json({
       success: true,
@@ -917,6 +937,7 @@ router.post('/actions/email', exportRateLimit, async (req, res, next) => {
       }
     });
   } catch (err) {
+    console.error('[Exports] Actions email error:', err.message, err.stack);
     return next(err);
   }
 });
