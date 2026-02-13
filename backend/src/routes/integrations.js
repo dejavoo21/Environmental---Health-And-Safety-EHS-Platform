@@ -660,6 +660,10 @@ router.get('/activity', requireRole('admin'), async (req, res, next) => {
     
     return res.json(result);
   } catch (error) {
+    // Return empty data instead of error if table doesn't exist
+    if (error.code === '42P01') { // relation does not exist
+      return res.json({ success: true, data: [], pagination: { page: 1, limit: 50, total: 0, totalPages: 0 } });
+    }
     next(error);
   }
 });

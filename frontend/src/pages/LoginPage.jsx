@@ -63,7 +63,12 @@ const LoginPage = () => {
     try {
       const result = await login(email, password);
       if (!result.requires2FA) {
-        navigate('/');
+        // Check if password change is required
+        if (result.forcePasswordChange) {
+          navigate('/change-password');
+        } else {
+          navigate('/');
+        }
       }
       // If 2FA required, the TwoFactorPrompt will show automatically
     } catch (err) {
@@ -75,7 +80,12 @@ const LoginPage = () => {
 
   const handle2FASuccess = (response) => {
     complete2FALogin(response);
-    navigate('/');
+    // Check if password change is required after 2FA
+    if (response.user?.forcePasswordChange) {
+      navigate('/change-password');
+    } else {
+      navigate('/');
+    }
   };
 
   // Show 2FA prompt if required

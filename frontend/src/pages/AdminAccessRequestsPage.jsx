@@ -28,10 +28,11 @@ const AdminAccessRequestsPage = () => {
 
   // Modal state
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [modalType, setModalType] = useState(null); // 'approve' | 'reject' | 'view' | 'request-info'
+  const [modalType, setModalType] = useState(null); // 'approve' | 'reject' | 'view' | 'request-info' | 'credentials'
   const [modalData, setModalData] = useState({ role: '', siteIds: [], notes: '', reason: '', sendEmail: true, infoMessage: '' });
   const [modalLoading, setModalLoading] = useState(false);
   const [modalError, setModalError] = useState('');
+  const [approvalResult, setApprovalResult] = useState(null); // Store temp password when email fails
 
   // Fetch access requests
   const fetchRequests = useCallback(async (page = 1) => {
@@ -75,6 +76,7 @@ const AdminAccessRequestsPage = () => {
     setModalType(null);
     setModalData({ role: '', siteIds: [], notes: '', reason: '', sendEmail: true, infoMessage: '' });
     setModalError('');
+    setApprovalResult(null);
   };
 
   const handleApprove = async () => {
@@ -83,12 +85,24 @@ const AdminAccessRequestsPage = () => {
     setModalLoading(true);
     setModalError('');
     try {
-      await api.post(`/access-requests/admin/${selectedRequest.id}/approve`, {
+      const response = await api.post(`/access-requests/admin/${selectedRequest.id}/approve`, {
         assignedRole: modalData.role,
         sendWelcomeEmail: true
       });
-      closeModal();
-      fetchRequests(pagination.page);
+      
+      // Check if email was sent
+      if (response.data.emailSent === false && response.data.tempPassword) {
+        // Show credentials modal
+        setApprovalResult({
+          user: response.data.user,
+          tempPassword: response.data.tempPassword
+        });
+        setModalType('credentials');
+        fetchRequests(pagination.page);
+      } else {
+        closeModal();
+        fetchRequests(pagination.page);
+      }
     } catch (err) {
       console.error('Approve error:', err);
       setModalError(err.response?.data?.message || 'Failed to approve request');
@@ -534,6 +548,55 @@ const AdminAccessRequestsPage = () => {
                     data-testid="confirm-request-info-btn"
                   >
                     {modalLoading ? 'Sending...' : 'Send Request'}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {modalType === 'credentials' && approvalResult && (
+              <>
+                <div className="modal-header">
+                  <h2>User Account Created</h2>
+                  <button type="button" className="close-btn" onClick={closeModal}>×</button>
+                </div>
+                <div className="modal-body">
+                  <div className="alert warning" style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#fff3cd', border: '1px solid #ffc107', borderRadius: '4px' }}>
+                    <strong>⚠️ Email could not be sent!</strong>
+                    <p style={{ margin: '0.5rem 0 0' }}>Please share these credentials with the user manually.</p>
+                  </div>
+
+                  <div style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '4px', marginBottom: '1rem' }}>
+                    <p style={{ margin: '0 0 0.5rem' }}><strong>Name:</strong> {approvalResult.user.name}</p>
+                    <p style={{ margin: '0 0 0.5rem' }}><strong>Email:</strong> {approvalResult.user.email}</p>
+                    <p style={{ margin: '0 0 0.5rem' }}><strong>Role:</strong> {approvalResult.user.role}</p>
+                    <hr style={{ margin: '0.75rem 0', border: 'none', borderTop: '1px solid #ddd' }} />
+                    <p style={{ margin: '0 0 0.5rem' }}>
+                      <strong>Temporary Password:</strong>{' '}
+                      <code style={{ background: '#e9ecef', padding: '0.25rem 0.5rem', borderRadius: '4px', fontFamily: 'monospace', fontSize: '1rem' }}>
+                        {approvalResult.tempPassword}
+                      </code>
+                    </p>
+                    <p style={{ margin: '0.5rem 0 0', fontSize: '0.85rem', color: '#666' }}>
+                      The user will be required to change this password on first login.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => {
+                      const text = `EHS Portal Login Credentials\n\nEmail: ${approvalResult.user.email}\nTemporary Password: ${approvalResult.tempPassword}\n\nLogin at: ${window.location.origin}/login\n\nYou will be required to change your password on first login.`;
+                      navigator.clipboard.writeText(text);
+                      alert('Credentials copied to clipboard!');
+                    }}
+                    style={{ marginBottom: '1rem' }}
+                  >
+                    📋 Copy Credentials to Clipboard
+                  </button>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn primary" onClick={closeModal}>
+                    Done
                   </button>
                 </div>
               </>

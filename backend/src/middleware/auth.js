@@ -15,6 +15,7 @@ const authMiddleware = async (req, res, next) => {
     const payload = jwt.verify(token, env.jwtSecret);
     const result = await query(
       `SELECT u.id, u.email, u.name, u.role, u.is_active, u.organisation_id,
+              u.force_password_change,
               o.name AS org_name, o.slug AS org_slug
        FROM users u
        LEFT JOIN organisations o ON o.id = u.organisation_id
@@ -41,7 +42,8 @@ const authMiddleware = async (req, res, next) => {
       isActive: user.is_active,
       organisationId: user.organisation_id,
       organisationName: user.org_name,
-      organisationSlug: user.org_slug
+      organisationSlug: user.org_slug,
+      forcePasswordChange: user.force_password_change || false
     };
     return next();
   } catch (err) {

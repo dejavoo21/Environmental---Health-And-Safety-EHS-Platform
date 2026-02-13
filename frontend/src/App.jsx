@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import RequestAccessPage from './pages/RequestAccessPage';
+import ForcePasswordChangePage from './pages/ForcePasswordChangePage';
 import DashboardPage from './pages/DashboardPage';
 import IncidentsListPage from './pages/IncidentsListPage';
 import IncidentNewPage from './pages/IncidentNewPage';
@@ -57,7 +58,7 @@ import SafetyAdvisorPage from './pages/SafetyAdvisorPage';
 import AdminSecurityPage from './pages/AdminSecurityPage';
 
 const RequireAuth = ({ children, roles }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, forcePasswordChange } = useAuth();
 
   if (loading) {
     return <LoadingState message="Loading session..." />;
@@ -65,6 +66,11 @@ const RequireAuth = ({ children, roles }) => {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Redirect to password change page if required
+  if (forcePasswordChange) {
+    return <Navigate to="/change-password" replace />;
   }
 
   if (roles && !roles.includes(user.role)) {
@@ -81,6 +87,7 @@ const App = () => (
     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
     <Route path="/reset-password" element={<ResetPasswordPage />} />
     <Route path="/request-access" element={<RequestAccessPage />} />
+    <Route path="/change-password" element={<ForcePasswordChangePage />} />
     
     <Route
       element={(

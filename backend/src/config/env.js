@@ -16,8 +16,20 @@ const env = {
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   // Uploads directory
   uploadsDir: process.env.UPLOADS_DIR || 'uploads',
-  // Email provider configuration - supports switching between 'gmail' and 'laflogroup'
-  emailProvider: process.env.EMAIL_PROVIDER || 'gmail',
+  // Email provider configuration - supports 'brevo', 'resend', 'gmail', 'laflogroup'
+  emailProvider: process.env.EMAIL_PROVIDER || 'brevo',
+  // Brevo API configuration (recommended - 300 emails/day free)
+  brevoApiKey: process.env.BREVO_API_KEY || '',
+  brevoFrom: process.env.BREVO_FROM || 'EHS Portal <noreply@ehs-portal.com>',
+  // Brevo SMTP configuration (backup - ports may be blocked)
+  brevoHost: process.env.BREVO_HOST || 'smtp-relay.brevo.com',
+  brevoPort: Number(process.env.BREVO_PORT || 587),
+  brevoUser: process.env.BREVO_USER || '',
+  brevoPass: process.env.BREVO_PASS || '',
+  brevoSecure: process.env.BREVO_SECURE === 'true',
+  // Resend API configuration (100 emails/day free)
+  resendApiKey: process.env.RESEND_API_KEY || '',
+  resendFrom: process.env.RESEND_FROM || 'EHS Portal <onboarding@resend.dev>',
   // Gmail SMTP configuration
   gmailHost: process.env.GMAIL_HOST || 'smtp.gmail.com',
   gmailPort: Number(process.env.GMAIL_PORT || 587),

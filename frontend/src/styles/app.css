@@ -403,6 +403,7 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
+  margin-left: auto; /* Push to the right */
 }
 
 .admin-add-btn:hover,

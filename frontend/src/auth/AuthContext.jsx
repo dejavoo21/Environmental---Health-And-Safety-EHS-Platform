@@ -12,6 +12,9 @@ export const AuthProvider = ({ children }) => {
   // 2FA state
   const [twoFactorRequired, setTwoFactorRequired] = useState(false);
   const [tempToken, setTempToken] = useState(null);
+  
+  // Force password change state
+  const [forcePasswordChange, setForcePasswordChange] = useState(false);
 
   const loadUser = async (storedToken) => {
     try {
@@ -19,6 +22,10 @@ export const AuthProvider = ({ children }) => {
       const res = await api.get('/auth/me');
       setUser(res.data);
       setToken(storedToken);
+      // Check if user needs to change password
+      if (res.data.forcePasswordChange) {
+        setForcePasswordChange(true);
+      }
     } catch (err) {
       setAuthToken(null);
       localStorage.removeItem(STORAGE_KEY);
@@ -28,6 +35,24 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  // Refresh user data (e.g., after password change)
+  const refreshUser = useCallback(async () => {
+    const storedToken = localStorage.getItem(STORAGE_KEY);
+    if (storedToken) {
+      try {
+        setAuthToken(storedToken);
+        const res = await api.get('/auth/me');
+        setUser(res.data);
+        // Clear force password change if it's no longer required
+        if (!res.data.forcePasswordChange) {
+          setForcePasswordChange(false);
+        }
+      } catch (err) {
+        console.error('Failed to refresh user:', err);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -54,7 +79,14 @@ export const AuthProvider = ({ children }) => {
     setAuthToken(nextToken);
     setUser(res.data.user);
     setToken(nextToken);
-    return { requires2FA: false };
+    
+    // Check if password change is required
+    if (res.data.user.forcePasswordChange) {
+      setForcePasswordChange(true);
+      return { requires2FA: false, forcePasswordChange: true };
+    }
+    
+    return { requires2FA: false, forcePasswordChange: false };
   };
 
   const complete2FALogin = useCallback((response) => {
@@ -65,6 +97,11 @@ export const AuthProvider = ({ children }) => {
     setToken(nextToken);
     setTwoFactorRequired(false);
     setTempToken(null);
+    
+    // Check if password change is required after 2FA
+    if (response.user.forcePasswordChange) {
+      setForcePasswordChange(true);
+    }
   }, []);
 
   const cancel2FA = useCallback(() => {
@@ -79,6 +116,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setTwoFactorRequired(false);
     setTempToken(null);
+    setForcePasswordChange(false);
   };
 
   const value = useMemo(() => ({
@@ -87,12 +125,15 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     logout,
+    refreshUser,
     // 2FA
     twoFactorRequired,
     tempToken,
     complete2FALogin,
-    cancel2FA
-  }), [user, token, loading, twoFactorRequired, tempToken, complete2FALogin, cancel2FA]);
+    cancel2FA,
+    // Force password change
+    forcePasswordChange
+  }), [user, token, loading, twoFactorRequired, tempToken, complete2FALogin, cancel2FA, forcePasswordChange, refreshUser]);
 
   return (
     <AuthContext.Provider value={value}>

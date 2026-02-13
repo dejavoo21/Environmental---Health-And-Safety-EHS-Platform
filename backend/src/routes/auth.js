@@ -73,6 +73,7 @@ router.post('/login', async (req, res, next) => {
     const result = await query(
       `SELECT u.id, u.email, u.name, u.role, u.password_hash, u.is_active, u.organisation_id,
               u.has_2fa_enabled, u.failed_login_attempts, u.locked_until, u.theme_preference,
+              u.force_password_change,
               o.name AS org_name, o.slug AS org_slug
        FROM users u
        LEFT JOIN organisations o ON o.id = u.organisation_id
@@ -266,7 +267,8 @@ router.post('/login', async (req, res, next) => {
         organisationId: user.organisation_id,
         organisationName: user.org_name,
         organisationSlug: user.org_slug,
-        themePreference: user.theme_preference
+        themePreference: user.theme_preference,
+        forcePasswordChange: user.force_password_change || false
       }
     });
   } catch (err) {
@@ -285,7 +287,8 @@ router.get('/me', authMiddleware, (req, res) => {
     role: req.user.role,
     organisationId: req.user.organisationId,
     organisationName: req.user.organisationName,
-    organisationSlug: req.user.organisationSlug
+    organisationSlug: req.user.organisationSlug,
+    forcePasswordChange: req.user.forcePasswordChange || false
   });
 });
 
@@ -540,6 +543,7 @@ router.post('/2fa/login-verify', async (req, res, next) => {
     // 2FA verified - get user data and complete login
     const userResult = await query(
       `SELECT u.id, u.email, u.name, u.role, u.organisation_id, u.theme_preference,
+              u.force_password_change,
               o.name AS org_name, o.slug AS org_slug
        FROM users u
        LEFT JOIN organisations o ON o.id = u.organisation_id
@@ -609,7 +613,8 @@ router.post('/2fa/login-verify', async (req, res, next) => {
         organisationId: user.organisation_id,
         organisationName: user.org_name,
         organisationSlug: user.org_slug,
-        themePreference: user.theme_preference
+        themePreference: user.theme_preference,
+        forcePasswordChange: user.force_password_change || false
       },
       backupCodeWarning
     });

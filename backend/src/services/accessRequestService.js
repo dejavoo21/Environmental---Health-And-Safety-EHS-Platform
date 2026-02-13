@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { query } = require('../config/db');
 const { sendEmail, isSmtpConfigured } = require('../utils/emailSender');
+const emailTemplates = require('../utils/emailTemplates');
 const env = require('../config/env');
 const securityAuditService = require('./securityAuditService');
 
@@ -470,8 +471,8 @@ const approveAccessRequest = async ({
       role: newUser.role
     },
     emailSent,
-    // Only include temp password in dev for testing
-    ...(env.nodeEnv === 'development' && { _devTempPassword: tempPassword })
+    // Include temp password when email fails so admin can share it manually
+    ...(!emailSent && { tempPassword })
   };
 };
 
@@ -558,148 +559,51 @@ const generateTemporaryPassword = () => {
  * Send access request confirmation email
  */
 const sendAccessRequestConfirmationEmail = async ({ email, fullName, referenceNumber, organisationName }) => {
-  const subject = 'EHS Portal - Access Request Received';
-  const text = `
-Hi ${fullName},
-
-Your access request for ${organisationName} has been received.
-
-Reference Number: ${referenceNumber}
-
-You will receive another email once your request has been reviewed.
-
-Best regards,
-EHS Portal Team
-  `.trim();
+  const template = emailTemplates.accessRequestConfirmation({
+    fullName,
+    referenceNumber,
+    organisationName
+  });
   
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .reference { background: #f0f0f0; padding: 10px 20px; border-radius: 6px; margin: 20px 0; font-size: 18px; }
-    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Access Request Received</h2>
-    <p>Hi ${fullName},</p>
-    <p>Your access request for <strong>${organisationName}</strong> has been received.</p>
-    <div class="reference">Reference Number: <strong>${referenceNumber}</strong></div>
-    <p>You will receive another email once your request has been reviewed.</p>
-    <div class="footer">
-      <p>Best regards,<br>EHS Portal Team</p>
-    </div>
-  </div>
-</body>
-</html>
-  `.trim();
-  
-  await sendEmail({ to: email, subject, text, html });
+  await sendEmail({
+    to: email,
+    subject: template.subject,
+    text: template.text,
+    html: template.html
+  });
 };
 
 /**
  * Send welcome email after approval
  */
 const sendApprovalEmail = async ({ email, name, tempPassword, loginUrl }) => {
-  const subject = 'EHS Portal - Your Account is Ready';
-  const text = `
-Hi ${name},
-
-Your access request has been approved! Your account is now ready to use.
-
-You can log in at: ${loginUrl}
-
-Your temporary password is: ${tempPassword}
-
-For security, you will be required to change your password on first login.
-
-Best regards,
-EHS Portal Team
-  `.trim();
+  const template = emailTemplates.accessRequestApproved({
+    name,
+    email,
+    tempPassword,
+    loginUrl
+  });
   
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .button { display: inline-block; padding: 12px 24px; background-color: #22c55e; color: white !important; text-decoration: none; border-radius: 6px; margin: 20px 0; }
-    .password { background: #f0f0f0; padding: 10px 20px; border-radius: 6px; margin: 20px 0; font-family: monospace; font-size: 18px; }
-    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Your Account is Ready!</h2>
-    <p>Hi ${name},</p>
-    <p>Your access request has been approved! Your account is now ready to use.</p>
-    <a href="${loginUrl}" class="button">Log In Now</a>
-    <p>Your temporary password is:</p>
-    <div class="password">${tempPassword}</div>
-    <p><strong>For security, you will be required to change your password on first login.</strong></p>
-    <div class="footer">
-      <p>Best regards,<br>EHS Portal Team</p>
-    </div>
-  </div>
-</body>
-</html>
-  `.trim();
-  
-  await sendEmail({ to: email, subject, text, html });
+  await sendEmail({
+    to: email,
+    subject: template.subject,
+    text: template.text,
+    html: template.html
+  });
 };
 
 /**
  * Send rejection email (polite, no reason given)
  */
 const sendRejectionEmail = async ({ email, name }) => {
-  const subject = 'EHS Portal - Access Request Update';
-  const text = `
-Hi ${name},
-
-Thank you for your interest in the EHS Portal.
-
-Unfortunately, we are unable to approve your access request at this time.
-
-If you believe this is in error or have questions, please contact your organisation's administrator.
-
-Best regards,
-EHS Portal Team
-  `.trim();
+  const template = emailTemplates.accessRequestRejected({ name });
   
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Access Request Update</h2>
-    <p>Hi ${name},</p>
-    <p>Thank you for your interest in the EHS Portal.</p>
-    <p>Unfortunately, we are unable to approve your access request at this time.</p>
-    <p>If you believe this is in error or have questions, please contact your organisation's administrator.</p>
-    <div class="footer">
-      <p>Best regards,<br>EHS Portal Team</p>
-    </div>
-  </div>
-</body>
-</html>
-  `.trim();
-  
-  await sendEmail({ to: email, subject, text, html });
+  await sendEmail({
+    to: email,
+    subject: template.subject,
+    text: template.text,
+    html: template.html
+  });
 };
 
 /**
@@ -861,58 +765,19 @@ const submitInfoResponse = async ({
 const sendInfoRequestEmail = async ({ email, name, referenceNumber, message }) => {
   const responseUrl = `${env.frontendUrl}/access-request/respond?ref=${referenceNumber}&email=${encodeURIComponent(email)}`;
   
-  const subject = 'EHS Portal - Additional Information Required';
-  const text = `
-Hi ${name},
-
-We need some additional information regarding your access request (Reference: ${referenceNumber}).
-
-Message from Administrator:
-${message}
-
-Please respond to this request by visiting:
-${responseUrl}
-
-If you have any questions, please contact the organisation administrator.
-
-Best regards,
-EHS Portal Team
-  `.trim();
+  const template = emailTemplates.additionalInfoRequired({
+    name,
+    referenceNumber,
+    message,
+    responseUrl
+  });
   
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .message-box { background-color: #f0f9ff; border-left: 4px solid #3b82f6; padding: 15px; margin: 20px 0; }
-    .button { display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white !important; text-decoration: none; border-radius: 6px; margin: 20px 0; }
-    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Additional Information Required</h2>
-    <p>Hi ${name},</p>
-    <p>We need some additional information regarding your access request.</p>
-    <p><strong>Reference Number:</strong> ${referenceNumber}</p>
-    <div class="message-box">
-      <strong>Message from Administrator:</strong>
-      <p>${message.replace(/\n/g, '<br>')}</p>
-    </div>
-    <p>Please click the button below to respond:</p>
-    <a href="${responseUrl}" class="button">Respond to Request</a>
-    <div class="footer">
-      <p>Best regards,<br>EHS Portal Team</p>
-    </div>
-  </div>
-</body>
-</html>
-  `.trim();
-  
-  await sendEmail({ to: email, subject, text, html });
+  await sendEmail({
+    to: email,
+    subject: template.subject,
+    text: template.text,
+    html: template.html
+  });
 };
 
 module.exports = {

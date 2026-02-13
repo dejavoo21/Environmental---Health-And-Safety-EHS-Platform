@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const { query } = require('../config/db');
 const { sendEmail, isSmtpConfigured } = require('../utils/emailSender');
+const emailTemplates = require('../utils/emailTemplates');
 const env = require('../config/env');
 const securityAuditService = require('./securityAuditService');
 
@@ -350,23 +351,24 @@ const changePassword = async ({
  * @returns {Object} - Validation result
  */
 const validatePasswordStrength = (password) => {
-  if (!password || password.length < 8) {
-    return { valid: false, message: 'Password must be at least 8 characters long.' };
+  if (!password || password.length < 12) {
+    return { valid: false, message: 'Password must be at least 12 characters long.' };
   }
   
   if (password.length > 128) {
     return { valid: false, message: 'Password must be less than 128 characters.' };
   }
   
-  // Check for at least one uppercase, one lowercase, one number
+  // Check for at least one uppercase, one lowercase, one number, and one special character
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
   
-  if (!hasUppercase || !hasLowercase || !hasNumber) {
+  if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecial) {
     return { 
       valid: false, 
-      message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number.' 
+      message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.' 
     };
   }
   
@@ -443,53 +445,18 @@ const maskEmail = (email) => {
  * @param {string} resetUrl - Password reset URL
  */
 const sendPasswordResetEmail = async (user, resetUrl) => {
-  const subject = 'EHS Portal - Password Reset Request';
-  const text = `
-Hi ${user.name},
-
-You requested to reset your password for your EHS Portal account.
-
-Click the link below to reset your password:
-${resetUrl}
-
-This link will expire in ${TOKEN_EXPIRY_MINUTES} minutes.
-
-If you did not request this password reset, please ignore this email or contact your administrator if you have concerns.
-
-Best regards,
-EHS Portal Team
-  `.trim();
+  const template = emailTemplates.passwordReset({
+    name: user.name,
+    resetUrl,
+    expiryMinutes: TOKEN_EXPIRY_MINUTES
+  });
   
-  const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .button { display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white !important; text-decoration: none; border-radius: 6px; margin: 20px 0; }
-    .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>Password Reset Request</h2>
-    <p>Hi ${user.name},</p>
-    <p>You requested to reset your password for your EHS Portal account.</p>
-    <p>Click the button below to reset your password:</p>
-    <a href="${resetUrl}" class="button">Reset Password</a>
-    <p>This link will expire in ${TOKEN_EXPIRY_MINUTES} minutes.</p>
-    <p>If you did not request this password reset, please ignore this email or contact your administrator if you have concerns.</p>
-    <div class="footer">
-      <p>Best regards,<br>EHS Portal Team</p>
-    </div>
-  </div>
-</body>
-</html>
-  `.trim();
-  
-  await sendEmail({ to: user.email, subject, text, html });
+  await sendEmail({
+    to: user.email,
+    subject: template.subject,
+    text: template.text,
+    html: template.html
+  });
 };
 
 /**

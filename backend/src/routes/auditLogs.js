@@ -95,7 +95,7 @@ router.get('/', requireRole(['admin']), async (req, res, next) => {
     );
 
     const events = result.rows.map(mapAuditRow);
-    return res.json({ events });
+    return res.json({ data: events, logs: events, events });
   } catch (err) {
     return next(err);
   }

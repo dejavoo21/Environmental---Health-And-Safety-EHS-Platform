@@ -128,6 +128,13 @@ router.get('/admin/:id', authMiddleware, requireRole('admin'), async (req, res, 
 router.post('/admin/:id/approve', authMiddleware, requireRole('admin'), async (req, res, next) => {
   const { assignedRole, sendWelcomeEmail = true } = req.body || {};
   
+  console.log('[AccessRequest] Approve request:', {
+    requestId: req.params.id,
+    organisationId: req.user.organisationId,
+    adminUserId: req.user.id,
+    assignedRole
+  });
+  
   try {
     const result = await accessRequestService.approveAccessRequest({
       requestId: req.params.id,
@@ -139,12 +146,19 @@ router.post('/admin/:id/approve', authMiddleware, requireRole('admin'), async (r
       userAgent: req.headers['user-agent']
     });
     
+    console.log('[AccessRequest] Approve result:', result);
+    
     if (!result.success) {
       return res.status(400).json(result);
     }
     
     return res.json(result);
   } catch (err) {
+    console.error('[AccessRequest] Approve error:', {
+      message: err.message,
+      code: err.code,
+      stack: err.stack
+    });
     return next(err);
   }
 });
