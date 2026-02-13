@@ -379,7 +379,7 @@ const ReportsPage = () => {
       )}
 
       <ExportPanel
-        title="📊 Export Incidents"
+        title="Export Incidents"
         endpoint="/exports/incidents"
         reportType="Incidents"
         filters={incidentFilters}
@@ -390,7 +390,7 @@ const ReportsPage = () => {
       />
 
       <ExportPanel
-        title="📋 Export Inspections"
+        title="Export Inspections"
         endpoint="/exports/inspections"
         reportType="Inspections"
         filters={inspectionFilters}
@@ -401,7 +401,7 @@ const ReportsPage = () => {
       />
 
       <ExportPanel
-        title="✅ Export Actions"
+        title="Export Actions"
         endpoint="/exports/actions"
         reportType="Actions"
         filters={actionFilters}
