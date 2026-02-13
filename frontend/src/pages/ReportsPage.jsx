@@ -367,18 +367,19 @@ const ReportsPage = () => {
 
   return (
     <div className="page reports-page">
+      <h1>Reports & Exports</h1>
       <p className="reports-intro">
         Export your data to CSV or PDF format for reporting and analysis, or email reports directly.
       </p>
 
       {rateLimitCooldown > 0 && (
         <div className="rate-limit-notice">
-          Export rate limit reached. Please wait {rateLimitCooldown} seconds before exporting again.
+          ⏳ Export rate limit reached. Please wait {rateLimitCooldown} seconds before exporting again.
         </div>
       )}
 
       <ExportPanel
-        title="Export Incidents"
+        title="📊 Export Incidents"
         endpoint="/exports/incidents"
         reportType="Incidents"
         filters={incidentFilters}
@@ -389,7 +390,7 @@ const ReportsPage = () => {
       />
 
       <ExportPanel
-        title="Export Inspections"
+        title="📋 Export Inspections"
         endpoint="/exports/inspections"
         reportType="Inspections"
         filters={inspectionFilters}
@@ -400,7 +401,7 @@ const ReportsPage = () => {
       />
 
       <ExportPanel
-        title="Export Actions"
+        title="✅ Export Actions"
         endpoint="/exports/actions"
         reportType="Actions"
         filters={actionFilters}
@@ -411,7 +412,7 @@ const ReportsPage = () => {
       />
 
       <p className="export-hint">
-        Exports are limited to 10,000 rows. Refine filters if needed.
+        💡 Exports are limited to 10,000 rows. Use filters to narrow down your data if needed.
       </p>
     </div>
   );
