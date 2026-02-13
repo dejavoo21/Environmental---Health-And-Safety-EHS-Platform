@@ -194,7 +194,12 @@ router.use(requireManager);
  * Fetch incidents data with filters
  */
 const fetchIncidentsData = async (req) => {
-  const { startDate, endDate, siteId, status, severity } = req.query;
+  // Extract filters from query (or body if it was copied there)
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const siteId = req.query.siteId;
+  const status = req.query.status;
+  const severity = req.query.severity;
 
   // Validate dates
   const start = parseQueryDate(startDate);
@@ -204,7 +209,7 @@ const fetchIncidentsData = async (req) => {
     throw new AppError('Invalid date format. Use ISO 8601 (YYYY-MM-DD).', 400, 'INVALID_DATE');
   }
 
-  // Build query
+  // Build query - only add non-empty filters
   const conditions = ['i.organisation_id = $1'];
   const values = [req.orgId];
 
@@ -446,7 +451,11 @@ router.post('/incidents/email', exportRateLimit, async (req, res, next) => {
  * Fetch inspections data with filters
  */
 const fetchInspectionsData = async (req) => {
-  const { startDate, endDate, siteId, result: resultFilter } = req.query;
+  // Extract filters from query (or body if it was copied there)
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const siteId = req.query.siteId;
+  const result = req.query.result;
 
   // Validate dates
   const start = parseQueryDate(startDate);
@@ -456,7 +465,7 @@ const fetchInspectionsData = async (req) => {
     throw new AppError('Invalid date format. Use ISO 8601 (YYYY-MM-DD).', 400, 'INVALID_DATE');
   }
 
-  // Build query
+  // Build query - only add non-empty filters
   const conditions = ['i.organisation_id = $1'];
   const values = [req.orgId];
 
@@ -472,8 +481,8 @@ const fetchInspectionsData = async (req) => {
     values.push(siteId);
     conditions.push(`i.site_id = $${values.length}`);
   }
-  if (resultFilter) {
-    values.push(resultFilter);
+  if (result) {
+    values.push(result);
     conditions.push(`i.overall_result = $${values.length}`);
   }
 
@@ -697,7 +706,11 @@ router.post('/inspections/email', exportRateLimit, async (req, res, next) => {
  * Fetch actions data with filters
  */
 const fetchActionsData = async (req) => {
-  const { startDate, endDate, status, dueBefore } = req.query;
+  // Extract filters from query (or body if it was copied there)
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const status = req.query.status;
+  const dueBefore = req.query.dueBefore;
 
   // Validate dates
   const start = parseQueryDate(startDate);
@@ -708,7 +721,7 @@ const fetchActionsData = async (req) => {
     throw new AppError('Invalid date format. Use ISO 8601 (YYYY-MM-DD).', 400, 'INVALID_DATE');
   }
 
-  // Build query
+  // Build query - only add non-empty filters
   const conditions = ['a.organisation_id = $1'];
   const values = [req.orgId];
 
