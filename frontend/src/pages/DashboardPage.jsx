@@ -99,12 +99,6 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-page">
-      {/* Header */}
-      <header className="dashboard-header">
-        <h1>Dashboard</h1>
-        <p>Overview of your EHS performance</p>
-      </header>
-
       {/* Quick Stats Row */}
       <div className="dashboard-quick-stats">
         <div
