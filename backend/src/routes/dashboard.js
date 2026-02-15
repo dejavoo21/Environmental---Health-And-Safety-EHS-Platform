@@ -186,19 +186,19 @@ router.get('/summary', async (req, res, next) => {
       value: row.count
     }));
 
-    // Actions summary
+    // Actions summary (note: action_status enum uses 'done' not 'completed')
     const actionsResult = await query(`
       SELECT
         COUNT(*) FILTER (WHERE status = 'open') AS open_count,
         COUNT(*) FILTER (WHERE status = 'in_progress') AS in_progress_count,
-        COUNT(*) FILTER (WHERE status = 'completed') AS completed_count,
+        COUNT(*) FILTER (WHERE status = 'done') AS done_count,
         COUNT(*) FILTER (WHERE status = 'open' AND due_date < CURRENT_DATE) AS overdue_count
       FROM actions
     `);
     const actionsSummary = actionsResult.rows[0] ? {
       open: Number(actionsResult.rows[0].open_count || 0),
       inProgress: Number(actionsResult.rows[0].in_progress_count || 0),
-      completed: Number(actionsResult.rows[0].completed_count || 0),
+      completed: Number(actionsResult.rows[0].done_count || 0),
       overdue: Number(actionsResult.rows[0].overdue_count || 0)
     } : { open: 0, inProgress: 0, completed: 0, overdue: 0 };
 
