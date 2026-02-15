@@ -173,8 +173,10 @@
 
 /* Pie Chart specific container */
 .pie-chart-container {
-  height: 200px;
+  height: 220px;
   flex: 1;
+  min-height: 220px;
+  padding: 10px 0;
 }
 
 /* Pie/Donut Chart Legend */
