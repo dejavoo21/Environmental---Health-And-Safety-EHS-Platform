@@ -203,6 +203,22 @@
   border-radius: 50%;
 }
 
+/* Incident Type Legend - smaller for bar chart */
+.incident-type-legend {
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.incident-type-legend .legend-item {
+  font-size: 0.75rem;
+}
+
+.incident-type-legend .legend-dot {
+  width: 10px;
+  height: 10px;
+}
+
 /* Recent Items List */
 .recent-list {
   list-style: none;
