@@ -244,15 +244,15 @@ const DashboardPage = () => {
               </div>
               {incidentsBySeverity.length > 0 ? (
                 <>
-                  <div className="chart-container">
+                  <div className="pie-chart-container">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
                           data={incidentsBySeverity}
                           cx="50%"
                           cy="50%"
-                          innerRadius={40}
-                          outerRadius={65}
+                          innerRadius={55}
+                          outerRadius={90}
                           paddingAngle={2}
                           dataKey="value"
                         >
@@ -268,7 +268,7 @@ const DashboardPage = () => {
                             backgroundColor: 'var(--color-bg-card)',
                             border: '1px solid var(--color-border-subtle)',
                             borderRadius: '6px',
-                            fontSize: '12px'
+                            fontSize: '13px'
                           }}
                         />
                       </PieChart>
@@ -281,7 +281,7 @@ const DashboardPage = () => {
                           className="legend-dot"
                           style={{ backgroundColor: SEVERITY_COLORS[entry.name] || COLORS.blue }}
                         />
-                        <span>{entry.name}: {entry.value}</span>
+                        <span style={{ textTransform: 'capitalize' }}>{entry.name}: {entry.value}</span>
                       </div>
                     ))}
                   </div>

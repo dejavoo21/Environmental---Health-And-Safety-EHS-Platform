@@ -154,7 +154,7 @@
 }
 
 .chart-container {
-  height: 180px;
+  height: 200px;
 }
 
 /* Mini Chart Card */
@@ -163,42 +163,54 @@
   border-radius: 12px;
   border: 1px solid var(--color-border-subtle);
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
 }
 
 .mini-chart-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .mini-chart-title {
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--color-text-strong);
   margin: 0;
+}
+
+/* Pie Chart specific container */
+.pie-chart-container {
+  height: 220px;
+  flex: 1;
 }
 
 /* Pie/Donut Chart Legend */
 .chart-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 1rem;
+  margin-top: 1rem;
   justify-content: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-strong);
 }
 
 .legend-dot {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
 
