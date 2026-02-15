@@ -305,12 +305,15 @@
   gap: 1rem;
 }
 
-/* Safety Advisor Compact Card */
+/* Safety Advisor Compact Card - matches chart card height */
 .safety-compact-card {
   background: linear-gradient(135deg, #2d6a6a 0%, #1a4a4a 100%);
   border-radius: 12px;
   padding: 1.25rem;
   color: white;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
 }
 
 .safety-compact-header {
@@ -384,6 +387,7 @@
   font-size: 0.8rem;
   text-decoration: none;
   opacity: 0.9;
+  margin-top: auto;
 }
 
 .safety-link:hover {
@@ -391,10 +395,19 @@
   text-decoration: underline;
 }
 
+/* Quick Actions Card - Full width at bottom */
+.quick-actions-card {
+  margin-top: auto;
+}
+
+.quick-actions-card .dashboard-card-body {
+  padding: 1rem;
+}
+
 /* Quick Links Card */
 .quick-links-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
 }
 
