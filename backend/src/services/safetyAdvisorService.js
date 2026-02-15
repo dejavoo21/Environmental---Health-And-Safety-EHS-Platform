@@ -420,10 +420,40 @@ const getUserSafetyOverview = async (orgId, userId, userRole, primarySiteId = nu
     LIMIT 5
   `, [orgId, userId]);
 
-  // Get weather for primary site if set
+  // Get weather for primary site, or fall back to first site with location data
   let primarySiteWeather = null;
-  if (primarySiteId) {
-    primarySiteWeather = await getWeatherForSite(primarySiteId, orgId);
+  let weatherSiteId = primarySiteId;
+  let weatherSiteName = null;
+
+  // If no primary site, try to get the first site with location data
+  if (!weatherSiteId) {
+    try {
+      const firstSiteResult = await query(`
+        SELECT s.id, s.name
+        FROM sites s
+        WHERE s.organisation_id = $1
+          AND s.deleted_at IS NULL
+          AND (s.latitude IS NOT NULL OR s.city IS NOT NULL)
+        ORDER BY s.created_at ASC
+        LIMIT 1
+      `, [orgId]);
+
+      if (firstSiteResult.rowCount > 0) {
+        weatherSiteId = firstSiteResult.rows[0].id;
+        weatherSiteName = firstSiteResult.rows[0].name;
+      }
+    } catch (err) {
+      console.warn('[SafetyAdvisor] Could not fetch fallback site for weather:', err.message);
+    }
+  }
+
+  if (weatherSiteId) {
+    primarySiteWeather = await getWeatherForSite(weatherSiteId, orgId);
+
+    // If we used a fallback site, include the site name
+    if (!primarySiteId && weatherSiteName && primarySiteWeather) {
+      primarySiteWeather.siteName = weatherSiteName;
+    }
   }
 
   return {
@@ -444,7 +474,12 @@ const getUserSafetyOverview = async (orgId, userId, userRole, primarySiteId = nu
       status: primarySiteWeather.status,
       tempC: primarySiteWeather.tempC,
       condition: primarySiteWeather.condition,
-      summaryText: primarySiteWeather.summaryText
+      summaryText: primarySiteWeather.summaryText,
+      siteName: primarySiteWeather.siteName || null,
+      humidity: primarySiteWeather.humidity,
+      windKph: primarySiteWeather.windKph,
+      feelsLikeC: primarySiteWeather.feelsLikeC,
+      description: primarySiteWeather.description
     } : null
   };
 };

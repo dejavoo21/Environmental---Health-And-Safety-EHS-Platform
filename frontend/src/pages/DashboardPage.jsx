@@ -362,39 +362,48 @@ const DashboardPage = () => {
             <h3>Safety Advisor</h3>
           </div>
 
-          {safetySummary?.primarySiteWeather ? (
-            <div className="safety-weather-row">
-              {safetySummary.primarySiteWeather.status === 'ok' ? (
-                <>
-                  <Sun size={28} />
-                  <div className="weather-temp">
-                    {safetySummary.primarySiteWeather.tempC ?? '--'}°C
+          {safetySummary?.primarySiteWeather && safetySummary.primarySiteWeather.status === 'ok' ? (
+            <div className="safety-weather-section">
+              <div className="safety-weather-row">
+                <Sun size={32} />
+                <div className="weather-temp">
+                  {safetySummary.primarySiteWeather.tempC ?? '--'}°C
+                </div>
+                <div className="weather-details">
+                  <div className="weather-condition">
+                    {safetySummary.primarySiteWeather.condition || 'Unknown'}
                   </div>
-                  <div className="weather-details">
-                    <div className="weather-condition">
-                      {safetySummary.primarySiteWeather.condition || 'Unknown'}
-                    </div>
+                  {safetySummary.primarySiteWeather.siteName && (
                     <div className="weather-location">
-                      {safetySummary.primarySiteWeather.summaryText || ''}
+                      {safetySummary.primarySiteWeather.siteName}
                     </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Cloud size={28} />
-                  <div className="weather-details">
-                    <div className="weather-condition">Weather unavailable</div>
-                    <div className="weather-location">Configure site location</div>
-                  </div>
-                </>
-              )}
+                  )}
+                </div>
+              </div>
+              <div className="weather-extra-info">
+                {safetySummary.primarySiteWeather.feelsLikeC !== undefined && (
+                  <span>Feels like {safetySummary.primarySiteWeather.feelsLikeC}°C</span>
+                )}
+                {safetySummary.primarySiteWeather.humidity !== undefined && (
+                  <span>Humidity {safetySummary.primarySiteWeather.humidity}%</span>
+                )}
+                {safetySummary.primarySiteWeather.windKph !== undefined && (
+                  <span>Wind {safetySummary.primarySiteWeather.windKph} km/h</span>
+                )}
+              </div>
             </div>
           ) : (
             <div className="safety-weather-row">
               <Cloud size={28} />
               <div className="weather-details">
-                <div className="weather-condition">No weather data</div>
-                <div className="weather-location">Select a primary site</div>
+                <div className="weather-condition">
+                  {safetySummary?.primarySiteWeather?.status === 'error'
+                    ? 'Weather unavailable'
+                    : 'No weather data'}
+                </div>
+                <div className="weather-location">
+                  {safetySummary?.primarySiteWeather?.error || 'Configure site location'}
+                </div>
               </div>
             </div>
           )}
