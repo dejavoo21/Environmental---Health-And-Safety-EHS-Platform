@@ -193,372 +193,380 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Main Grid */}
-      <div className="dashboard-main-grid">
-        {/* Left Column - Charts and Tables */}
-        <div className="dashboard-left-column">
-          {/* Charts Row */}
-          <div className="dashboard-charts-row">
-            {/* Incidents by Type - Bar Chart */}
-            <div className="mini-chart-card">
-              <div className="mini-chart-header">
-                <h4 className="mini-chart-title">Incidents by Type</h4>
-              </div>
-              {incidentsByType.length > 0 ? (
-                <div className="chart-container">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={incidentsByType} layout="vertical" margin={{ left: 0, right: 10 }}>
-                      <XAxis type="number" hide />
-                      <YAxis
-                        type="category"
-                        dataKey="type"
-                        width={80}
-                        tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'var(--color-bg-card)',
-                          border: '1px solid var(--color-border-subtle)',
-                          borderRadius: '6px',
-                          fontSize: '12px'
-                        }}
-                      />
-                      <Bar dataKey="count" fill={COLORS.primary} radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              ) : (
-                <div className="dashboard-empty">
-                  <Activity size={32} />
-                  <p>No incident data</p>
-                </div>
-              )}
+      {/* Row 1: Incidents by Type + Safety Advisor */}
+      <div className="dashboard-row-2col">
+        {/* Incidents by Type - Bar Chart */}
+        <div className="mini-chart-card">
+          <div className="mini-chart-header">
+            <h4 className="mini-chart-title">Incidents by Type</h4>
+          </div>
+          {incidentsByType.length > 0 ? (
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={incidentsByType} layout="vertical" margin={{ left: 0, right: 10 }}>
+                  <XAxis type="number" hide />
+                  <YAxis
+                    type="category"
+                    dataKey="type"
+                    width={80}
+                    tick={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--color-bg-card)',
+                      border: '1px solid var(--color-border-subtle)',
+                      borderRadius: '6px',
+                      fontSize: '12px'
+                    }}
+                  />
+                  <Bar dataKey="count" fill={COLORS.primary} radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
+          ) : (
+            <div className="dashboard-empty">
+              <Activity size={32} />
+              <p>No incident data</p>
+            </div>
+          )}
+        </div>
 
-            {/* Incidents by Severity - Pie Chart */}
-            <div className="mini-chart-card">
-              <div className="mini-chart-header">
-                <h4 className="mini-chart-title">Severity Distribution</h4>
-              </div>
-              {incidentsBySeverity.length > 0 ? (
+        {/* Safety Advisor Compact Card */}
+        <div className="safety-compact-card">
+          <div className="safety-compact-header">
+            <Shield size={18} />
+            <h3>Safety Advisor</h3>
+          </div>
+
+          {safetySummary?.primarySiteWeather ? (
+            <div className="safety-weather-row">
+              {safetySummary.primarySiteWeather.status === 'ok' ? (
                 <>
-                  <div className="pie-chart-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={incidentsBySeverity}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={55}
-                          outerRadius={90}
-                          paddingAngle={2}
-                          dataKey="value"
-                        >
-                          {incidentsBySeverity.map((entry, index) => (
-                            <Cell
-                              key={`cell-${index}`}
-                              fill={SEVERITY_COLORS[entry.name] || COLORS.blue}
-                            />
-                          ))}
-                        </Pie>
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: 'var(--color-bg-card)',
-                            border: '1px solid var(--color-border-subtle)',
-                            borderRadius: '6px',
-                            fontSize: '13px'
-                          }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
+                  <Sun size={28} />
+                  <div className="weather-temp">
+                    {safetySummary.primarySiteWeather.tempC ?? '--'}°C
                   </div>
-                  <div className="chart-legend">
-                    {incidentsBySeverity.map((entry, index) => (
-                      <div key={index} className="legend-item">
-                        <span
-                          className="legend-dot"
-                          style={{ backgroundColor: SEVERITY_COLORS[entry.name] || COLORS.blue }}
-                        />
-                        <span style={{ textTransform: 'capitalize' }}>{entry.name}: {entry.value}</span>
-                      </div>
-                    ))}
+                  <div className="weather-details">
+                    <div className="weather-condition">
+                      {safetySummary.primarySiteWeather.condition || 'Unknown'}
+                    </div>
+                    <div className="weather-location">
+                      {safetySummary.primarySiteWeather.summaryText || ''}
+                    </div>
                   </div>
                 </>
               ) : (
-                <div className="dashboard-empty">
-                  <TrendingUp size={32} />
-                  <p>No severity data</p>
-                </div>
+                <>
+                  <Cloud size={28} />
+                  <div className="weather-details">
+                    <div className="weather-condition">Weather unavailable</div>
+                    <div className="weather-location">Configure site location</div>
+                  </div>
+                </>
               )}
             </div>
-          </div>
-
-          {/* Actions Summary + Trend Chart Row */}
-          <div className="dashboard-charts-row">
-            {/* Actions Summary */}
-            <div className="mini-chart-card">
-              <div className="mini-chart-header">
-                <h4 className="mini-chart-title">Actions Overview</h4>
-                <button className="dashboard-card-action" onClick={() => navigate('/actions')}>
-                  View All <ChevronRight size={14} />
-                </button>
-              </div>
-              <div className="actions-summary">
-                <div className="action-stat">
-                  <div className="action-stat-value">{actionsSummary.open}</div>
-                  <div className="action-stat-label">Open</div>
-                </div>
-                <div className="action-stat">
-                  <div className="action-stat-value">{actionsSummary.inProgress}</div>
-                  <div className="action-stat-label">In Progress</div>
-                </div>
-                <div className="action-stat">
-                  <div className="action-stat-value">{actionsSummary.completed}</div>
-                  <div className="action-stat-label">Completed</div>
-                </div>
-                <div className="action-stat">
-                  <div className={`action-stat-value ${actionsSummary.overdue > 0 ? 'overdue' : ''}`}>
-                    {actionsSummary.overdue}
-                  </div>
-                  <div className="action-stat-label">Overdue</div>
-                </div>
-              </div>
-              {/* Upcoming Actions List */}
-              {data.upcomingActions?.length > 0 && (
-                <ul className="recent-list">
-                  {data.upcomingActions.slice(0, 3).map(action => (
-                    <li
-                      key={action.id}
-                      className="recent-item"
-                      onClick={() => navigate(`/actions/${action.id}`)}
-                    >
-                      <div className="recent-item-main">
-                        <div className="recent-item-title">{action.title}</div>
-                        <div className="recent-item-meta">Due: {formatDate(action.dueDate)}</div>
-                      </div>
-                      <span className={`badge-mini ${action.priority}`}>{action.priority}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Severity Trend - Line Chart */}
-            <div className="mini-chart-card">
-              <div className="mini-chart-header">
-                <h4 className="mini-chart-title">Incident Trend (12mo)</h4>
-              </div>
-              {severityTrend.length > 0 ? (
-                <div className="chart-container">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={severityTrend} margin={{ left: 0, right: 10, top: 5, bottom: 5 }}>
-                      <XAxis
-                        dataKey="month"
-                        tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
-                        axisLine={false}
-                        tickLine={false}
-                        tickFormatter={(val) => val.slice(5)} // Show only MM
-                      />
-                      <YAxis
-                        allowDecimals={false}
-                        tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
-                        axisLine={false}
-                        tickLine={false}
-                        width={25}
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: 'var(--color-bg-card)',
-                          border: '1px solid var(--color-border-subtle)',
-                          borderRadius: '6px',
-                          fontSize: '11px'
-                        }}
-                      />
-                      <Line type="monotone" dataKey="low" stroke={COLORS.green} strokeWidth={2} dot={false} />
-                      <Line type="monotone" dataKey="medium" stroke={COLORS.amber} strokeWidth={2} dot={false} />
-                      <Line type="monotone" dataKey="high" stroke={COLORS.orange} strokeWidth={2} dot={false} />
-                      <Line type="monotone" dataKey="critical" stroke={COLORS.red} strokeWidth={2} dot={false} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              ) : (
-                <div className="dashboard-empty">
-                  <TrendingUp size={32} />
-                  <p>No trend data</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Recent Tables Row */}
-          <div className="dashboard-tables-row">
-            {/* Recent Incidents */}
-            <div className="dashboard-card">
-              <div className="dashboard-card-header">
-                <h3 className="dashboard-card-title">
-                  <AlertTriangle size={16} /> Recent Incidents
-                </h3>
-                <button className="dashboard-card-action" onClick={() => navigate('/incidents')}>
-                  View All <ChevronRight size={14} />
-                </button>
-              </div>
-              <div className="dashboard-card-body" style={{ padding: 0 }}>
-                {data.recentIncidents?.length > 0 ? (
-                  <table className="compact-table">
-                    <thead>
-                      <tr>
-                        <th>Title</th>
-                        <th>Date</th>
-                        <th>Severity</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.recentIncidents.map(inc => (
-                        <tr key={inc.id} onClick={() => navigate(`/incidents/${inc.id}`)}>
-                          <td className="truncate">{inc.title}</td>
-                          <td>{formatDate(inc.occurredAt)}</td>
-                          <td><span className={`badge-mini ${inc.severity}`}>{inc.severity}</span></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="dashboard-empty">
-                    <CheckCircle2 size={24} />
-                    <p>No recent incidents</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Recent Inspections */}
-            <div className="dashboard-card">
-              <div className="dashboard-card-header">
-                <h3 className="dashboard-card-title">
-                  <Clipboard size={16} /> Recent Inspections
-                </h3>
-                <button className="dashboard-card-action" onClick={() => navigate('/inspections')}>
-                  View All <ChevronRight size={14} />
-                </button>
-              </div>
-              <div className="dashboard-card-body" style={{ padding: 0 }}>
-                {data.recentInspections?.length > 0 ? (
-                  <table className="compact-table">
-                    <thead>
-                      <tr>
-                        <th>Template</th>
-                        <th>Site</th>
-                        <th>Result</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.recentInspections.map(ins => (
-                        <tr key={ins.id} onClick={() => navigate(`/inspections/${ins.id}`)}>
-                          <td className="truncate">{ins.templateName}</td>
-                          <td className="truncate">{ins.siteName}</td>
-                          <td><span className={`badge-mini ${ins.overallResult}`}>{ins.overallResult}</span></td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="dashboard-empty">
-                    <CheckCircle2 size={24} />
-                    <p>No recent inspections</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="dashboard-right-column">
-          {/* Safety Advisor Compact Card */}
-          <div className="safety-compact-card">
-            <div className="safety-compact-header">
-              <Shield size={18} />
-              <h3>Safety Advisor</h3>
-            </div>
-
-            {safetySummary?.primarySiteWeather ? (
-              <div className="safety-weather-row">
-                {safetySummary.primarySiteWeather.status === 'ok' ? (
-                  <>
-                    <Sun size={28} />
-                    <div className="weather-temp">
-                      {safetySummary.primarySiteWeather.tempC ?? '--'}°C
-                    </div>
-                    <div className="weather-details">
-                      <div className="weather-condition">
-                        {safetySummary.primarySiteWeather.condition || 'Unknown'}
-                      </div>
-                      <div className="weather-location">
-                        {safetySummary.primarySiteWeather.summaryText || ''}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <Cloud size={28} />
-                    <div className="weather-details">
-                      <div className="weather-condition">Weather unavailable</div>
-                      <div className="weather-location">Configure site location</div>
-                    </div>
-                  </>
-                )}
-              </div>
-            ) : (
-              <div className="safety-weather-row">
-                <Cloud size={28} />
-                <div className="weather-details">
-                  <div className="weather-condition">No weather data</div>
-                  <div className="weather-location">Select a primary site</div>
-                </div>
-              </div>
-            )}
-
-            {safetySummary?.safetyMoment && (
-              <div className="safety-moment-preview">
-                <h4>{safetySummary.safetyMoment.title}</h4>
-                <p>{safetySummary.safetyMoment.body}</p>
-              </div>
-            )}
-
-            <Link to="/safety-advisor" className="safety-link">
-              Open Safety Advisor <ChevronRight size={14} />
-            </Link>
-          </div>
-
-          {/* Permit Alerts */}
-          {(kpis.expiringPermits > 0) && (
-            <div className="dashboard-card">
-              <div className="dashboard-card-header">
-                <h3 className="dashboard-card-title">
-                  <AlertCircle size={16} /> Alerts
-                </h3>
-              </div>
-              <div className="dashboard-card-body">
-                <ul className="recent-list">
-                  {kpis.expiringPermits > 0 && (
-                    <li
-                      className="recent-item"
-                      onClick={() => navigate('/permits')}
-                    >
-                      <div className="recent-item-main">
-                        <div className="recent-item-title">{kpis.expiringPermits} permits expiring soon</div>
-                        <div className="recent-item-meta">Within next 7 days</div>
-                      </div>
-                      <ChevronRight size={16} />
-                    </li>
-                  )}
-                </ul>
+          ) : (
+            <div className="safety-weather-row">
+              <Cloud size={28} />
+              <div className="weather-details">
+                <div className="weather-condition">No weather data</div>
+                <div className="weather-location">Select a primary site</div>
               </div>
             </div>
           )}
 
+          {safetySummary?.safetyMoment && (
+            <div className="safety-moment-preview">
+              <h4>{safetySummary.safetyMoment.title}</h4>
+              <p>{safetySummary.safetyMoment.body}</p>
+            </div>
+          )}
+
+          <Link to="/safety-advisor" className="safety-link">
+            Open Safety Advisor <ChevronRight size={14} />
+          </Link>
+        </div>
+      </div>
+
+      {/* Row 2: Actions Overview + Incident Trend */}
+      <div className="dashboard-row-2col">
+        {/* Actions Summary */}
+        <div className="mini-chart-card">
+          <div className="mini-chart-header">
+            <h4 className="mini-chart-title">Actions Overview</h4>
+            <button className="dashboard-card-action" onClick={() => navigate('/actions')}>
+              View All <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="actions-summary">
+            <div className="action-stat">
+              <div className="action-stat-value">{actionsSummary.open}</div>
+              <div className="action-stat-label">Open</div>
+            </div>
+            <div className="action-stat">
+              <div className="action-stat-value">{actionsSummary.inProgress}</div>
+              <div className="action-stat-label">In Progress</div>
+            </div>
+            <div className="action-stat">
+              <div className="action-stat-value">{actionsSummary.completed}</div>
+              <div className="action-stat-label">Completed</div>
+            </div>
+            <div className="action-stat">
+              <div className={`action-stat-value ${actionsSummary.overdue > 0 ? 'overdue' : ''}`}>
+                {actionsSummary.overdue}
+              </div>
+              <div className="action-stat-label">Overdue</div>
+            </div>
+          </div>
+          {/* Upcoming Actions List */}
+          {data.upcomingActions?.length > 0 && (
+            <ul className="recent-list">
+              {data.upcomingActions.slice(0, 3).map(action => (
+                <li
+                  key={action.id}
+                  className="recent-item"
+                  onClick={() => navigate(`/actions/${action.id}`)}
+                >
+                  <div className="recent-item-main">
+                    <div className="recent-item-title">{action.title}</div>
+                    <div className="recent-item-meta">Due: {formatDate(action.dueDate)}</div>
+                  </div>
+                  <span className={`badge-mini ${action.priority}`}>{action.priority}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Severity Trend - Line Chart */}
+        <div className="mini-chart-card">
+          <div className="mini-chart-header">
+            <h4 className="mini-chart-title">Incident Trend (12mo)</h4>
+          </div>
+          {severityTrend.length > 0 ? (
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={severityTrend} margin={{ left: 0, right: 10, top: 5, bottom: 5 }}>
+                  <XAxis
+                    dataKey="month"
+                    tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={(val) => val.slice(5)} // Show only MM
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{ fontSize: 10, fill: 'var(--color-text-muted)' }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={25}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--color-bg-card)',
+                      border: '1px solid var(--color-border-subtle)',
+                      borderRadius: '6px',
+                      fontSize: '11px'
+                    }}
+                  />
+                  <Line type="monotone" dataKey="low" stroke={COLORS.green} strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="medium" stroke={COLORS.amber} strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="high" stroke={COLORS.orange} strokeWidth={2} dot={false} />
+                  <Line type="monotone" dataKey="critical" stroke={COLORS.red} strokeWidth={2} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="dashboard-empty">
+              <TrendingUp size={32} />
+              <p>No trend data</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Row 3: Severity Distribution + Alerts */}
+      <div className="dashboard-row-2col">
+        {/* Incidents by Severity - Pie Chart */}
+        <div className="mini-chart-card">
+          <div className="mini-chart-header">
+            <h4 className="mini-chart-title">Severity Distribution</h4>
+          </div>
+          {incidentsBySeverity.length > 0 ? (
+            <>
+              <div className="pie-chart-container">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={incidentsBySeverity}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={55}
+                      outerRadius={90}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {incidentsBySeverity.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={SEVERITY_COLORS[entry.name] || COLORS.blue}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'var(--color-bg-card)',
+                        border: '1px solid var(--color-border-subtle)',
+                        borderRadius: '6px',
+                        fontSize: '13px'
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="chart-legend">
+                {incidentsBySeverity.map((entry, index) => (
+                  <div key={index} className="legend-item">
+                    <span
+                      className="legend-dot"
+                      style={{ backgroundColor: SEVERITY_COLORS[entry.name] || COLORS.blue }}
+                    />
+                    <span style={{ textTransform: 'capitalize' }}>{entry.name}: {entry.value}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="dashboard-empty">
+              <TrendingUp size={32} />
+              <p>No severity data</p>
+            </div>
+          )}
+        </div>
+
+        {/* Alerts Card */}
+        <div className="dashboard-card alerts-card">
+          <div className="dashboard-card-header">
+            <h3 className="dashboard-card-title">
+              <AlertCircle size={16} /> Alerts & Notifications
+            </h3>
+          </div>
+          <div className="dashboard-card-body">
+            {kpis.expiringPermits > 0 ? (
+              <ul className="recent-list">
+                <li
+                  className="recent-item"
+                  onClick={() => navigate('/permits')}
+                >
+                  <div className="recent-item-main">
+                    <div className="recent-item-title">{kpis.expiringPermits} permits expiring soon</div>
+                    <div className="recent-item-meta">Within next 7 days</div>
+                  </div>
+                  <ChevronRight size={16} />
+                </li>
+                {kpis.overdueActions > 0 && (
+                  <li
+                    className="recent-item"
+                    onClick={() => navigate('/actions?status=overdue')}
+                  >
+                    <div className="recent-item-main">
+                      <div className="recent-item-title">{kpis.overdueActions} overdue actions</div>
+                      <div className="recent-item-meta">Require immediate attention</div>
+                    </div>
+                    <ChevronRight size={16} />
+                  </li>
+                )}
+              </ul>
+            ) : (
+              <div className="dashboard-empty">
+                <CheckCircle2 size={32} />
+                <p>No active alerts</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Row 4: Recent Tables */}
+      <div className="dashboard-row-2col">
+        {/* Recent Incidents */}
+        <div className="dashboard-card">
+          <div className="dashboard-card-header">
+            <h3 className="dashboard-card-title">
+              <AlertTriangle size={16} /> Recent Incidents
+            </h3>
+            <button className="dashboard-card-action" onClick={() => navigate('/incidents')}>
+              View All <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="dashboard-card-body" style={{ padding: 0 }}>
+            {data.recentIncidents?.length > 0 ? (
+              <table className="compact-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Severity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.recentIncidents.map(inc => (
+                    <tr key={inc.id} onClick={() => navigate(`/incidents/${inc.id}`)}>
+                      <td className="truncate">{inc.title}</td>
+                      <td>{formatDate(inc.occurredAt)}</td>
+                      <td><span className={`badge-mini ${inc.severity}`}>{inc.severity}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="dashboard-empty">
+                <CheckCircle2 size={24} />
+                <p>No recent incidents</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Recent Inspections */}
+        <div className="dashboard-card">
+          <div className="dashboard-card-header">
+            <h3 className="dashboard-card-title">
+              <Clipboard size={16} /> Recent Inspections
+            </h3>
+            <button className="dashboard-card-action" onClick={() => navigate('/inspections')}>
+              View All <ChevronRight size={14} />
+            </button>
+          </div>
+          <div className="dashboard-card-body" style={{ padding: 0 }}>
+            {data.recentInspections?.length > 0 ? (
+              <table className="compact-table">
+                <thead>
+                  <tr>
+                    <th>Template</th>
+                    <th>Site</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.recentInspections.map(ins => (
+                    <tr key={ins.id} onClick={() => navigate(`/inspections/${ins.id}`)}>
+                      <td className="truncate">{ins.templateName}</td>
+                      <td className="truncate">{ins.siteName}</td>
+                      <td><span className={`badge-mini ${ins.overallResult}`}>{ins.overallResult}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="dashboard-empty">
+                <CheckCircle2 size={24} />
+                <p>No recent inspections</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
