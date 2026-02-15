@@ -536,13 +536,13 @@ const DashboardPage = () => {
             <>
               <div className="pie-chart-container">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+                  <PieChart>
                     <Pie
                       data={filteredSeverityData}
                       cx="50%"
                       cy="50%"
-                      innerRadius={45}
-                      outerRadius={75}
+                      innerRadius="35%"
+                      outerRadius="70%"
                       paddingAngle={2}
                       dataKey="value"
                     >
