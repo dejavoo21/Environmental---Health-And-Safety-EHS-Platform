@@ -541,8 +541,8 @@ const DashboardPage = () => {
                       data={filteredSeverityData}
                       cx="50%"
                       cy="50%"
-                      innerRadius="35%"
-                      outerRadius="70%"
+                      innerRadius={50}
+                      outerRadius={95}
                       paddingAngle={2}
                       dataKey="value"
                     >
@@ -596,46 +596,88 @@ const DashboardPage = () => {
             />
           </div>
           <div className="dashboard-card-body">
-            {hasAlerts ? (
-              <ul className="recent-list">
-                {filteredAlerts.expiringPermits > 0 && (
-                  <li
-                    className="recent-item"
-                    onClick={() => navigate('/permits')}
-                  >
-                    <div className="recent-item-main">
-                      <div className="recent-item-title">
-                        {Math.round(filteredAlerts.expiringPermits)} permits expiring soon
-                      </div>
-                      <div className="recent-item-meta">
-                        {alertsPeriod === 'today' ? 'Expiring today' :
-                         alertsPeriod === '7d' ? 'Within next 7 days' : 'Within next 30 days'}
-                      </div>
-                    </div>
-                    <ChevronRight size={16} />
-                  </li>
-                )}
-                {filteredAlerts.overdueActions > 0 && (
-                  <li
-                    className="recent-item"
-                    onClick={() => navigate('/actions?status=overdue')}
-                  >
-                    <div className="recent-item-main">
-                      <div className="recent-item-title">
-                        {Math.round(filteredAlerts.overdueActions)} overdue actions
-                      </div>
-                      <div className="recent-item-meta">Require immediate attention</div>
-                    </div>
-                    <ChevronRight size={16} />
-                  </li>
-                )}
-              </ul>
-            ) : (
-              <div className="dashboard-empty">
-                <CheckCircle2 size={32} />
-                <p>No alerts for {getPeriodLabel(alertsPeriod)}</p>
-              </div>
-            )}
+            <ul className="recent-list">
+              {/* Expiring Permits Alert */}
+              <li
+                className="recent-item"
+                onClick={() => navigate('/permits')}
+              >
+                <div className="recent-item-main">
+                  <div className="recent-item-title">
+                    {filteredAlerts.expiringPermits > 0
+                      ? `${Math.round(filteredAlerts.expiringPermits)} permits expiring soon`
+                      : 'No permits expiring'}
+                  </div>
+                  <div className="recent-item-meta">
+                    {alertsPeriod === 'today' ? 'Today' :
+                     alertsPeriod === '7d' ? 'Within next 7 days' : 'Within next 30 days'}
+                  </div>
+                </div>
+                <span className={`badge-mini ${filteredAlerts.expiringPermits > 0 ? 'warning' : 'pass'}`}>
+                  {filteredAlerts.expiringPermits > 0 ? 'Action' : 'OK'}
+                </span>
+              </li>
+
+              {/* Overdue Actions Alert */}
+              <li
+                className="recent-item"
+                onClick={() => navigate('/actions?status=overdue')}
+              >
+                <div className="recent-item-main">
+                  <div className="recent-item-title">
+                    {filteredAlerts.overdueActions > 0
+                      ? `${Math.round(filteredAlerts.overdueActions)} overdue actions`
+                      : 'No overdue actions'}
+                  </div>
+                  <div className="recent-item-meta">
+                    {filteredAlerts.overdueActions > 0 ? 'Require attention' : 'All actions on track'}
+                  </div>
+                </div>
+                <span className={`badge-mini ${filteredAlerts.overdueActions > 0 ? 'critical' : 'pass'}`}>
+                  {filteredAlerts.overdueActions > 0 ? 'Urgent' : 'OK'}
+                </span>
+              </li>
+
+              {/* Open Incidents Summary */}
+              <li
+                className="recent-item"
+                onClick={() => navigate('/incidents?status=open')}
+              >
+                <div className="recent-item-main">
+                  <div className="recent-item-title">
+                    {kpis.openIncidents > 0
+                      ? `${kpis.openIncidents} open incidents`
+                      : 'No open incidents'}
+                  </div>
+                  <div className="recent-item-meta">
+                    {kpis.openIncidents > 0 ? 'Pending investigation' : 'All incidents resolved'}
+                  </div>
+                </div>
+                <span className={`badge-mini ${kpis.openIncidents > 0 ? 'medium' : 'pass'}`}>
+                  {kpis.openIncidents > 0 ? 'Review' : 'OK'}
+                </span>
+              </li>
+
+              {/* High Risks Summary */}
+              <li
+                className="recent-item"
+                onClick={() => navigate('/risks')}
+              >
+                <div className="recent-item-main">
+                  <div className="recent-item-title">
+                    {kpis.highRisks > 0
+                      ? `${kpis.highRisks} high/extreme risks`
+                      : 'No high-level risks'}
+                  </div>
+                  <div className="recent-item-meta">
+                    {kpis.highRisks > 0 ? 'Require mitigation' : 'Risk levels acceptable'}
+                  </div>
+                </div>
+                <span className={`badge-mini ${kpis.highRisks > 0 ? 'high' : 'pass'}`}>
+                  {kpis.highRisks > 0 ? 'Monitor' : 'OK'}
+                </span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

@@ -173,9 +173,9 @@
 
 /* Pie Chart specific container */
 .pie-chart-container {
-  height: 180px;
+  height: 240px;
   flex: 1;
-  min-height: 180px;
+  min-height: 240px;
 }
 
 /* Pie/Donut Chart Legend */
@@ -509,6 +509,7 @@
 .badge-mini.medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
 .badge-mini.high { background: rgba(249, 115, 22, 0.15); color: #f97316; }
 .badge-mini.critical { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.badge-mini.warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
 
 /* Empty state */
 .dashboard-empty {
