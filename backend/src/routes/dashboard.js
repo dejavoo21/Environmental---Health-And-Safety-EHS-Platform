@@ -204,7 +204,7 @@ router.get('/summary', async (req, res, next) => {
 
     // Recent actions (top 5)
     const recentActionsRes = await query(`
-      SELECT a.id, a.title, a.status, a.priority, a.due_date
+      SELECT a.id, a.title, a.status, a.due_date
       FROM actions a
       WHERE a.status IN ('open', 'in_progress')
       ORDER BY a.due_date ASC NULLS LAST
@@ -214,7 +214,6 @@ router.get('/summary', async (req, res, next) => {
       id: row.id,
       title: row.title,
       status: row.status,
-      priority: row.priority,
       dueDate: toIso(row.due_date)
     }));
 
