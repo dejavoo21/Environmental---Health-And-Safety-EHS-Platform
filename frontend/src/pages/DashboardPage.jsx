@@ -559,29 +559,30 @@ const DashboardPage = () => {
             </div>
           )}
 
-          {/* Quick Actions - Full width at bottom */}
-          <div className="dashboard-card quick-actions-card">
-            <div className="dashboard-card-header">
-              <h3 className="dashboard-card-title">
-                <Zap size={16} /> Quick Actions
-              </h3>
-            </div>
-            <div className="dashboard-card-body">
-              <div className="quick-links-grid">
-                <Link to="/incidents/new" className="quick-link">
-                  <Plus size={16} /> Incident
-                </Link>
-                <Link to="/inspections/new" className="quick-link">
-                  <Plus size={16} /> Inspection
-                </Link>
-                <Link to="/permits/new" className="quick-link">
-                  <Plus size={16} /> Permit
-                </Link>
-                <Link to="/risks/new" className="quick-link">
-                  <Plus size={16} /> Risk
-                </Link>
-              </div>
-            </div>
+        </div>
+      </div>
+
+      {/* Quick Actions - Full width at bottom */}
+      <div className="dashboard-card quick-actions-card">
+        <div className="dashboard-card-header">
+          <h3 className="dashboard-card-title">
+            <Zap size={16} /> Quick Actions
+          </h3>
+        </div>
+        <div className="dashboard-card-body">
+          <div className="quick-links-grid">
+            <Link to="/incidents/new" className="quick-link">
+              <Plus size={16} /> New Incident
+            </Link>
+            <Link to="/inspections/new" className="quick-link">
+              <Plus size={16} /> New Inspection
+            </Link>
+            <Link to="/permits/new" className="quick-link">
+              <Plus size={16} /> New Permit
+            </Link>
+            <Link to="/risks/new" className="quick-link">
+              <Plus size={16} /> New Risk
+            </Link>
           </div>
         </div>
       </div>

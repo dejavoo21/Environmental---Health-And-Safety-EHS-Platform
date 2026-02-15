@@ -397,11 +397,12 @@
 
 /* Quick Actions Card - Full width at bottom */
 .quick-actions-card {
-  margin-top: auto;
+  margin-top: 1.5rem;
+  width: 100%;
 }
 
 .quick-actions-card .dashboard-card-body {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
 }
 
 /* Quick Links Card */
