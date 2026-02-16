@@ -432,7 +432,6 @@ const getUserSafetyOverview = async (orgId, userId, userRole, primarySiteId = nu
         SELECT s.id, s.name
         FROM sites s
         WHERE s.organisation_id = $1
-          AND s.deleted_at IS NULL
           AND (s.latitude IS NOT NULL OR s.city IS NOT NULL)
         ORDER BY s.created_at ASC
         LIMIT 1
