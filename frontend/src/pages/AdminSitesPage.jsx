@@ -505,7 +505,6 @@ const AdminSitesPage = () => {
         {/* Right Column: Table */}
         <div className="admin-table-column">
           <div className="admin-table-header">
-            <h3>Sites</h3>
             <button className="btn primary" onClick={handleAddNew}>+ Add New Site</button>
           </div>
           {sites.length === 0 ? (

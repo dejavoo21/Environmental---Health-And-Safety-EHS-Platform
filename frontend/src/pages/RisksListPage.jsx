@@ -189,7 +189,6 @@ const RisksListPage = () => {
       {/* Header */}
       <div className="risks-list-page__header">
         <div className="risks-list-page__title-row">
-          <h1>Risk Register</h1>
           <div className="risks-list-page__actions">
             {canViewHeatmap && (
               <button

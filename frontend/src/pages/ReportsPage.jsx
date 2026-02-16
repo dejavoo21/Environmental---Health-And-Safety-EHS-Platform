@@ -367,7 +367,6 @@ const ReportsPage = () => {
 
   return (
     <div className="page reports-page">
-      <h1>Reports & Exports</h1>
       <p className="reports-intro">
         Export your data to CSV or PDF format for reporting and analysis, or email reports directly.
       </p>
