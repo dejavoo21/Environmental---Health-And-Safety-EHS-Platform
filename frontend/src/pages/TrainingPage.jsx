@@ -384,13 +384,18 @@ const TrainingPage = () => {
   );
 
   return (
-    <div className="training-page">
-      <header className="training-header">
-        <h1><GraduationCap size={28} /> Training</h1>
-        <p>Manage your training courses and track your progress</p>
+    <div className="page-shell training-page">
+      <header className="page-header">
+        <div>
+          <h1 className="page-title">Training</h1>
+          <p className="page-subtitle">
+            Manage your training courses and track your progress.
+          </p>
+        </div>
       </header>
 
-      <div className="training-tabs">
+      <div className="training-layout">
+        <div className="training-tabs">
         <button 
           className={`training-tab ${activeTab === 'my-training' ? 'active' : ''}`}
           onClick={() => setActiveTab('my-training')}
@@ -411,25 +416,26 @@ const TrainingPage = () => {
         </button>
       </div>
 
-      {error && (
-        <div className="training-error">
-          <AlertCircle size={20} />
-          <span>{error}</span>
-        </div>
-      )}
+        {error && (
+          <div className="training-error">
+            <AlertCircle size={20} />
+            <span>{error}</span>
+          </div>
+        )}
 
-      {loading ? (
-        <div className="training-loading">
-          <div className="spinner" />
-          <p>Loading training data...</p>
-        </div>
-      ) : (
-        <>
-          {activeTab === 'my-training' && renderMyTraining()}
-          {activeTab === 'catalog' && renderCatalog()}
-          {activeTab === 'completions' && renderCompletions()}
-        </>
-      )}
+        {loading ? (
+          <div className="training-loading">
+            <div className="spinner" />
+            <p>Loading training data...</p>
+          </div>
+        ) : (
+          <>
+            {activeTab === 'my-training' && renderMyTraining()}
+            {activeTab === 'catalog' && renderCatalog()}
+            {activeTab === 'completions' && renderCompletions()}
+          </>
+        )}
+      </div>
     </div>
   );
 };

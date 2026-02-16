@@ -156,9 +156,9 @@ const ExportPanel = ({
   const isDisabled = exporting || exportingPdf || sendingEmail || rateLimitCooldown > 0;
 
   return (
-    <div className="card export-section">
+    <div className="report-section">
       <h3>{title}</h3>
-      <div className="export-filters">
+      <div className="report-filters">
         {filters.map((filter) => (
           <label key={filter.field}>
             {filter.label}
@@ -213,9 +213,9 @@ const ExportPanel = ({
         </div>
       )}
 
-      <div className="export-actions">
+      <div className="report-actions">
         <button
-          className="btn primary export-btn"
+          className="btn secondary export-btn"
           onClick={() => handleExport('csv')}
           disabled={isDisabled}
         >
@@ -229,7 +229,7 @@ const ExportPanel = ({
           {exportingPdf ? 'Exporting...' : 'Export PDF'}
         </button>
         <button
-          className="btn outline export-btn"
+          className="btn primary export-btn"
           onClick={() => setEmailModalOpen(true)}
           disabled={isDisabled}
         >
@@ -366,14 +366,19 @@ const ReportsPage = () => {
   }
 
   return (
-    <div className="page reports-page">
-      <p className="reports-intro">
-        Export your data to CSV or PDF format for reporting and analysis, or email reports directly.
-      </p>
+    <div className="page-shell reports-page">
+      <header className="page-header">
+        <div>
+          <h1 className="page-title">Reports &amp; Exports</h1>
+          <p className="page-subtitle">
+            Export your data to CSV or PDF for reporting and analysis, or email reports directly.
+          </p>
+        </div>
+      </header>
 
       {rateLimitCooldown > 0 && (
         <div className="rate-limit-notice">
-          ⏳ Export rate limit reached. Please wait {rateLimitCooldown} seconds before exporting again.
+          Export rate limit reached. Please wait {rateLimitCooldown} seconds before exporting again.
         </div>
       )}
 

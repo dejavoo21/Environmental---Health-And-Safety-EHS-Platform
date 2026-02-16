@@ -185,30 +185,34 @@ const RisksListPage = () => {
   }
   
   return (
-    <div className="risks-list-page">
+    <div className="page-shell risks-list-page">
       {/* Header */}
-      <div className="risks-list-page__header">
-        <div className="risks-list-page__title-row">
-          <div className="risks-list-page__actions">
-            {canViewHeatmap && (
-              <button
-                className="btn btn--secondary"
-                onClick={() => navigate('/risks/heatmap')}
-              >
-                <span className="inline-icon"><AppIcon name="info" size={16} />View Heatmap</span>
-              </button>
-            )}
-            {canCreate && (
-              <button
-                className="btn btn--primary"
-                onClick={() => navigate('/risks/new')}
-              >
-                + Add Risk
-              </button>
-            )}
-          </div>
+      <header className="page-header">
+        <div>
+          <h1 className="page-title">Risk Register</h1>
+          <p className="page-subtitle">
+            Track, prioritize and review key risks across your sites.
+          </p>
         </div>
-      </div>
+        <div className="page-header-actions">
+          {canViewHeatmap && (
+            <button
+              className="btn btn--secondary"
+              onClick={() => navigate('/risks/heatmap')}
+            >
+              <span className="inline-icon"><AppIcon name="info" size={16} />View Heatmap</span>
+            </button>
+          )}
+          {canCreate && (
+            <button
+              className="btn btn--primary"
+              onClick={() => navigate('/risks/new')}
+            >
+              + Add Risk
+            </button>
+          )}
+        </div>
+      </header>
       
       {/* Summary Cards */}
       {summary && (

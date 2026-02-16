@@ -231,18 +231,22 @@ const AdminPPERulesPage = () => {
   if (error && !rules.length && !showForm) return <ErrorState message={error} />;
 
   return (
-    <div className="page admin-safety-page">
-      <div className="page-header">
+    <div className="page-shell">
+      <header className="page-header">
         <div>
-          <h2>PPE Rules</h2>
-          <p className="muted">Define conditions that trigger PPE requirements</p>
+          <h1 className="page-title">PPE Rules</h1>
+          <p className="page-subtitle">
+            Define and manage PPE requirements for tasks and weather conditions.
+          </p>
         </div>
-        {!showForm && (
-          <button className="btn success" onClick={() => setShowForm(true)}>
-            + Add PPE Rule
-          </button>
-        )}
-      </div>
+        <div className="page-header-actions">
+          {!showForm && (
+            <button className="btn success" onClick={() => setShowForm(true)}>
+              + Add PPE Rule
+            </button>
+          )}
+        </div>
+      </header>
 
       {/* Form */}
       {showForm && (

@@ -157,18 +157,22 @@ const AdminSiteLegislationPage = () => {
   if (error && !legislation.length && !showForm) return <ErrorState message={error} />;
 
   return (
-    <div className="page admin-safety-page">
-      <div className="page-header">
+    <div className="page-shell">
+      <header className="page-header">
         <div>
-          <h2>Site Legislation</h2>
-          <p className="muted">Manage legislation and regulatory references for sites</p>
+          <h1 className="page-title">Site Legislation</h1>
+          <p className="page-subtitle">
+            Manage legislation and regulatory references for your sites.
+          </p>
         </div>
-        {!showForm && (
-          <button className="btn success" onClick={() => setShowForm(true)}>
-            + Add Legislation
-          </button>
-        )}
-      </div>
+        <div className="page-header-actions">
+          {!showForm && (
+            <button className="btn success" onClick={() => setShowForm(true)}>
+              + Add Legislation
+            </button>
+          )}
+        </div>
+      </header>
 
       {/* Form */}
       {showForm && (
