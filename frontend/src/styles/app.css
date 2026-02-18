@@ -2651,14 +2651,9 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 1200px;
-}
-
-.reports-page h1 {
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #1e3a5f;
-  margin: 0 0 0.5rem 0;
+  width: 100%;
+  max-width: none;
+  background: var(--color-bg-page);
 }
 
 .reports-intro {
@@ -2873,6 +2868,109 @@ textarea:focus {
 
 :root.dark-theme .reports-intro {
   color: #94a3b8;
+}
+
+/* Reports page scoped styles */
+.reports-page .page-header {
+  margin-bottom: 0;
+}
+
+.reports-page .page-subtitle {
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.reports-page .report-section {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.reports-page .report-section h3 {
+  margin: 0 0 1.25rem;
+  color: var(--color-text-strong);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.reports-page .report-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.reports-page .report-filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.reports-page .report-filters input,
+.reports-page .report-filters select {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-strong);
+}
+
+.reports-page .report-filters input[type="date"] {
+  -webkit-appearance: auto;
+  appearance: auto;
+  padding-right: 0.75rem;
+  color-scheme: light;
+}
+
+:root.dark-theme .reports-page .report-filters input[type="date"] {
+  color-scheme: dark;
+}
+
+.reports-page .report-filters input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  position: static;
+  width: 1.1em;
+  height: 1.1em;
+  margin-left: 0.3rem;
+  cursor: pointer;
+}
+
+.reports-page .report-filters input[type="date"]::-webkit-clear-button {
+  display: none;
+}
+
+.reports-page .report-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-subtle);
+  justify-content: flex-end;
+}
+
+.reports-page .export-btn.btn.secondary {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-strong);
+}
+
+.reports-page .export-btn.btn.secondary:hover:not(:disabled) {
+  background: var(--color-row-hover);
+  border-color: var(--color-primary);
+  transform: none;
+  box-shadow: none;
+}
+
+.reports-page .export-btn.btn.primary {
+  background: #0f766e;
+  border: 1px solid #0f766e;
+  color: #ffffff;
+}
+
+.reports-page .export-btn.btn.primary:hover:not(:disabled) {
+  background: #0d5f59;
+  border-color: #0d5f59;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Success message */

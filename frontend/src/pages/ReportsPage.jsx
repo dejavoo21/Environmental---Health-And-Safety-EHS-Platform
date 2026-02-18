@@ -369,7 +369,6 @@ const ReportsPage = () => {
     <div className="page-shell reports-page">
       <header className="page-header">
         <div>
-          <h1 className="page-title">Reports &amp; Exports</h1>
           <p className="page-subtitle">
             Export your data to CSV or PDF for reporting and analysis, or email reports directly.
           </p>
