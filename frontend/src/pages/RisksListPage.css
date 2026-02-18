@@ -273,12 +273,12 @@
 }
 
 .btn--primary {
-  background: #1976D2;
+  background: #0f766e;
   color: white;
 }
 
 .btn--primary:hover {
-  background: #1565C0;
+  background: #0d5f59;
 }
 
 .btn--secondary {

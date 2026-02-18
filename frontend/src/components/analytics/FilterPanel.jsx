@@ -54,11 +54,12 @@ const FilterPanel = ({ filters, onChange, onClear, loading = false }) => {
     const preset = e.target.value;
     setShowCustomDates(preset === 'custom');
 
-    if (preset !== 'custom') {
-      onChange({
-        dateRange: { preset }
-      });
-    }
+    onChange({
+      dateRange: {
+        ...(filters.dateRange || {}),
+        preset
+      }
+    });
   };
 
   const handleCustomDateChange = (field, value) => {

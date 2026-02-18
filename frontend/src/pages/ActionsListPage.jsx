@@ -120,7 +120,7 @@ const ActionsListPage = () => {
         )}
       </div>
 
-      <div className="filters compact sticky">
+      <div className="filters compact sticky actions-filters">
         <label>
           Status
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
