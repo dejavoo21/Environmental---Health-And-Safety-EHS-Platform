@@ -5,6 +5,17 @@
   margin: 0 auto;
 }
 
+.training-page .btn.btn-primary {
+  background: #0f766e;
+  border: 1px solid #0f766e;
+  color: #ffffff;
+}
+
+.training-page .btn.btn-primary:hover {
+  background: #0d5f59;
+  border-color: #0d5f59;
+}
+
 .training-header {
   margin-bottom: 1.5rem;
 }
