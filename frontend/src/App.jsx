@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import RequestAccessPage from './pages/RequestAccessPage';
+import AccessRequestResponsePage from './pages/AccessRequestResponsePage';
 import ForcePasswordChangePage from './pages/ForcePasswordChangePage';
 import DashboardPage from './pages/DashboardPage';
 import IncidentsListPage from './pages/IncidentsListPage';
@@ -87,6 +88,7 @@ const App = () => (
     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
     <Route path="/reset-password" element={<ResetPasswordPage />} />
     <Route path="/request-access" element={<RequestAccessPage />} />
+    <Route path="/access-request/respond" element={<AccessRequestResponsePage />} />
     <Route path="/change-password" element={<ForcePasswordChangePage />} />
     
     <Route

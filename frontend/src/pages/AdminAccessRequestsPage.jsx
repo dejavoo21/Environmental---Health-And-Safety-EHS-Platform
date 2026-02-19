@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../api/client';
 
 const STATUS_OPTIONS = [
+  { value: 'all', label: 'All' },
   { value: 'pending', label: 'Pending' },
   { value: 'info_requested', label: 'Info Requested' },
   { value: 'approved', label: 'Approved' },
-  { value: 'rejected', label: 'Rejected' },
-  { value: 'all', label: 'All' }
+  { value: 'rejected', label: 'Rejected' }
 ];
 
 const formatDate = (dateStr) => {
@@ -22,7 +22,7 @@ const AdminAccessRequestsPage = () => {
   const [requests, setRequests] = useState([]);
   const [counts, setCounts] = useState({ pending: 0, approved: 0, rejected: 0 });
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 });
-  const [statusFilter, setStatusFilter] = useState('pending');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 

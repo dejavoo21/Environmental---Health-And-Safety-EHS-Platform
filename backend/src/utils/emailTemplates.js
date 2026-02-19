@@ -20,6 +20,13 @@ const BRAND = {
   supportEmail: 'support@ehs-portal.com'
 };
 
+const escapeHtml = (value = '') => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
 /**
  * Base email layout wrapper
  */
@@ -421,7 +428,8 @@ EHS Portal Team
 /**
  * Additional Information Required Email
  */
-const additionalInfoRequired = ({ name, referenceNumber, message, responseUrl }) => {
+const additionalInfoRequired = ({ name, referenceNumber, message, responseUrl, passphrase, expiryHours = 72 }) => {
+  const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
   const content = `
     <h2>Additional Information Required</h2>
     <p>Hello <strong>${name}</strong>,</p>
@@ -433,8 +441,14 @@ const additionalInfoRequired = ({ name, referenceNumber, message, responseUrl })
     
     <div class="info-box">
       <strong>Message from Administrator:</strong>
-      <p style="margin-top: 12px; margin-bottom: 0;">${message.replace(/\n/g, '<br>')}</p>
+      <p style="margin-top: 12px; margin-bottom: 0;">${safeMessage}</p>
     </div>
+
+    <div class="credential-box">
+      <div class="label">One-Time Passphrase (OTP)</div>
+      <div class="value">${passphrase}</div>
+    </div>
+    <p style="margin-top: -6px; color: #6b7280; font-size: 14px;">You must enter this passphrase on the response page. It expires in ${expiryHours} hours.</p>
     
     <p>Please click the button below to provide the requested information:</p>
     
@@ -462,6 +476,9 @@ Reference: ${referenceNumber}
 
 Message from Administrator:
 ${message}
+
+One-Time Passphrase: ${passphrase}
+(Expires in ${expiryHours} hours)
 
 Please respond by visiting: ${responseUrl}
 

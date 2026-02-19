@@ -511,30 +511,32 @@ const AdminSitesPage = () => {
             <EmptyState message="No sites available." />
           ) : (
             <div className="card table-card">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Code</th>
-                    <th>Location</th>
-                    <th>Timezone</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sites.map((site) => (
-                    <tr key={site.id}>
-                      <td><strong>{site.name}</strong></td>
-                      <td><code>{site.code}</code></td>
-                      <td>{site.city}, {site.country_code || 'Unknown'}</td>
-                      <td>{site.timezone || '-'}</td>
-                      <td>
-                        <button className="btn ghost" onClick={() => handleEdit(site)}>Edit</button>
-                      </td>
+              <div className="admin-sites-table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="col-name">Name</th>
+                      <th className="col-code">Code</th>
+                      <th className="col-location">Location</th>
+                      <th className="col-timezone">Timezone</th>
+                      <th className="col-actions">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {sites.map((site) => (
+                      <tr key={site.id}>
+                        <td className="cell-name"><strong>{site.name}</strong></td>
+                        <td className="cell-code"><code>{site.code}</code></td>
+                        <td className="cell-location">{site.city}, {site.country_code || 'Unknown'}</td>
+                        <td className="cell-timezone">{site.timezone || '-'}</td>
+                        <td className="cell-actions">
+                          <button className="btn ghost" onClick={() => handleEdit(site)}>Edit</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </div>

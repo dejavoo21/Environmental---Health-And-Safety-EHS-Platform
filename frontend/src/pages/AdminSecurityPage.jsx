@@ -245,7 +245,7 @@ const AdminSecurityPage = () => {
       </div>
 
       {/* 2FA Coverage */}
-      <div className="security-section">
+      <div className="security-section security-section--recent-activity">
         <h3>2FA Coverage</h3>
         <div className="twofa-progress">
           <div className="twofa-bar">
@@ -301,9 +301,11 @@ const AdminSecurityPage = () => {
             </div>
           ))}
         </div>
-        <button className="btn btn-link" onClick={() => setActiveTab('audit')}>
-          View all activity →
-        </button>
+        <div className="recent-activity-footer">
+          <button className="btn activity-view-all-btn" onClick={() => setActiveTab('audit')}>
+            View all activity →
+          </button>
+        </div>
       </div>
     </div>
   );

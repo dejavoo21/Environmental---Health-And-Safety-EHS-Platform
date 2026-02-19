@@ -10,9 +10,12 @@ const { sendEmail, isSmtpConfigured } = require('../utils/emailSender');
 const emailTemplates = require('../utils/emailTemplates');
 const env = require('../config/env');
 const securityAuditService = require('./securityAuditService');
+const notificationService = require('./notificationService');
 
 // Constants
 const DEFAULT_EXPIRE_DAYS = 30;
+const INFO_RESPONSE_EXPIRE_HOURS = 72;
+const INFO_RESPONSE_MAX_ATTEMPTS = 5;
 
 /**
  * Submit a new access request
@@ -556,6 +559,24 @@ const generateTemporaryPassword = () => {
 };
 
 /**
+ * Hash a one-time token/passphrase for storage
+ */
+const hashSecret = (value) => crypto.createHash('sha256').update(value).digest('hex');
+
+/**
+ * Generate a one-time passphrase for access-request info response
+ */
+const generateInfoResponsePassphrase = () => {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const bytes = crypto.randomBytes(8);
+  let value = '';
+  for (let i = 0; i < 8; i++) {
+    value += alphabet[bytes[i] % alphabet.length];
+  }
+  return `${value.slice(0, 4)}-${value.slice(4)}`;
+};
+
+/**
  * Send access request confirmation email
  */
 const sendAccessRequestConfirmationEmail = async ({ email, fullName, referenceNumber, organisationName }) => {
@@ -654,6 +675,12 @@ const requestMoreInfo = async ({
     return { success: false, error: 'ALREADY_PROCESSED', message: `This request has already been ${request.status}.` };
   }
   
+  const responseToken = crypto.randomBytes(32).toString('hex');
+  const passphrase = generateInfoResponsePassphrase();
+  const responseTokenHash = hashSecret(responseToken);
+  const passphraseHash = hashSecret(passphrase.toUpperCase().replace(/-/g, ''));
+  const expiresAt = new Date(Date.now() + INFO_RESPONSE_EXPIRE_HOURS * 60 * 60 * 1000);
+
   // Update access request status
   await query(
     `UPDATE access_requests 
@@ -661,10 +688,18 @@ const requestMoreInfo = async ({
          info_requested_at = NOW(), 
          info_requested_by = $1, 
          info_request_message = $2,
+         info_response = NULL,
+         info_responded_at = NULL,
+         info_response_token_hash = $3,
+         info_response_token_expires_at = $4,
+         info_response_token_used_at = NULL,
+         info_response_passphrase_hash = $5,
+         info_response_passphrase_expires_at = $4,
+         info_response_attempts = 0,
          updated_at = NOW(),
-         organisation_id = COALESCE(organisation_id, $4)
-     WHERE id = $3`,
-    [adminUserId, message, requestId, organisationId]
+         organisation_id = COALESCE(organisation_id, $7)
+     WHERE id = $6`,
+    [adminUserId, message, responseTokenHash, expiresAt, passphraseHash, requestId, organisationId]
   );
   
   // Log the event
@@ -688,7 +723,10 @@ const requestMoreInfo = async ({
         email: request.email,
         name: request.fullName,
         referenceNumber: request.referenceNumber,
-        message
+        message,
+        responseToken,
+        passphrase,
+        expiryHours: INFO_RESPONSE_EXPIRE_HOURS
       });
       console.log('[AccessRequest] Info request email sent to:', request.email);
     } catch (emailError) {
@@ -710,12 +748,16 @@ const requestMoreInfo = async ({
 const submitInfoResponse = async ({
   referenceNumber,
   email,
+  token,
+  passphrase,
   response,
   ipAddress = null
 }) => {
   // Find the request by reference number and email
   const result = await query(
-    `SELECT id, organisation_id, status, full_name 
+    `SELECT id, organisation_id, status, full_name,
+            info_response_token_hash, info_response_token_expires_at, info_response_token_used_at,
+            info_response_passphrase_hash, info_response_passphrase_expires_at, info_response_attempts
      FROM access_requests 
      WHERE reference_number = $1 AND LOWER(email) = LOWER($2)`,
     [referenceNumber, email]
@@ -730,6 +772,55 @@ const submitInfoResponse = async ({
   if (request.status !== 'info_requested') {
     return { success: false, error: 'INVALID_STATUS', message: 'This request is not awaiting additional information.' };
   }
+
+  const now = new Date();
+  if (!token || !passphrase) {
+    return { success: false, error: 'SECURITY_REQUIRED', message: 'A valid response link and passphrase are required.' };
+  }
+
+  if (request.info_response_token_used_at) {
+    return { success: false, error: 'TOKEN_USED', message: 'This response link has already been used.' };
+  }
+
+  if (!request.info_response_token_hash || !request.info_response_token_expires_at || now > new Date(request.info_response_token_expires_at)) {
+    return { success: false, error: 'TOKEN_EXPIRED', message: 'This response link has expired. Please contact the administrator for a new request.' };
+  }
+
+  if (!request.info_response_passphrase_hash || !request.info_response_passphrase_expires_at || now > new Date(request.info_response_passphrase_expires_at)) {
+    return { success: false, error: 'PASSPHRASE_EXPIRED', message: 'This passphrase has expired. Please contact the administrator for a new request.' };
+  }
+
+  const tokenHash = hashSecret(token);
+  if (tokenHash !== request.info_response_token_hash) {
+    return { success: false, error: 'INVALID_TOKEN', message: 'Invalid response link. Please use the latest link from your email.' };
+  }
+
+  const normalizedPassphrase = passphrase.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const passphraseHash = hashSecret(normalizedPassphrase);
+  const attempts = Number(request.info_response_attempts || 0);
+  if (passphraseHash !== request.info_response_passphrase_hash) {
+    const nextAttempts = attempts + 1;
+    await query(
+      `UPDATE access_requests
+       SET info_response_attempts = $1, updated_at = NOW()
+       WHERE id = $2`,
+      [nextAttempts, request.id]
+    );
+
+    if (nextAttempts >= INFO_RESPONSE_MAX_ATTEMPTS) {
+      return {
+        success: false,
+        error: 'PASSPHRASE_LOCKED',
+        message: 'Maximum passphrase attempts reached. Please contact the administrator for a new request.'
+      };
+    }
+
+    return {
+      success: false,
+      error: 'INVALID_PASSPHRASE',
+      message: `Invalid passphrase. ${INFO_RESPONSE_MAX_ATTEMPTS - nextAttempts} attempt(s) remaining.`
+    };
+  }
   
   // Update with response and change status back to pending
   await query(
@@ -737,6 +828,12 @@ const submitInfoResponse = async ({
      SET status = 'pending', 
          info_response = $1, 
          info_responded_at = NOW(),
+         info_response_token_used_at = NOW(),
+         info_response_token_hash = NULL,
+         info_response_token_expires_at = NULL,
+         info_response_passphrase_hash = NULL,
+         info_response_passphrase_expires_at = NULL,
+         info_response_attempts = 0,
          updated_at = NOW()
      WHERE id = $2`,
     [response, request.id]
@@ -752,6 +849,41 @@ const submitInfoResponse = async ({
     },
     ipAddress
   });
+
+  // Notify admins in-app so they can review and approve/reject quickly.
+  if (request.organisation_id) {
+    try {
+      const adminsResult = await query(
+        `SELECT id
+         FROM users
+         WHERE organisation_id = $1
+           AND role = 'admin'
+           AND is_active = TRUE`,
+        [request.organisation_id]
+      );
+
+      for (const admin of adminsResult.rows) {
+        await notificationService.createNotification({
+          userId: admin.id,
+          organisationId: request.organisation_id,
+          type: 'system',
+          priority: 'normal',
+          title: 'Access Request Info Received',
+          message: `Additional information was submitted for ${referenceNumber}.`,
+          relatedType: 'access_request',
+          relatedId: request.id,
+          metadata: {
+            referenceNumber,
+            applicantName: request.full_name,
+            applicantEmail: email
+          }
+        });
+      }
+    } catch (notifyErr) {
+      console.error('[AccessRequest] Failed to create admin info-response notifications:', notifyErr.message);
+      // Do not fail applicant response submission if notification fails.
+    }
+  }
   
   return {
     success: true,
@@ -762,14 +894,16 @@ const submitInfoResponse = async ({
 /**
  * Send info request email to applicant
  */
-const sendInfoRequestEmail = async ({ email, name, referenceNumber, message }) => {
-  const responseUrl = `${env.frontendUrl}/access-request/respond?ref=${referenceNumber}&email=${encodeURIComponent(email)}`;
+const sendInfoRequestEmail = async ({ email, name, referenceNumber, message, responseToken, passphrase, expiryHours }) => {
+  const responseUrl = `${env.frontendUrl}/access-request/respond?ref=${referenceNumber}&email=${encodeURIComponent(email)}&token=${encodeURIComponent(responseToken)}`;
   
   const template = emailTemplates.additionalInfoRequired({
     name,
     referenceNumber,
     message,
-    responseUrl
+    responseUrl,
+    passphrase,
+    expiryHours
   });
   
   await sendEmail({

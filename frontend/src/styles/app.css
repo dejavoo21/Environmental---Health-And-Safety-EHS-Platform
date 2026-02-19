@@ -2226,8 +2226,16 @@ textarea:focus {
 }
 
 .support-box a {
-  color: var(--color-primary);
+  color: #0f766e;
   text-decoration: underline;
+}
+
+.support-box a:visited {
+  color: #0f766e;
+}
+
+.support-box a:hover {
+  color: #0d5f59;
 }
 
 .help-article h2 {
@@ -2898,6 +2906,7 @@ textarea:focus {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1rem;
+  background: var(--color-bg-card);
 }
 
 .reports-page .report-filters label {
@@ -2941,9 +2950,13 @@ textarea:focus {
 }
 
 .reports-page .report-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-card);
   justify-content: flex-end;
 }
 
@@ -4127,6 +4140,30 @@ textarea:focus {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+}
+
+/* Analytics filter quick actions (All/Clear) */
+.filter-panel .filter-label-row .btn.btn-link.btn-xs {
+  background: #0f766e;
+  color: #ffffff;
+  border: 1px solid #0f766e;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.filter-panel .filter-label-row .btn.btn-link.btn-xs:hover:not(:disabled) {
+  background: #0d5f59;
+  border-color: #0d5f59;
+  color: #ffffff;
+}
+
+.filter-panel .filter-label-row .btn.btn-link.btn-xs:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .filter-select,
@@ -6603,6 +6640,57 @@ textarea:focus {
 
 .admin-sites-page .admin-table-column {
   min-width: 0; /* Allow table to shrink */
+}
+
+.admin-sites-page .admin-sites-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 0.25rem;
+}
+
+.admin-sites-page .table-card table {
+  width: 100%;
+  min-width: 860px;
+  table-layout: fixed;
+}
+
+.admin-sites-page .table-card .col-name,
+.admin-sites-page .table-card .cell-name {
+  width: 20%;
+}
+
+.admin-sites-page .table-card .col-code,
+.admin-sites-page .table-card .cell-code {
+  width: 10%;
+}
+
+.admin-sites-page .table-card .col-location,
+.admin-sites-page .table-card .cell-location {
+  width: 22%;
+}
+
+.admin-sites-page .table-card .col-timezone,
+.admin-sites-page .table-card .cell-timezone {
+  width: 28%;
+}
+
+.admin-sites-page .table-card .cell-timezone {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.admin-sites-page .table-card .col-actions,
+.admin-sites-page .table-card .cell-actions {
+  width: 20%;
+  min-width: 140px;
+  white-space: nowrap;
+  text-align: center;
+  padding-right: 1.25rem;
+}
+
+.admin-sites-page .table-card .cell-actions .btn {
+  margin-right: 0;
 }
 
 .admin-sites-page .admin-form-card {

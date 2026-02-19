@@ -232,13 +232,13 @@ router.post('/admin/:id/request-info', authMiddleware, requireRole('admin'), asy
  * Submit additional information response (public - for applicant)
  */
 router.post('/respond', async (req, res, next) => {
-  const { referenceNumber, email, response } = req.body || {};
+  const { referenceNumber, email, token, passphrase, response } = req.body || {};
   
-  if (!referenceNumber || !email || !response) {
+  if (!referenceNumber || !email || !token || !passphrase || !response) {
     return res.status(400).json({ 
       success: false, 
       error: 'VALIDATION_ERROR', 
-      message: 'Reference number, email, and response are required.' 
+      message: 'Reference number, email, token, OTP/passphrase, and response are required.' 
     });
   }
   
@@ -246,6 +246,8 @@ router.post('/respond', async (req, res, next) => {
     const result = await accessRequestService.submitInfoResponse({
       referenceNumber,
       email,
+      token,
+      passphrase,
       response: response.trim(),
       ipAddress: getClientIp(req)
     });

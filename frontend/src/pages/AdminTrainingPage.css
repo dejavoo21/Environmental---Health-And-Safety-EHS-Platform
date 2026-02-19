@@ -27,6 +27,18 @@
   color: var(--text-secondary);
 }
 
+/* Keep Training Admin primary actions aligned with app brand, not generic blue overrides */
+.admin-training-page .btn.btn-primary {
+  background: #0f766e;
+  border: 1px solid #0f766e;
+  color: #ffffff;
+}
+
+.admin-training-page .btn.btn-primary:hover:not(:disabled) {
+  background: #0d5f59;
+  border-color: #0d5f59;
+}
+
 /* Tabs */
 .admin-training-tabs {
   display: flex;

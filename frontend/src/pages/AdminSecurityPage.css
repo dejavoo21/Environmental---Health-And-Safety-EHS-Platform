@@ -213,41 +213,66 @@
 }
 
 /* Activity List */
-.activity-list {
+.admin-security-page .activity-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.activity-item {
+.admin-security-page .activity-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.625rem 0.75rem;
+  padding: 0.75rem 0.875rem;
   background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   border-radius: 8px;
 }
 
-.activity-content {
+.admin-security-page .activity-content {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.activity-action {
+.admin-security-page .activity-action {
   font-weight: 500;
   color: var(--text-primary);
   text-transform: capitalize;
 }
 
-.activity-user {
+.admin-security-page .activity-user {
   font-size: 0.8125rem;
   color: var(--text-secondary);
 }
 
-.activity-time {
+.admin-security-page .activity-time {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.admin-security-page .security-section--recent-activity {
+  margin-bottom: 0;
+}
+
+.admin-security-page .recent-activity-footer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.admin-security-page .activity-view-all-btn {
+  background: #0f766e;
+  color: #ffffff;
+  border: 1px solid #0f766e;
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+}
+
+.admin-security-page .activity-view-all-btn:hover {
+  background: #0d5f59;
+  border-color: #0d5f59;
 }
 
 /* Action Icons */
