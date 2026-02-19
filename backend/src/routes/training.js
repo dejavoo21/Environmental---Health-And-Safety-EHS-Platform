@@ -348,7 +348,7 @@ router.get('/assignments', async (req, res, next) => {
     };
 
     // Non-managers only see their own
-    if (req.user.role !== 'admin' && req.user.role !== 'manager') {
+    if (req.user.role !== 'admin' && req.user.role !== 'manager' && req.user.role !== 'super_admin') {
       options.userId = req.user.id;
     } else if (req.query.userId) {
       options.userId = req.query.userId;
@@ -390,7 +390,7 @@ router.get('/assignments/:id', async (req, res, next) => {
     );
     
     // Check access
-    if (req.user.role !== 'admin' && req.user.role !== 'manager' && assignment.user.id !== req.user.id) {
+    if (req.user.role !== 'admin' && req.user.role !== 'manager' && req.user.role !== 'super_admin' && assignment.user.id !== req.user.id) {
       throw new AppError('Access denied', 403, 'FORBIDDEN');
     }
     
@@ -530,7 +530,7 @@ router.get('/completions', async (req, res, next) => {
     };
     
     // Non-managers only see their own
-    if (req.user.role !== 'admin' && req.user.role !== 'manager') {
+    if (req.user.role !== 'admin' && req.user.role !== 'manager' && req.user.role !== 'super_admin') {
       options.userId = req.user.id;
     } else if (req.query.userId) {
       options.userId = req.query.userId;
@@ -555,7 +555,7 @@ router.get('/completions/:id', async (req, res, next) => {
     );
     
     // Check access
-    if (req.user.role !== 'admin' && req.user.role !== 'manager' && completion.user.id !== req.user.id) {
+    if (req.user.role !== 'admin' && req.user.role !== 'manager' && req.user.role !== 'super_admin' && completion.user.id !== req.user.id) {
       throw new AppError('Access denied', 403, 'FORBIDDEN');
     }
     

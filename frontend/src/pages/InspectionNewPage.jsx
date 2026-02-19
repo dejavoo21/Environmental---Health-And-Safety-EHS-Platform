@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { ErrorState, LoadingState } from '../components/States';
 
 const InspectionNewPage = () => {
@@ -104,7 +105,7 @@ const InspectionNewPage = () => {
   if (error && !sites.length) return <ErrorState message={error} />;
 
   // Improved empty state with specific messages
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = hasRole(user?.role, 'admin');
   if (!sites.length && !templates.length) {
     return (
       <div className="card form-card">

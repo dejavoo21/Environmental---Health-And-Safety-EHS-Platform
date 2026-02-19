@@ -240,8 +240,7 @@ const SafetyMoments = () => {
 
   const isAdmin = currentUser.roles.includes('admin') || currentUser.roles.includes('safety_manager');
   return (
-    <div className="page admin-safety-moments" aria-labelledby="safety-moments-heading">
-      <h2 id="safety-moments-heading">Safety Moments</h2>
+    <div className="page admin-safety-moments" aria-label="Safety Moments">
       <div className="admin-desc">Create and schedule safety messages to display on dashboards and task pages.</div>
       <div className="admin-toolbar" role="region" aria-label="Safety Moments Filters and Actions">
         <label htmlFor="filter-site" className="sr-only">Filter by Site</label>
@@ -273,11 +272,11 @@ const SafetyMoments = () => {
         <button type="button" onClick={handleExportCSV} className="admin-export-btn" aria-label="Export CSV">Export CSV</button>
         <button type="button" onClick={() => fileInputRef.current && fileInputRef.current.click()} className="admin-import-btn" aria-label="Import CSV">Import CSV</button>
         <input type="file" accept=".csv" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImportCSV} aria-label="Import CSV file" />
-        {isAdmin && (
-          <button className="btn primary" onClick={handleCreate} aria-label="Create Safety Moment">Create Safety Moment</button>
-        )}
         {isAdmin && selected.length > 0 && (
           <button className="admin-bulk-archive-btn" onClick={handleBulkArchive} aria-label="Archive Selected Safety Moments">Archive Selected</button>
+        )}
+        {isAdmin && (
+          <button className="btn primary create-safety-moment-btn" onClick={handleCreate} aria-label="Create Safety Moment">Create Safety Moment</button>
         )}
       </div>
       {/* Notification Toast */}

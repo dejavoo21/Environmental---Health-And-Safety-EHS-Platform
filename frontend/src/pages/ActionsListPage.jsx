@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 
 // P2-J3: My Actions, P2-J4: All Actions
@@ -20,7 +21,7 @@ const ActionsListPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const canViewAll = user?.role === 'manager' || user?.role === 'admin';
+  const canViewAll = hasRole(user?.role, 'manager');
 
   const loadSites = async () => {
     try {

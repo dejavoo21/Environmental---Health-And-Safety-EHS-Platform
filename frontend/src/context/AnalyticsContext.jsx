@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import api from '../api/client';
 
 const AnalyticsContext = createContext({
@@ -242,7 +243,7 @@ export const AnalyticsProvider = ({ children }) => {
 
   // Initial load
   useEffect(() => {
-    if (user && (user.role === 'manager' || user.role === 'admin')) {
+    if (user && hasRole(user.role, 'manager')) {
       refreshData();
     }
   }, [user]);

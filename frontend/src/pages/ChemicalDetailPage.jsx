@@ -5,6 +5,7 @@ import { getChemical, updateChemical, getChemicalLocations, addChemicalLocation,
          getChemicalIncidents, getChemicalActions } from '../api/chemicals';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { GHSHazardPanel, SDSStatusBadge, SDSDocumentCard, ChemicalStatusBadge } from '../components/chemicals';
 import { ErrorState, LoadingState } from '../components/States';
 import AppIcon from '../components/AppIcon';
@@ -33,7 +34,7 @@ const ChemicalDetailPage = () => {
   const [showSDSUpload, setShowSDSUpload] = useState(false);
   const [showAddLocation, setShowAddLocation] = useState(false);
 
-  const canEdit = user?.role === 'manager' || user?.role === 'admin';
+  const canEdit = hasRole(user?.role, 'manager');
 
   const loadChemical = async () => {
     try {

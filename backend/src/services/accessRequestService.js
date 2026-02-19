@@ -11,6 +11,7 @@ const emailTemplates = require('../utils/emailTemplates');
 const env = require('../config/env');
 const securityAuditService = require('./securityAuditService');
 const notificationService = require('./notificationService');
+const { normalizePhone } = require('./accessRevalidationService');
 
 // Constants
 const DEFAULT_EXPIRE_DAYS = 30;
@@ -27,6 +28,7 @@ const submitAccessRequest = async ({
   fullName,
   organisationCode,
   requestedRole = 'worker',
+  mobilePhone = null,
   reason = null,
   termsAccepted = false,
   ipAddress = null,
@@ -54,6 +56,11 @@ const submitAccessRequest = async ({
     // Validate role
     if (!['worker', 'manager'].includes(requestedRole)) {
       return { success: false, error: 'INVALID_ROLE', message: 'Invalid role requested.' };
+    }
+
+    const normalizedMobilePhone = normalizePhone(mobilePhone);
+    if (mobilePhone && !/^\+\d{7,15}$/.test(normalizedMobilePhone)) {
+      return { success: false, error: 'INVALID_MOBILE', message: 'Please provide a valid mobile number, including country code.' };
     }
     
     // Validate reason length if provided
@@ -123,8 +130,8 @@ const submitAccessRequest = async ({
     const insertResult = await query(
       `INSERT INTO access_requests (
         email, full_name, organisation_id, organisation_code, requested_role,
-        reason, terms_accepted, ip_address, user_agent, expires_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        mobile_phone, reason, terms_accepted, ip_address, user_agent, expires_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING id, reference_number, created_at`,
       [
         email.toLowerCase().trim(),
@@ -132,6 +139,7 @@ const submitAccessRequest = async ({
         organisationId,
         organisationCode ? organisationCode.toLowerCase().trim() : null,
         requestedRole,
+        normalizedMobilePhone || null,
         reason,
         termsAccepted,
         ipAddress,
@@ -256,7 +264,7 @@ const listAccessRequests = async ({
   const dataResult = await query(
     `SELECT 
       ar.id, ar.reference_number, ar.email, ar.full_name, ar.requested_role,
-      ar.reason, ar.status, ar.created_at, ar.expires_at,
+      ar.mobile_phone, ar.reason, ar.status, ar.created_at, ar.expires_at,
       ar.info_requested_at, ar.info_request_message, ar.info_response, ar.info_responded_at,
       u.name AS decided_by_name, ar.decision_at
      FROM access_requests ar
@@ -290,6 +298,7 @@ const listAccessRequests = async ({
       email: row.email,
       fullName: row.full_name,
       requestedRole: row.requested_role,
+      mobilePhone: row.mobile_phone,
       reason: row.reason,
       status: row.status,
       createdAt: row.created_at,
@@ -340,6 +349,7 @@ const getAccessRequest = async (id, organisationId) => {
     organisationId: row.organisation_id,
     organisationCode: row.organisation_code,
     requestedRole: row.requested_role,
+    mobilePhone: row.mobile_phone,
     reason: row.reason,
     status: row.status,
     decisionBy: row.decision_by,
@@ -412,15 +422,16 @@ const approveAccessRequest = async ({
   // Create user
   const userResult = await query(
     `INSERT INTO users (
-      email, name, password_hash, role, organisation_id, is_active, force_password_change
-    ) VALUES ($1, $2, $3, $4, $5, TRUE, TRUE)
+      email, name, password_hash, role, organisation_id, mobile_phone, is_active, force_password_change
+    ) VALUES ($1, $2, $3, $4, $5, $6, TRUE, TRUE)
     RETURNING id, email, name, role`,
     [
       request.email,
       request.fullName,
       passwordHash,
       assignedRole || request.requestedRole,
-      organisationId
+      organisationId,
+      request.mobilePhone || null
     ]
   );
   

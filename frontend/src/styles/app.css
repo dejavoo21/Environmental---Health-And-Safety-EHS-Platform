@@ -2334,6 +2334,11 @@ textarea:focus {
   color: #fff;
 }
 
+.role-super-admin {
+  background: #7c3aed;
+  color: #fff;
+}
+
 .role-manager {
   background: #4a8dbd;
   color: #fff;
@@ -6735,4 +6740,156 @@ textarea:focus {
   .admin-sites-page .admin-form-column {
     position: static;
   }
+}
+
+/* Keep Safety Moments toolbar actions aligned on one desktop row */
+.admin-safety-moments .admin-toolbar {
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+}
+
+.admin-safety-moments .admin-filter-site,
+.admin-safety-moments .admin-filter-role,
+.admin-safety-moments .admin-filter-status {
+  min-width: 140px;
+}
+
+.admin-safety-moments .admin-search {
+  flex: 1;
+  min-width: 220px;
+}
+
+.admin-safety-moments .admin-export-btn,
+.admin-safety-moments .admin-import-btn,
+.admin-safety-moments .btn.primary {
+  white-space: nowrap;
+}
+
+.admin-safety-moments .create-safety-moment-btn {
+  margin-left: auto;
+}
+
+@media (max-width: 1400px) {
+  .admin-safety-moments .admin-toolbar {
+    flex-wrap: wrap;
+  }
+}
+
+/* Keep Site Legislation toolbar actions aligned on one desktop row */
+.admin-site-legislation .admin-toolbar {
+  flex-wrap: nowrap;
+  gap: 0.75rem;
+}
+
+.admin-site-legislation .admin-filter-site,
+.admin-site-legislation .admin-filter-jurisdiction,
+.admin-site-legislation .admin-filter-category {
+  min-width: 140px;
+}
+
+.admin-site-legislation .admin-search {
+  flex: 1;
+  min-width: 220px;
+}
+
+.admin-site-legislation .admin-export-btn,
+.admin-site-legislation .admin-import-btn,
+.admin-site-legislation .btn.primary {
+  white-space: nowrap;
+}
+
+@media (max-width: 1400px) {
+  .admin-site-legislation .admin-toolbar {
+    flex-wrap: wrap;
+  }
+}
+
+.help-chatbot {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1200;
+}
+
+.help-chatbot-fab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  background: var(--color-success);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.help-chatbot-panel {
+  width: min(360px, calc(100vw - 2rem));
+  max-height: min(70vh, 560px);
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  overflow: hidden;
+}
+
+.help-chatbot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.help-chatbot-body {
+  overflow-y: auto;
+  padding: 0.75rem 0.9rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.help-chatbot-message {
+  max-width: 90%;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+}
+
+.help-chatbot-message.user {
+  justify-self: end;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.help-chatbot-message p {
+  margin: 0;
+}
+
+.help-chatbot-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.65rem 0.9rem 0;
+}
+
+.help-chatbot-quick .btn.secondary {
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+}
+
+.help-chatbot-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.75rem 0.9rem 0.9rem;
+}
+
+.help-chatbot-input input {
+  flex: 1;
+  min-width: 0;
 }

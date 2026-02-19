@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import {
   listRisks,
   listCategories,
@@ -52,8 +53,8 @@ const RisksListPage = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   
   // Check permissions
-  const canCreate = user?.role === 'manager' || user?.role === 'admin';
-  const canViewHeatmap = user?.role === 'manager' || user?.role === 'admin';
+  const canCreate = hasRole(user?.role, 'manager');
+  const canViewHeatmap = hasRole(user?.role, 'manager');
   
   // Fetch risks
   const fetchRisks = useCallback(async () => {

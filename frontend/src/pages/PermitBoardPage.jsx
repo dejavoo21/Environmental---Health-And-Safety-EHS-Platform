@@ -4,6 +4,7 @@ import { getPermitBoard, getPermitTypes, approvePermit, rejectPermit,
          activatePermit, suspendPermit, closePermit } from '../api/permits';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { PermitCard } from '../components/permits';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { Calendar, RefreshCcw } from 'lucide-react';
@@ -36,7 +37,7 @@ const PermitBoardPage = () => {
   const [actionNotes, setActionNotes] = useState('');
   const [actionProcessing, setActionProcessing] = useState(false);
 
-  const canManage = user?.role === 'manager' || user?.role === 'admin';
+  const canManage = hasRole(user?.role, 'manager');
 
   const loadData = useCallback(async () => {
     try {

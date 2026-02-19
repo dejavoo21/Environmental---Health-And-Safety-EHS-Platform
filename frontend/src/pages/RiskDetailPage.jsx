@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import AppIcon from '../components/AppIcon';
 import {
   getRisk,
@@ -82,8 +83,8 @@ const RiskDetailPage = () => {
   const [deleteTarget, setDeleteTarget] = useState(null);
   
   // Check permissions
-  const canEdit = user?.role === 'manager' || user?.role === 'admin';
-  const canDelete = user?.role === 'admin';
+  const canEdit = hasRole(user?.role, 'manager');
+  const canDelete = hasRole(user?.role, 'admin');
   const isOwner = risk?.owner_id === user?.id;
   
   // Fetch risk data

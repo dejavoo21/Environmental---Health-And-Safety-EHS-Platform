@@ -31,6 +31,7 @@ import NotificationPreferencesPage from './pages/NotificationPreferencesPage';
 import SecurityPage from './pages/SecurityPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { LoadingState } from './components/States';
+import { hasAnyRole } from './utils/roles';
 // Phase 7: Chemical & Permit Management
 import ChemicalRegisterPage from './pages/ChemicalRegisterPage';
 import ChemicalDetailPage from './pages/ChemicalDetailPage';
@@ -74,7 +75,7 @@ const RequireAuth = ({ children, roles }) => {
     return <Navigate to="/change-password" replace />;
   }
 
-  if (roles && !roles.includes(user.role)) {
+  if (roles && !hasAnyRole(user.role, roles)) {
     return <Navigate to="/" replace />;
   }
 

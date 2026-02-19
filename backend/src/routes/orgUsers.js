@@ -1,15 +1,45 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
 const { query } = require('../config/db');
 const { AppError } = require('../utils/appError');
 const { requireRole } = require('../middleware/requireRole');
 const { orgScopeMiddleware } = require('../middleware/orgScope');
 const { toIso, splitName } = require('../utils/format');
 const { recordAudit } = require('../utils/audit');
+const env = require('../config/env');
+const { hasRequiredRole } = require('../utils/roles');
 
 const router = express.Router();
 
-const validRoles = new Set(['worker', 'manager', 'admin']);
+const validRoles = new Set(['worker', 'manager', 'admin', 'super_admin']);
+
+const photoStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(process.cwd(), env.uploadsDir, 'profile-photos', req.orgId);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname || '').toLowerCase() || '.jpg';
+    cb(null, `${req.params.id}_${Date.now()}${ext}`);
+  }
+});
+
+const photoUpload = multer({
+  storage: photoStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype || !file.mimetype.startsWith('image/')) {
+      return cb(new AppError('Only image files are allowed for profile photo.', 400, 'INVALID_FILE_TYPE'));
+    }
+    cb(null, true);
+  }
+});
 
 // Apply orgScope middleware to all routes
 router.use(orgScopeMiddleware);
@@ -26,6 +56,7 @@ const mapUserRow = (row) => ({
   name: row.name,
   role: row.role,
   isActive: row.is_active,
+  profilePhotoUrl: row.profile_photo_url || null,
   createdAt: toIso(row.created_at),
   updatedAt: toIso(row.updated_at)
 });
@@ -55,7 +86,7 @@ router.get('/', async (req, res, next) => {
 
   try {
     const result = await query(
-      `SELECT id, email, name, role, is_active, created_at, updated_at
+      `SELECT id, email, name, role, is_active, profile_photo_url, created_at, updated_at
        FROM users
        WHERE ${conditions.join(' AND ')}
        ORDER BY name`,
@@ -104,7 +135,10 @@ router.post('/', async (req, res, next) => {
   }
 
   if (!role || !validRoles.has(role)) {
-    return next(new AppError('Role must be worker, manager, or admin', 400, 'INVALID_ROLE'));
+    return next(new AppError('Role must be worker, manager, admin, or super admin', 400, 'INVALID_ROLE'));
+  }
+  if (role === 'super_admin' && req.user.role !== 'super_admin') {
+    return next(new AppError('Only a super admin can assign super admin role', 403, 'FORBIDDEN'));
   }
 
   try {
@@ -124,7 +158,7 @@ router.post('/', async (req, res, next) => {
     const result = await query(
       `INSERT INTO users (email, name, password_hash, role, organisation_id, is_active)
        VALUES ($1, $2, $3, $4, $5, TRUE)
-       RETURNING id, email, name, role, is_active, created_at, updated_at`,
+       RETURNING id, email, name, role, is_active, profile_photo_url, created_at, updated_at`,
       [email.toLowerCase(), name.trim(), passwordHash, role, req.orgId]
     );
 
@@ -157,7 +191,7 @@ router.get('/:id', async (req, res, next) => {
 
   try {
     const result = await query(
-      `SELECT id, email, name, role, is_active, created_at, updated_at
+      `SELECT id, email, name, role, is_active, profile_photo_url, created_at, updated_at
        FROM users
        WHERE id = $1 AND organisation_id = $2`,
       [id, req.orgId]
@@ -190,7 +224,10 @@ router.put('/:id', async (req, res, next) => {
 
   // Validate role if provided
   if (role !== undefined && !validRoles.has(role)) {
-    return next(new AppError('Role must be worker, manager, or admin', 400, 'INVALID_ROLE'));
+    return next(new AppError('Role must be worker, manager, admin, or super admin', 400, 'INVALID_ROLE'));
+  }
+  if (role === 'super_admin' && req.user.role !== 'super_admin') {
+    return next(new AppError('Only a super admin can assign super admin role', 403, 'FORBIDDEN'));
   }
 
   // Validate email if provided
@@ -222,6 +259,9 @@ router.put('/:id', async (req, res, next) => {
     }
 
     const oldUser = existing.rows[0];
+    if (oldUser.role === 'super_admin' && req.user.role !== 'super_admin') {
+      return next(new AppError('Only a super admin can modify a super admin account', 403, 'FORBIDDEN'));
+    }
 
     // Check email uniqueness if changing email
     if (email && email.toLowerCase() !== oldUser.email) {
@@ -242,7 +282,7 @@ router.put('/:id', async (req, res, next) => {
            role = COALESCE($3, role),
            updated_at = NOW()
        WHERE id = $4 AND organisation_id = $5
-       RETURNING id, email, name, role, is_active, created_at, updated_at`,
+       RETURNING id, email, name, role, is_active, profile_photo_url, created_at, updated_at`,
       [email ? email.toLowerCase() : null, name ? name.trim() : null, role || null, id, req.orgId]
     );
 
@@ -290,15 +330,22 @@ router.post('/:id/disable', async (req, res, next) => {
     }
 
     const user = existing.rows[0];
+    if (user.role === 'super_admin' && req.user.role !== 'super_admin') {
+      return next(new AppError('Only a super admin can disable a super admin account', 403, 'FORBIDDEN'));
+    }
 
-    // Check if this is the last admin
-    if (user.role === 'admin') {
+    // Check if this is the last privileged admin/super admin
+    if (hasRequiredRole(user.role, 'admin')) {
       const adminCount = await query(
-        'SELECT COUNT(*) AS cnt FROM users WHERE organisation_id = $1 AND role = $2 AND is_active = TRUE',
-        [req.orgId, 'admin']
+        `SELECT COUNT(*) AS cnt
+         FROM users
+         WHERE organisation_id = $1
+           AND role IN ('admin', 'super_admin')
+           AND is_active = TRUE`,
+        [req.orgId]
       );
       if (parseInt(adminCount.rows[0].cnt, 10) <= 1) {
-        return next(new AppError('Cannot disable the only active admin in the organisation', 400, 'LAST_ADMIN'));
+        return next(new AppError('Cannot disable the only active admin/super admin in the organisation', 400, 'LAST_ADMIN'));
       }
     }
 
@@ -348,11 +395,14 @@ router.post('/:id/enable', async (req, res, next) => {
   try {
     // Check user exists in org
     const existing = await query(
-      'SELECT id FROM users WHERE id = $1 AND organisation_id = $2',
+      'SELECT id, role FROM users WHERE id = $1 AND organisation_id = $2',
       [id, req.orgId]
     );
     if (existing.rowCount === 0) {
       return next(new AppError('User not found', 404, 'USER_NOT_FOUND'));
+    }
+    if (existing.rows[0].role === 'super_admin' && req.user.role !== 'super_admin') {
+      return next(new AppError('Only a super admin can enable a super admin account', 403, 'FORBIDDEN'));
     }
 
     // Enable user
@@ -410,11 +460,14 @@ router.post('/:id/reset-password', async (req, res, next) => {
   try {
     // Check user exists in org
     const existing = await query(
-      'SELECT id FROM users WHERE id = $1 AND organisation_id = $2',
+      'SELECT id, role FROM users WHERE id = $1 AND organisation_id = $2',
       [id, req.orgId]
     );
     if (existing.rowCount === 0) {
       return next(new AppError('User not found', 404, 'USER_NOT_FOUND'));
+    }
+    if (existing.rows[0].role === 'super_admin' && req.user.role !== 'super_admin') {
+      return next(new AppError('Only a super admin can reset a super admin password', 403, 'FORBIDDEN'));
     }
 
     // Hash new password
@@ -444,6 +497,63 @@ router.post('/:id/reset-password', async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
+});
+
+router.post('/:id/profile-photo', (req, res, next) => {
+  photoUpload.single('file')(req, res, async (err) => {
+    if (err) {
+      return next(err);
+    }
+
+    const { id } = req.params;
+    if (!req.file) {
+      return next(new AppError('Profile photo file is required.', 400, 'FILE_REQUIRED'));
+    }
+
+    try {
+      const existing = await query(
+        'SELECT id, profile_photo_url FROM users WHERE id = $1 AND organisation_id = $2',
+        [id, req.orgId]
+      );
+      if (existing.rowCount === 0) {
+        return next(new AppError('User not found', 404, 'USER_NOT_FOUND'));
+      }
+
+      const oldPhotoUrl = existing.rows[0].profile_photo_url;
+      const photoUrl = `/uploads/profile-photos/${req.orgId}/${req.file.filename}`;
+
+      const updated = await query(
+        `UPDATE users
+         SET profile_photo_url = $1, updated_at = NOW()
+         WHERE id = $2 AND organisation_id = $3
+         RETURNING id, email, name, role, is_active, profile_photo_url, created_at, updated_at`,
+        [photoUrl, id, req.orgId]
+      );
+
+      if (oldPhotoUrl && oldPhotoUrl !== photoUrl) {
+        try {
+          const oldPath = path.join(process.cwd(), env.uploadsDir, oldPhotoUrl.replace(/^\/uploads\//, ''));
+          if (fs.existsSync(oldPath)) {
+            fs.unlinkSync(oldPath);
+          }
+        } catch (cleanupErr) {
+          console.warn('[OrgUsers] Failed to cleanup old profile photo:', cleanupErr.message);
+        }
+      }
+
+      await recordAudit({
+        eventType: 'user_profile_photo_updated',
+        entityType: 'user',
+        entityId: id,
+        userId: req.user.id,
+        organisationId: req.orgId
+      });
+
+      return res.json({ data: mapUserRow(updated.rows[0]) });
+    } catch (uploadErr) {
+      return next(uploadErr);
+    }
+  });
 });
 
 module.exports = router;

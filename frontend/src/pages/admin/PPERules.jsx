@@ -271,7 +271,7 @@ const PPERules = () => {
         <button type="button" onClick={() => fileInputRef.current && fileInputRef.current.click()} className="admin-import-btn" aria-label="Import CSV">Import CSV</button>
         <input type="file" accept=".csv" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImportCSV} aria-label="Import CSV file" />
         {isAdmin && (
-          <button className="admin-add-btn" onClick={handleAdd} aria-label="Add PPE Rule">Add PPE Rule</button>
+          <button className="btn primary" onClick={handleAdd} aria-label="Add PPE Rule">Add PPE Rule</button>
         )}
         {isAdmin && selected.length > 0 && (
           <button className="admin-bulk-archive-btn" onClick={handleBulkArchive} aria-label="Archive Selected PPE Rules">Archive Selected</button>

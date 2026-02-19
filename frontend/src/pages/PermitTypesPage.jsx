@@ -4,6 +4,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { getPermitTypes } from '../api/permits';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { LoadingState, ErrorState, EmptyState } from '../components/States';
 import AppIcon from '../components/AppIcon';
 import './PermitTypesPage.css';
@@ -48,7 +49,7 @@ const PermitTypesPage = () => {
   });
   const [saving, setSaving] = useState(false);
 
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = hasRole(user?.role, 'admin');
 
   useEffect(() => {
     if (!isAdmin) {

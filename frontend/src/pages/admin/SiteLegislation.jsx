@@ -240,8 +240,7 @@ const SiteLegislation = () => {
 
   const isAdmin = currentUser.roles.includes('admin') || currentUser.roles.includes('safety_manager');
   return (
-    <div className="page admin-site-legislation" aria-labelledby="site-legislation-heading">
-      <h2 id="site-legislation-heading">Site Legislation</h2>
+    <div className="page admin-site-legislation" aria-label="Site Legislation">
       <div className="admin-toolbar" role="region" aria-label="Site Legislation Filters and Actions">
         <label htmlFor="filter-site-leg" className="sr-only">Filter by Site</label>
         <select id="filter-site-leg" className="admin-filter-site" value={filterSite} onChange={e => { setFilterSite(e.target.value); setPage(1); }} aria-label="Filter by site">
@@ -271,7 +270,7 @@ const SiteLegislation = () => {
         <button type="button" onClick={() => fileInputRef.current && fileInputRef.current.click()} className="admin-import-btn" aria-label="Import CSV">Import CSV</button>
         <input type="file" accept=".csv" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImportCSV} aria-label="Import CSV file" />
         {isAdmin && (
-          <button className="admin-add-btn" onClick={handleAdd} aria-label="Add Legislation">Add Legislation</button>
+          <button className="btn primary" onClick={handleAdd} aria-label="Add Legislation">Add Legislation</button>
         )}
         {isAdmin && selected.length > 0 && (
           <button className="admin-bulk-archive-btn" onClick={handleBulkArchive} aria-label="Archive Selected Legislation">Archive Selected</button>

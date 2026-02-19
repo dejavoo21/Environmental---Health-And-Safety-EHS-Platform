@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { ErrorState, LoadingState } from './States';
 
 // P2-J1, P2-J2: Actions linked to incidents/inspections
@@ -12,7 +13,7 @@ const ActionsPanel = ({ sourceType, sourceId, onCreateAction }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const canCreateAction = user?.role === 'manager' || user?.role === 'admin';
+  const canCreateAction = hasRole(user?.role, 'manager');
   const sourceLabel = sourceType === 'incident' ? 'incident' : 'inspection';
 
   useEffect(() => {

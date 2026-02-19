@@ -82,6 +82,10 @@ const env = {
   loginHistoryRetentionDays: Number(process.env.LOGIN_HISTORY_RETENTION_DAYS || 90),
   securityAuditRetentionDays: Number(process.env.SECURITY_AUDIT_RETENTION_DAYS || 730),
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  // Optional SMS provider settings for OTP delivery
+  twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || '',
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || '',
+  twilioFromNumber: process.env.TWILIO_FROM_NUMBER || '',
   // Phase 10 Integrations configuration
   backendUrl: process.env.BACKEND_URL || 'http://localhost:3001',
   encryptionKey: process.env.ENCRYPTION_KEY || process.env.TOTP_ENCRYPTION_KEY || '',

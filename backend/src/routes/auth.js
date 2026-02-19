@@ -9,6 +9,7 @@ const { authMiddleware } = require('../middleware/auth');
 const passwordResetService = require('../services/passwordResetService');
 const securityAuditService = require('../services/securityAuditService');
 const twoFactorService = require('../services/twoFactorService');
+const accessRevalidationService = require('../services/accessRevalidationService');
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ const router = express.Router();
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
 const TEMP_TOKEN_EXPIRY = '5m';
+const REVALIDATION_TOKEN_EXPIRY = '10m';
 
 // Helper to get client IP
 const getClientIp = (req) => {
@@ -60,10 +62,75 @@ const recordLoginHistory = async ({
   );
 };
 
+const buildAuthResponse = (user, token) => {
+  const nameParts = splitName(user.name);
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      firstName: nameParts.firstName,
+      lastName: nameParts.lastName,
+      name: user.name,
+      role: user.role,
+      organisationId: user.organisation_id,
+      organisationName: user.org_name,
+      organisationSlug: user.org_slug,
+      themePreference: user.theme_preference,
+      forcePasswordChange: user.force_password_change || false
+    }
+  };
+};
+
+const finalizeLogin = async ({
+  user,
+  ipAddress,
+  userAgent,
+  mfaUsed = false
+}) => {
+  await query(
+    `UPDATE users
+     SET failed_login_attempts = 0, locked_until = NULL, last_login_at = NOW(), last_login_ip = $1
+     WHERE id = $2`,
+    [ipAddress, user.id]
+  );
+
+  await securityAuditService.logLoginAttempt({
+    success: true,
+    userId: user.id,
+    organisationId: user.organisation_id,
+    ipAddress,
+    userAgent
+  });
+
+  await recordLoginHistory({
+    userId: user.id,
+    organisationId: user.organisation_id,
+    ipAddress,
+    userAgent,
+    success: true,
+    mfaUsed
+  });
+
+  const token = jwt.sign(
+    {
+      sub: user.id,
+      role: user.role,
+      organisationId: user.organisation_id,
+      organisationSlug: user.org_slug
+    },
+    env.jwtSecret,
+    { expiresIn: env.jwtExpiresIn }
+  );
+
+  return buildAuthResponse(user, token);
+};
+
 router.post('/login', async (req, res, next) => {
   const { email, password } = req.body || {};
   const ipAddress = getClientIp(req);
   const userAgent = req.headers['user-agent'];
+  const trustedDeviceToken = req.headers['x-trusted-device-token'];
   
   if (!email || !password) {
     return next(new AppError('Invalid email or password', 401, 'INVALID_CREDENTIALS'));
@@ -73,7 +140,7 @@ router.post('/login', async (req, res, next) => {
     const result = await query(
       `SELECT u.id, u.email, u.name, u.role, u.password_hash, u.is_active, u.organisation_id,
               u.has_2fa_enabled, u.failed_login_attempts, u.locked_until, u.theme_preference,
-              u.force_password_change,
+              u.force_password_change, u.mobile_phone, u.last_access_revalidated_at,
               o.name AS org_name, o.slug AS org_slug
        FROM users u
        LEFT JOIN organisations o ON o.id = u.organisation_id
@@ -195,6 +262,53 @@ router.post('/login', async (req, res, next) => {
       return next(new AppError('Invalid email or password', 401, 'INVALID_CREDENTIALS'));
     }
 
+    const revalidationRequired = accessRevalidationService.isRevalidationRequired(user.last_access_revalidated_at);
+    let trustedDeviceValidated = false;
+
+    if (revalidationRequired) {
+      if (trustedDeviceToken) {
+        const trustedDevice = await accessRevalidationService.validateTrustedDevice({
+          userId: user.id,
+          token: trustedDeviceToken
+        });
+        if (trustedDevice.valid) {
+          await query(
+            `UPDATE users
+             SET last_access_revalidated_at = NOW()
+             WHERE id = $1`,
+            [user.id]
+          );
+          trustedDeviceValidated = true;
+        }
+      }
+    }
+
+    if (revalidationRequired && !trustedDeviceValidated) {
+      const revalidationToken = jwt.sign(
+        {
+          sub: user.id,
+          type: 'revalidation_pending',
+          organisationId: user.organisation_id,
+          has2FA: user.has_2fa_enabled,
+          email: user.email,
+          name: user.name,
+          mobilePhone: user.mobile_phone || null
+        },
+        env.jwtSecret,
+        { expiresIn: REVALIDATION_TOKEN_EXPIRY }
+      );
+
+      return res.json({
+        requiresRevalidation: true,
+        revalidationToken,
+        channels: {
+          email: true,
+          phone: Boolean(user.mobile_phone)
+        },
+        message: 'Please complete account revalidation.'
+      });
+    }
+
     // Password is correct - check if 2FA is required
     if (user.has_2fa_enabled) {
       // Generate temporary token for 2FA step
@@ -216,61 +330,12 @@ router.post('/login', async (req, res, next) => {
     }
 
     // No 2FA - complete login
-    // Reset failed attempts and update last login
-    await query(
-      `UPDATE users 
-       SET failed_login_attempts = 0, locked_until = NULL, last_login_at = NOW(), last_login_ip = $1 
-       WHERE id = $2`,
-      [ipAddress, user.id]
-    );
-
-    // Log successful login
-    await securityAuditService.logLoginAttempt({
-      success: true,
-      userId: user.id,
-      organisationId: user.organisation_id,
-      ipAddress,
-      userAgent
-    });
-    
-    await recordLoginHistory({
-      userId: user.id,
-      organisationId: user.organisation_id,
+    return res.json(await finalizeLogin({
+      user,
       ipAddress,
       userAgent,
-      success: true,
       mfaUsed: false
-    });
-
-    const token = jwt.sign(
-      {
-        sub: user.id,
-        role: user.role,
-        organisationId: user.organisation_id,
-        organisationSlug: user.org_slug
-      },
-      env.jwtSecret,
-      { expiresIn: env.jwtExpiresIn }
-    );
-
-    const nameParts = splitName(user.name);
-
-    return res.json({
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: nameParts.firstName,
-        lastName: nameParts.lastName,
-        name: user.name,
-        role: user.role,
-        organisationId: user.organisation_id,
-        organisationName: user.org_name,
-        organisationSlug: user.org_slug,
-        themePreference: user.theme_preference,
-        forcePasswordChange: user.force_password_change || false
-      }
-    });
+    }));
   } catch (err) {
     return next(err);
   }
@@ -290,6 +355,170 @@ router.get('/me', authMiddleware, (req, res) => {
     organisationSlug: req.user.organisationSlug,
     forcePasswordChange: req.user.forcePasswordChange || false
   });
+});
+
+router.post('/revalidation/start', async (req, res, next) => {
+  const { revalidationToken, channel = 'email' } = req.body || {};
+
+  if (!revalidationToken) {
+    return res.status(400).json({
+      success: false,
+      error: 'TOKEN_REQUIRED',
+      message: 'Revalidation token is required.'
+    });
+  }
+
+  try {
+    let decoded;
+    try {
+      decoded = jwt.verify(revalidationToken, env.jwtSecret);
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        error: 'TOKEN_EXPIRED',
+        message: 'Revalidation session expired. Please sign in again.'
+      });
+    }
+
+    if (decoded.type !== 'revalidation_pending') {
+      return res.status(400).json({
+        success: false,
+        error: 'TOKEN_INVALID',
+        message: 'Invalid revalidation token.'
+      });
+    }
+
+    const result = await accessRevalidationService.startRevalidationOtp({
+      userId: decoded.sub,
+      email: decoded.email,
+      name: decoded.name,
+      mobilePhone: decoded.mobilePhone,
+      preferredChannel: channel
+    });
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    return res.json(result);
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.post('/revalidation/verify', async (req, res, next) => {
+  const { revalidationToken, code, rememberDevice = false } = req.body || {};
+  const ipAddress = getClientIp(req);
+  const userAgent = req.headers['user-agent'];
+
+  if (!revalidationToken || !code) {
+    return res.status(400).json({
+      success: false,
+      error: 'VALIDATION_ERROR',
+      message: 'Revalidation token and OTP code are required.'
+    });
+  }
+
+  try {
+    let decoded;
+    try {
+      decoded = jwt.verify(revalidationToken, env.jwtSecret);
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        error: 'TOKEN_EXPIRED',
+        message: 'Revalidation session expired. Please sign in again.'
+      });
+    }
+
+    if (decoded.type !== 'revalidation_pending') {
+      return res.status(400).json({
+        success: false,
+        error: 'TOKEN_INVALID',
+        message: 'Invalid revalidation token.'
+      });
+    }
+
+    const verification = await accessRevalidationService.verifyRevalidationOtp({
+      userId: decoded.sub,
+      code
+    });
+
+    if (!verification.success) {
+      return res.status(400).json(verification);
+    }
+
+    if (decoded.has2FA) {
+      let trustedDeviceToken = null;
+      if (rememberDevice) {
+        const trustedDevice = await accessRevalidationService.createTrustedDevice({
+          userId: decoded.sub,
+          label: 'Remembered Device',
+          userAgent
+        });
+        trustedDeviceToken = trustedDevice.token;
+      }
+
+      const tempToken = jwt.sign(
+        {
+          sub: decoded.sub,
+          type: '2fa_pending',
+          organisationId: decoded.organisationId,
+          trustedDeviceToken
+        },
+        env.jwtSecret,
+        { expiresIn: TEMP_TOKEN_EXPIRY }
+      );
+
+      return res.json({
+        success: true,
+        requires2FA: true,
+        tempToken,
+        message: 'Revalidation complete. Please enter your two-factor authentication code.'
+      });
+    }
+
+    const userResult = await query(
+      `SELECT u.id, u.email, u.name, u.role, u.organisation_id, u.theme_preference,
+              u.force_password_change,
+              o.name AS org_name, o.slug AS org_slug
+       FROM users u
+       LEFT JOIN organisations o ON o.id = u.organisation_id
+       WHERE u.id = $1`,
+      [decoded.sub]
+    );
+
+    if (userResult.rowCount === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'USER_NOT_FOUND',
+        message: 'User not found.'
+      });
+    }
+
+    let trustedDeviceToken = null;
+    if (rememberDevice) {
+      const trustedDevice = await accessRevalidationService.createTrustedDevice({
+        userId: decoded.sub,
+        label: 'Remembered Device',
+        userAgent
+      });
+      trustedDeviceToken = trustedDevice.token;
+    }
+
+    return res.json({
+      success: true,
+      ...(await finalizeLogin({
+        user: userResult.rows[0],
+        ipAddress,
+        userAgent,
+        mfaUsed: true
+      })),
+      ...(trustedDeviceToken ? { trustedDeviceToken } : {})
+    });
+  } catch (err) {
+    return next(err);
+  }
 });
 
 // ==========================================
@@ -616,7 +845,8 @@ router.post('/2fa/login-verify', async (req, res, next) => {
         themePreference: user.theme_preference,
         forcePasswordChange: user.force_password_change || false
       },
-      backupCodeWarning
+      backupCodeWarning,
+      ...(decoded.trustedDeviceToken ? { trustedDeviceToken: decoded.trustedDeviceToken } : {})
     });
   } catch (err) {
     console.error('[Auth] 2FA Login Verify Error:', {

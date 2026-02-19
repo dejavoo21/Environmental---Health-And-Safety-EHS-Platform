@@ -2,19 +2,24 @@ import { useCallback, useEffect, useState } from 'react';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
+import { hasRole } from '../utils/roles';
 
 // User Form Modal Component
-const UserFormModal = ({ user, onClose, onSave }) => {
+const UserFormModal = ({ user, currentUser, onClose, onSave }) => {
   const [form, setForm] = useState({
     email: user?.email || '',
     name: user?.name || '',
     password: '',
     role: user?.role || 'worker'
   });
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
+  const [profilePhotoPreview, setProfilePhotoPreview] = useState(user?.profilePhotoUrl || '');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   const isEdit = !!user;
+  const canAssignSuperAdmin = currentUser?.role === 'super_admin';
+  const isEditingProtectedSuperAdmin = isEdit && user?.role === 'super_admin' && !canAssignSuperAdmin;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,15 +36,26 @@ const UserFormModal = ({ user, onClose, onSave }) => {
 
     setSaving(true);
     try {
+      let savedUser = null;
       if (isEdit) {
         const payload = { email: form.email, name: form.name, role: form.role };
-        await api.put(`/org-users/${user.id}`, payload);
+        const res = await api.put(`/org-users/${user.id}`, payload);
+        savedUser = res.data?.data || user;
       } else {
-        await api.post('/org-users', {
+        const res = await api.post('/org-users', {
           email: form.email,
           name: form.name,
           password: form.password,
           role: form.role
+        });
+        savedUser = res.data?.data || null;
+      }
+
+      if (profilePhotoFile && savedUser?.id) {
+        const formData = new FormData();
+        formData.append('file', profilePhotoFile);
+        await api.post(`/org-users/${savedUser.id}/profile-photo`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
       onSave();
@@ -83,12 +99,17 @@ const UserFormModal = ({ user, onClose, onSave }) => {
               <select
                 value={form.role}
                 onChange={(e) => setForm((prev) => ({ ...prev, role: e.target.value }))}
+                disabled={isEditingProtectedSuperAdmin}
               >
                 <option value="worker">Worker</option>
                 <option value="manager">Manager</option>
                 <option value="admin">Admin</option>
+                <option value="super_admin" disabled={!canAssignSuperAdmin}>Super Admin</option>
               </select>
             </label>
+            {isEditingProtectedSuperAdmin && (
+              <p className="muted small">Only a super admin can modify this user’s role.</p>
+            )}
             {!isEdit && (
               <label>
                 Password *
@@ -99,6 +120,32 @@ const UserFormModal = ({ user, onClose, onSave }) => {
                   placeholder="Minimum 8 characters"
                 />
               </label>
+            )}
+            <label>
+              Profile Photo
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setProfilePhotoFile(file);
+                  if (file) {
+                    setProfilePhotoPreview(URL.createObjectURL(file));
+                  } else {
+                    setProfilePhotoPreview(user?.profilePhotoUrl || '');
+                  }
+                }}
+              />
+            </label>
+            {profilePhotoPreview && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <img
+                  src={profilePhotoPreview}
+                  alt="Profile preview"
+                  style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #4b5563' }}
+                />
+                <span className="muted small">Profile photo preview</span>
+              </div>
             )}
             {isEdit && (
               <p className="muted small">Use "Reset Password" action to change password.</p>
@@ -397,6 +444,7 @@ const AdminUsersPage = () => {
 
   const getRoleBadgeClass = (role) => {
     switch (role) {
+      case 'super_admin': return 'badge role-super-admin';
       case 'admin': return 'badge role-admin';
       case 'manager': return 'badge role-manager';
       case 'worker': return 'badge role-worker';
@@ -426,6 +474,7 @@ const AdminUsersPage = () => {
               <option value="worker">Worker</option>
               <option value="manager">Manager</option>
               <option value="admin">Admin</option>
+              {hasRole(currentUser?.role, 'admin') && <option value="super_admin">Super Admin</option>}
             </select>
           </label>
           <label className="field">
@@ -469,7 +518,34 @@ const AdminUsersPage = () => {
               {filteredUsers.map((user) => (
                 <tr key={user.id} className={!user.isActive ? 'row-inactive' : ''}>
                   <td>
-                    {user.name}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      {user.profilePhotoUrl ? (
+                        <img
+                          src={user.profilePhotoUrl}
+                          alt={user.name}
+                          style={{ width: '34px', height: '34px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #4b5563' }}
+                        />
+                      ) : (
+                        <span
+                          aria-hidden="true"
+                          style={{
+                            width: '34px',
+                            height: '34px',
+                            borderRadius: '50%',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            background: '#374151',
+                            color: '#ffffff'
+                          }}
+                        >
+                          {(user.name || '?').split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase()}
+                        </span>
+                      )}
+                      <span>{user.name}</span>
+                    </div>
                     {user.id === currentUser?.id && <span className="muted small"> (you)</span>}
                   </td>
                   <td>{user.email}</td>
@@ -508,6 +584,7 @@ const AdminUsersPage = () => {
       {showUserModal && (
         <UserFormModal
           user={editingUser}
+          currentUser={currentUser}
           onClose={() => { setShowUserModal(false); setEditingUser(null); }}
           onSave={handleUserSaved}
         />

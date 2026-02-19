@@ -25,7 +25,7 @@ const getClientIp = (req) => {
  * Submit a new access request (public)
  */
 router.post('/', async (req, res, next) => {
-  const { email, fullName, organisationCode, requestedRole, reason, termsAccepted } = req.body || {};
+  const { email, fullName, organisationCode, requestedRole, mobilePhone, reason, termsAccepted } = req.body || {};
   
   if (!email) {
     return next(new AppError('Email is required', 400, 'VALIDATION_ERROR'));
@@ -43,6 +43,7 @@ router.post('/', async (req, res, next) => {
       fullName,
       organisationCode: organisationCode || null,
       requestedRole: requestedRole || 'worker',
+      mobilePhone: mobilePhone || null,
       reason,
       termsAccepted: termsAccepted === true,
       ipAddress: getClientIp(req),

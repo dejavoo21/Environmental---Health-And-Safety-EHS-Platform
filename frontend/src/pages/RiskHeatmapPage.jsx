@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import {
   getHeatmap,
   listRisks,
@@ -50,7 +51,7 @@ const RiskHeatmapPage = () => {
   );
   
   // Check permissions
-  const canAccess = user?.role === 'manager' || user?.role === 'admin';
+  const canAccess = hasRole(user?.role, 'manager');
   
   // Fetch heatmap data
   const fetchHeatmap = useCallback(async () => {

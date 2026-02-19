@@ -4,6 +4,7 @@ import { getPermit, getPermitControls, completeControl, approvePermit,
          rejectPermit, activatePermit, suspendPermit, resumePermit,
          closePermit, cancelPermit, getPermitHistory } from '../api/permits';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { PermitStatusBadge, CountdownBadge, ControlChecklistTabs,
          StateHistoryTimeline } from '../components/permits';
 import { LoadingState, ErrorState } from '../components/States';
@@ -43,7 +44,7 @@ const PermitDetailPage = () => {
   const [safetyAcknowledged, setSafetyAcknowledged] = useState(false);
   const [requiresSafetyAck, setRequiresSafetyAck] = useState(false);
 
-  const canManage = user?.role === 'manager' || user?.role === 'admin';
+  const canManage = hasRole(user?.role, 'manager');
   const isAuthor = permit?.requestedById === user?.id;
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { ErrorState, LoadingState } from '../components/States';
 import AttachmentsPanel from '../components/AttachmentsPanel';
 import ActivityLogPanel from '../components/ActivityLogPanel';
@@ -79,7 +80,7 @@ const ActionDetailPage = () => {
   };
 
   const isAssignee = action?.assignedTo?.id === user?.id;
-  const isManagerOrAdmin = user?.role === 'manager' || user?.role === 'admin';
+  const isManagerOrAdmin = hasRole(user?.role, 'manager');
   const canUpdateStatus = isAssignee || isManagerOrAdmin;
 
   // Phase 11: Check if marking as done is blocked

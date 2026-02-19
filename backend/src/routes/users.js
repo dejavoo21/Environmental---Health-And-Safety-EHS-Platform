@@ -4,10 +4,11 @@ const { query } = require('../config/db');
 const { AppError } = require('../utils/appError');
 const { requireRole } = require('../middleware/requireRole');
 const { toIso } = require('../utils/format');
+const { hasRequiredRole } = require('../utils/roles');
 
 const router = express.Router();
 
-const allowedRoles = ['worker', 'manager', 'admin'];
+const allowedRoles = ['worker', 'manager', 'admin', 'super_admin'];
 
 // Helper to split name into firstName/lastName for API response
 const splitName = (name) => {
@@ -22,7 +23,7 @@ const splitName = (name) => {
 router.get('/', async (req, res, next) => {
   try {
     // Only managers and admins can list users
-    if (!['manager', 'admin'].includes(req.user.role)) {
+    if (!hasRequiredRole(req.user.role, 'manager')) {
       return next(new AppError('Forbidden', 403, 'FORBIDDEN'));
     }
 
@@ -102,7 +103,10 @@ router.post('/', requireRole(['admin']), async (req, res, next) => {
     return next(new AppError('Password must be at least 8 characters', 400, 'VALIDATION_ERROR'));
   }
   if (!role || !allowedRoles.includes(role)) {
-    return next(new AppError('Role must be worker, manager, or admin', 400, 'VALIDATION_ERROR'));
+    return next(new AppError('Role must be worker, manager, admin, or super admin', 400, 'VALIDATION_ERROR'));
+  }
+  if (role === 'super_admin' && req.user.role !== 'super_admin') {
+    return next(new AppError('Only a super admin can assign super admin role', 403, 'FORBIDDEN'));
   }
 
   // Email format check
@@ -156,6 +160,10 @@ router.put('/:id', requireRole(['admin']), async (req, res, next) => {
     if (existing.rowCount === 0) {
       return next(new AppError('User not found', 404, 'NOT_FOUND'));
     }
+    const existingRoleResult = await query('SELECT role FROM users WHERE id = $1', [id]);
+    if (existingRoleResult.rows[0]?.role === 'super_admin' && req.user.role !== 'super_admin') {
+      return next(new AppError('Only a super admin can modify a super admin account', 403, 'FORBIDDEN'));
+    }
 
     // Check duplicate email if changing
     if (email && email.toLowerCase() !== existing.rows[0].email) {
@@ -175,7 +183,10 @@ router.put('/:id', requireRole(['admin']), async (req, res, next) => {
 
     // Validate role if provided
     if (role !== undefined && !allowedRoles.includes(role)) {
-      return next(new AppError('Role must be worker, manager, or admin', 400, 'VALIDATION_ERROR'));
+      return next(new AppError('Role must be worker, manager, admin, or super admin', 400, 'VALIDATION_ERROR'));
+    }
+    if (role === 'super_admin' && req.user.role !== 'super_admin') {
+      return next(new AppError('Only a super admin can assign super admin role', 403, 'FORBIDDEN'));
     }
 
     // Build update query dynamically

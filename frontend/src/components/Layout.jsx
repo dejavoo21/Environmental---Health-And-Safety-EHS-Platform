@@ -4,6 +4,8 @@ import { useAuth } from '../auth/AuthContext';
 import { useOrg } from '../context/OrgContext';
 import { NotificationBell } from './notifications';
 import { ThemeToggle } from './security';
+import HelpChatbot from './HelpChatbot';
+import { hasAnyRole } from '../utils/roles';
 import {
   User,
   Home,
@@ -289,7 +291,7 @@ const Layout = () => {
 
   const canAccess = (roles) => {
     if (!roles || roles.length === 0) return true;
-    return roles.includes(user?.role);
+    return hasAnyRole(user?.role, roles);
   };
 
   const toggleGroup = (groupId) => {
@@ -435,6 +437,7 @@ const Layout = () => {
         aria-live="polite" 
         aria-atomic="true"
       />
+      <HelpChatbot />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { ErrorState, LoadingState } from '../components/States';
 import AttachmentsPanel from '../components/AttachmentsPanel';
 import ActivityLogPanel from '../components/ActivityLogPanel';
@@ -27,7 +28,7 @@ const InspectionDetailPage = () => {
   const [safetyAcknowledged, setSafetyAcknowledged] = useState(false);
   const [requiresSafetyAck, setRequiresSafetyAck] = useState(false);
 
-  const canCreateAction = user?.role === 'manager' || user?.role === 'admin';
+  const canCreateAction = hasRole(user?.role, 'manager');
 
   useEffect(() => {
     const load = async () => {

@@ -12,6 +12,7 @@ const RequestAccessPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
+    mobilePhone: '',
     organisationCode: '',
     requestedRole: '',
     reason: '',
@@ -54,6 +55,10 @@ const RequestAccessPage = () => {
 
     // Organisation code is optional - can be added by admin later
 
+    if (formData.mobilePhone && !/^\+?[0-9()\-\s]{7,20}$/.test(formData.mobilePhone.trim())) {
+      newErrors.mobilePhone = 'Please enter a valid mobile number';
+    }
+
     if (!formData.requestedRole) {
       newErrors.requestedRole = 'Please select a role';
     }
@@ -83,6 +88,7 @@ const RequestAccessPage = () => {
       const response = await api.post('/access-requests', {
         fullName: formData.fullName.trim(),
         email: formData.email.trim().toLowerCase(),
+        mobilePhone: formData.mobilePhone.trim() || null,
         organisationCode: formData.organisationCode.trim() ? formData.organisationCode.trim().toUpperCase() : null,
         requestedRole: formData.requestedRole,
         reason: formData.reason.trim() || undefined,
@@ -202,6 +208,25 @@ const RequestAccessPage = () => {
             )}
             <span className="field-hint">
               If you know your organisation code, enter it here. Otherwise, leave blank and an admin will assign you later.
+            </span>
+          </label>
+
+          <label className="field">
+            <span>Mobile Number (Optional)</span>
+            <input
+              type="tel"
+              value={formData.mobilePhone}
+              onChange={(e) => handleChange('mobilePhone', e.target.value)}
+              placeholder="+1 555 010 1234"
+              autoComplete="tel"
+              className={errors.mobilePhone ? 'error' : ''}
+              data-testid="mobile-phone-input"
+            />
+            {errors.mobilePhone && (
+              <span className="field-error">{errors.mobilePhone}</span>
+            )}
+            <span className="field-hint">
+              Add your mobile number if you want to receive OTPs by phone.
             </span>
           </label>
 

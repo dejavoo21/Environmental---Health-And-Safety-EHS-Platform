@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/client';
 import { useAuth } from '../auth/AuthContext';
+import { hasRole } from '../utils/roles';
 import { ErrorState, LoadingState } from '../components/States';
 import AttachmentsPanel from '../components/AttachmentsPanel';
 import ActivityLogPanel from '../components/ActivityLogPanel';
@@ -91,7 +92,7 @@ const IncidentDetailPage = () => {
     return () => { active = false; };
   }, [incident?.site?.id, id]);
 
-  const canUpdateStatus = user?.role === 'manager' || user?.role === 'admin';
+  const canUpdateStatus = hasRole(user?.role, 'manager');
 
   // Phase 11: Handle safety acknowledgement callback
   const handleSafetyAcknowledge = ({ acknowledgedAt }) => {

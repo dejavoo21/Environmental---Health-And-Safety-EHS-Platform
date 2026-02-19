@@ -1,12 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
-import { TwoFactorPrompt } from '../components/security';
+import { TwoFactorPrompt, RevalidationPrompt } from '../components/security';
 import AppIcon from '../components/AppIcon';
 import api from '../api/client';
 
 const LoginPage = () => {
-  const { login, twoFactorRequired, tempToken, complete2FALogin, cancel2FA } = useAuth();
+  const {
+    login,
+    twoFactorRequired,
+    tempToken,
+    complete2FALogin,
+    cancel2FA,
+    revalidationRequired,
+    revalidationToken,
+    revalidationChannels,
+    completeRevalidation,
+    cancelRevalidation
+  } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState('');
@@ -62,7 +73,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const result = await login(email, password);
-      if (!result.requires2FA) {
+      if (!result.requires2FA && !result.requiresRevalidation) {
         // Check if password change is required
         if (result.forcePasswordChange) {
           navigate('/change-password');
@@ -103,6 +114,30 @@ const LoginPage = () => {
     );
   }
 
+  if (revalidationRequired && revalidationToken) {
+    return (
+      <div className="login-page">
+        <div className="login-card">
+          <RevalidationPrompt
+            revalidationToken={revalidationToken}
+            channels={revalidationChannels}
+            onSuccess={(response) => {
+              const result = completeRevalidation(response);
+              if (!result?.requires2FA) {
+                if (response.user?.forcePasswordChange) {
+                  navigate('/change-password');
+                } else {
+                  navigate('/');
+                }
+              }
+            }}
+            onCancel={cancelRevalidation}
+          />
+        </div>
+      </div>
+    );
+  }
+
   // Show SSO-only mode if enforced
   if (ssoProvider?.ssoOnlyMode) {
     return (
@@ -130,7 +165,6 @@ const LoginPage = () => {
     <div className="login-page">
       <form className="login-card" onSubmit={handleSubmit}>
         <div className="login-header">
-          <div className="pill">Phase 10 Access</div>
           <h1>EHS Portal</h1>
           <p>Log in to track incidents, inspections, and safety KPIs.</p>
         </div>
